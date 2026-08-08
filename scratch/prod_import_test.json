@@ -1,0 +1,27 @@
+[
+  {
+    "id": "e4450125-1e35-42bb-92cc-49da43eef6b5",
+    "domain_id": "771cc888-033e-4ea7-ab89-c7fb9df7649f",
+    "industry_id": "ind-dental-456",
+    "object_type": "Insight",
+    "version": "1.0.0",
+    "author": "admin@cac.app",
+    "review_status": "Published",
+    "base_confidence": 95,
+    "tags": "[\"dental\", \"import_test\"]",
+    "expected_output": "Detailed strategy",
+    "placeholders": "[\"{{BUSINESS_NAME}}\"]",
+    "target_goal": "ANY",
+    "target_audience": "ANY",
+    "target_location": "ANY",
+    "target_size": "ANY",
+    "target_service": "ANY",
+    "target_stage": "ANY",
+    "target_model": "B2C",
+    "target_pricing": "ANY",
+    "target_type": "Offline",
+    "target_maturity": "ANY",
+    "target_challenge": "ANY",
+    "content_json": "{\"insight\":\"This is an End-to-End import test insight verified on production.\"}"
+  }
+]

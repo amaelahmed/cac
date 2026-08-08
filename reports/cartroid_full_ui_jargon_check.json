@@ -1,0 +1,122 @@
+{
+  "passed": true,
+  "generatedAt": "2026-06-28T22:22:49.389Z",
+  "url": "http://localhost:8796/details/",
+  "screenshot": "reports/cartroid_full_ui.png",
+  "visibleSectionsSimple": true,
+  "tabPresence": {
+    "30-Day Plan": true,
+    "Marketing Plan": true,
+    "What Customers Think": true,
+    "Example Customer Types": true,
+    "Customer Problems": true,
+    "Post Ideas": true,
+    "Ready-to-Use Captions": true,
+    "Message Templates": true,
+    "Full Plan": true
+  },
+  "tabChecks": [
+    {
+      "label": "30-Day Plan",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "Marketing Plan",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "What Customers Think",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "Example Customer Types",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "Customer Problems",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "Other Shops Customers May Choose",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "Post Ideas",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "Ready-to-Use Captions",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "Message Templates",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "Brand Style",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "Ad Result Calculator",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "Advanced Growth Plan",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    },
+    {
+      "label": "Full Plan",
+      "exists": true,
+      "hasContent": true,
+      "bannedTerms": []
+    }
+  ],
+  "hasNaturalStrategyWhy": true,
+  "hasBusinessExample": true,
+  "day1ReasonSpecific": true,
+  "day10ReasonSpecific": true,
+  "noRawInternalText": true,
+  "bannedTermsFound": [],
+  "revenueHiddenForPrelaunch": true,
+  "ageHiddenForPrelaunch": true,
+  "locationAppliedOnce": true,
+  "readability": {
+    "sentenceCount": 467,
+    "avgSentenceWords": 16.9,
+    "veryLongUiRuns": [
+      "30-Day Plan Marketing Plan What Customers Think Example Customer Types Customer Problems Other Shops Customers May Choose Post Ideas Ready-to-Use Captions Message Templates Brand Style Ad Result Calculator Advanced Growth Plan Full Plan 30-Day Post Plan 30 different post ideas built from the business details, local context, and selected channels",
+      "Day 1 INSTAGRAM / WHATSAPP REEL First look at Cartroid Day 2 INSTAGRAM / WHATSAPP STORY POLL Let students choose the first design Day 3 INSTAGRAM / WHATSAPP CAROUSEL How to order Day 4 INSTAGRAM / WHATSAPP REEL Sample product reveal Day 5 INSTAGRAM / WHATSAPP PHOTO POST Why Cartroid is starting Day 6 INSTAGRAM / WHATSAPP SCREEN RECORDING WhatsApp ordering walkthrough Day 7 INSTAGRAM / WHATSAPP REEL Making video Day 8 INSTAGRAM / WHATSAPP CAROUSEL Before and after customisation Day 9 INSTAGRAM / WHATSAPP STORY How many days it takes Day 10 INSTAGRAM / WHATSAPP CAROUSEL Starting price clarity Day 11 INSTAGRAM / WHATSAPP REEL Birthday gift idea Day 12 INSTAGRAM / WHATSAPP REEL Gift idea for college friends Day 13 INSTAGRAM / WHATSAPP POST Kozhikode delivery and pickup Day 14 INSTAGRAM / WHATSAPP POST Launch-week offer Day 15 INSTAGRAM / WHATSAPP STORY First 10 test orders Day 16 INSTAGRAM / WHATSAPP REEL Packaging video Day 17 INSTAGRAM / WHATSAPP CAROUSEL Questions before ordering Day 18 INSTAGRAM / WHATSAPP STORY Friend referral Day 19 INSTAGRAM / WHATSAPP POST How early feedback will work Day 20 INSTAGRAM / WHATSAPP CAROUSEL Design of the week Day 21 INSTAGRAM / WHATSAPP REEL Material close-up Day 22 INSTAGRAM / WHATSAPP CAROUSEL How we prevent mistakes Day 23 INSTAGRAM / WHATSAPP STORY Preview confirmation Day 24 INSTAGRAM / WHATSAPP REEL Farewell gift idea Day 25 INSTAGRAM / WHATSAPP POST Malayalam-English local caption Day 26 INSTAGRAM / WHATSAPP POST Find us on Google soon Day 27 INSTAGRAM / WHATSAPP STORY Delivery area check Day 28 INSTAGRAM / WHATSAPP CAROUSEL Custom order checklist Day 29 INSTAGRAM / WHATSAPP REEL Three-day launch countdown Day 30 INSTAGRAM / WHATSAPP REEL Opening day [TAB:Marketing Plan] Back to brief RETAIL · KOZHIKODE, KERALA, INDIA Cartroid — Full Plan Cartroid is a Retail preparing to launch in Kozhikode",
+      "30-Day Plan Marketing Plan What Customers Think Example Customer Types Customer Problems Other Shops Customers May Choose Post Ideas Ready-to-Use Captions Message Templates Brand Style Ad Result Calculator Advanced Growth Plan Full Plan 10-Step Marketing Plan Each step says what to do, when to do it, and how to know if it helped",
+      "STEP 2 · DO THIS FIRST Use a safe six-step custom order process SIMPLE TASK · DO THIS TODAY STEP 3 · DO THIS FIRST Send a design preview before making the product SIMPLE TASK · DO THIS TODAY STEP 4 · DO THIS THIS WEEK Start with three actions, not a huge plan SIMPLE TASK · DO THIS TODAY STEP 5 · DO THIS THIS WEEK Ask for preview confirmation in one clean message SIMPLE TASK · DO THIS TODAY STEP 6 · DO THIS THIS WEEK Write an Instagram bio that explains ordering SIMPLE TASK · DO THIS TODAY STEP 7 · DO THIS THIS WEEK Use a first reply that collects the right details SIMPLE TASK · DO THIS TODAY STEP 8 · DO AFTER THE BASICS Collect interested people before opening SIMPLE TASK · DO THIS WITHIN 30 DAYS STEP 9 · DO AFTER THE BASICS Answer what happens if the design is wrong SIMPLE TASK · DO THIS WITHIN 30 DAYS STEP 10 · DO AFTER THE BASICS Record making videos, not only final photos SIMPLE TASK · DO THIS WITHIN 30 DAYS [TAB:What Customers Think] Back to brief RETAIL · KOZHIKODE, KERALA, INDIA Cartroid — Full Plan Cartroid is a Retail preparing to launch in Kozhikode",
+      "30-Day Plan Marketing Plan What Customers Think Example Customer Types Customer Problems Other Shops Customers May Choose Post Ideas Ready-to-Use Captions Message Templates Brand Style Ad Result Calculator Advanced Growth Plan Full Plan What Customers Think Plain-language reasons people hesitate, trust, remember, and buy",
+      "30-Day Plan Marketing Plan What Customers Think Example Customer Types Customer Problems Other Shops Customers May Choose Post Ideas Ready-to-Use Captions Message Templates Brand Style Ad Result Calculator Advanced Growth Plan Full Plan Example Customer Types Examples based on your business details, not real people",
+      "30-Day Plan Marketing Plan What Customers Think Example Customer Types Customer Problems Other Shops Customers May Choose Post Ideas Ready-to-Use Captions Message Templates Brand Style Ad Result Calculator Advanced Growth Plan Full Plan Customer Problems Each problem maps to what to do, what to post, and what to say",
+      "30-Day Plan Marketing Plan What Customers Think Example Customer Types Customer Problems Other Shops Customers May Choose Post Ideas Ready-to-Use Captions Message Templates Brand Style Ad Result Calculator Advanced Growth Plan Full Plan Other Shops Customers May Choose No competitor URL supplied"
+    ]
+  },
+  "consoleErrors": []
+}

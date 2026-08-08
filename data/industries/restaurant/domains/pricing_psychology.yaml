@@ -1,0 +1,34 @@
+- title: "Decoy Pricing"
+  object_type: "Framework"
+  version: "1.1.0"
+  target_pricing: "Premium"
+  target_goal: "Increase AOV"
+  author: "CAC Psychology Team"
+  base_confidence: 90
+  quality_score: 95
+  expected_output: "Explanation of how a high-priced decoy makes other items look reasonable."
+  dependencies:
+    - "Remove the Dollar Sign"
+  tags:
+    - "pricing"
+    - "aov"
+  content:
+    principle: "People compare prices relative to each other, not in a vacuum."
+    application: "Introduce an extremely expensive item (e.g., $150 Seafood Tower) so the $45 Steak looks like a reasonable mid-tier option."
+
+- title: "Remove the Dollar Sign"
+  object_type: "Insight"
+  version: "1.1.0"
+  target_pricing: "ANY"
+  target_goal: "Reduce Friction"
+  author: "CAC Psychology Team"
+  base_confidence: 95
+  quality_score: 90
+  expected_output: "The psychological impact of currency symbols on spending."
+  related_objects:
+    - "Decoy Pricing"
+  tags:
+    - "menu design"
+  content:
+    insight: "Currency symbols trigger the 'pain of paying' center in the brain."
+    implication: "List prices as simple numbers (e.g., '14' instead of '$14.00') to abstract the concept of money."

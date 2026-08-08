@@ -1,0 +1,22 @@
+[
+  {
+    "id": "test-import-obj-1",
+    "domain_id": "dom-strategy",
+    "industry_id": "ind-generic-000",
+    "object_type": "framework",
+    "author": "test-admin",
+    "review_status": "Published",
+    "base_confidence": 95,
+    "content_json": "{\"title\": \"Test Strategy\"}"
+  },
+  {
+    "id": "test-import-obj-2",
+    "domain_id": "dom-marketing",
+    "industry_id": "ind-generic-000",
+    "object_type": "campaign",
+    "author": "test-admin",
+    "review_status": "Published",
+    "base_confidence": 90,
+    "content_json": "{\"title\": \"Test Campaign\"}"
+  }
+]

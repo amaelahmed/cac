@@ -1,0 +1,254 @@
+{
+  "url": "http://localhost:8797/details/",
+  "requestedLabels": [
+    "Calendar / 30-Day Post Plan",
+    "Marketing Plan",
+    "What Customers Think",
+    "Example Customer Types",
+    "Customer Problems",
+    "Other Shops Customers May Choose",
+    "Post Ideas",
+    "Ready-to-Use Captions",
+    "Message Templates",
+    "Brand Style",
+    "Ad Result Calculator",
+    "Advanced Growth Plan",
+    "Full Plan"
+  ],
+  "tabButtonTexts": [
+    "Continue as Tester",
+    "Back to brief",
+    "Export PDF",
+    "Start Over",
+    "Calendar / 30-Day Post Plan",
+    "Marketing Plan",
+    "What Customers Think",
+    "Example Customer Types",
+    "Customer Problems",
+    "Other Shops Customers May Choose",
+    "Post Ideas",
+    "Ready-to-Use Captions",
+    "Message Templates",
+    "Brand Style",
+    "Ad Result Calculator",
+    "Advanced Growth Plan",
+    "Full Plan",
+    "Day 1ReelCustom gifts are coming to Kozhikode.Cartroid is opening soon. Send your idea, see a preview, confirm it, and get your customised product made.Open card",
+    "Day 2Story pollWhich design should we launch first?Help us choose Cartroid's first design.Open card",
+    "Day 3CarouselOrdering from Cartroid is simple.Send your idea. See a preview. Confirm the design. Get it made and delivered in Kozhikode.Open card",
+    "Day 4ReelWe make only after you confirm.Before we make your custom product, we show you a preview. You can check name, photo, colour, size, and spelling.Open card",
+    "Day 5PostNo guessing about price.Cartroid prices depend on product type, size, design detail, and delivery. Send your idea and we will guide you.Open card",
+    "Day 6ReelFrom idea to gift.A simple idea can become a personal gift when every detail is checked properly.Open card",
+    "Day 7StoryWhich area should we deliver to first?Cartroid is preparing delivery and pickup around Kozhikode. Reply with your area or college.Open card",
+    "Day 8ReelFor the friend who says no gifts.Some gifts are kept because they feel personal. Send us a name, photo, or idea.Open card",
+    "Day 9CarouselCustom orders need careful checking.Before making, we check name, spelling, photo, colour, size, and delivery date.Open card",
+    "Day 10ReelFirst 10 test orders are opening.Cartroid is starting slowly so every custom detail is checked properly. Message slot to reserve one.Open card",
+    "Day 11ReelBirthday gift ideaCartroid in Kozhikode: For the friend who says they do not want gifts but still keeps personal ones.Open card",
+    "Day 12ReelGift idea for college friendsCartroid in Kozhikode: College gifts do not need to be boring. Make it personal.Open card",
+    "Day 13PostKozhikode delivery and pickupCartroid will support delivery and pickup around Kozhikode and nearby areas.Open card",
+    "Day 14PostLaunch-week offerCartroid in Kozhikode: Launch week: first 20 orders get free gift packing.Open card",
+    "Day 15StoryFirst 10 test ordersCartroid in Kozhikode: We are taking the first 10 test orders slowly so every detail is checked.Open card",
+    "Day 16ReelPackaging videoCartroid in Kozhikode: The gift should look good when it reaches their hand.Open card",
+    "Day 17CarouselQuestions before orderingCartroid in Kozhikode: Before you order, here are the five things most people ask.Open card",
+    "Day 18StoryFriend referralCartroid in Kozhikode: Ordering with a friend? Both of you can get a small launch add-on.Open card",
+    "Day 19PostHow early feedback will workCartroid in Kozhikode: After first orders, tell us what looked good and what should improve.Open card",
+    "Day 20CarouselDesign of the weekCartroid in Kozhikode: Design of the week: simple, personal, and easy to gift.Open card",
+    "Day 21ReelMaterial close-upCartroid in Kozhikode: Here is what goes into the product before it becomes a gift.Open card",
+    "Day 22CarouselHow we prevent mistakesCartroid in Kozhikode: Custom orders need careful checking. Here is how we prevent mistakes.Open card",
+    "Day 23StoryPreview confirmationCartroid in Kozhikode: We make only after you confirm the preview.Open card",
+    "Day 24ReelFarewell gift ideaCartroid in Kozhikode: For the classmate who made college better.Open card",
+    "Day 25PostMalayalam-English local captionCartroid in Kozhikode: Gift venam, but basic aakaruthu. Send your idea and see a preview first.Open card",
+    "Day 26PostFind us on Google soonCartroid is getting ready on Google so local buyers can find photos, hours, and contact details.Open card",
+    "Day 27StoryDelivery area checkWhich area should we cover first in Kozhikode?Open card",
+    "Day 28CarouselCustom order checklistCartroid in Kozhikode: Send these details and we can guide your order faster.Open card",
+    "Day 29ReelThree-day launch countdownCartroid in Kozhikode: 3 days to opening test orders. Samples, preview, and WhatsApp ordering are almost ready.Open card",
+    "Day 30ReelOpening dayCartroid is open for test orders in Kozhikode. Send your idea, see preview, confirm, and we will make it.Open card"
+  ],
+  "oldLabelsVisible": [],
+  "consoleErrors": [],
+  "tabs": [
+    {
+      "id": "calendar",
+      "label": "Calendar / 30-Day Post Plan",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/calendar.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "marketing-plan",
+      "label": "Marketing Plan",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/marketing-plan.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "what-customers-think",
+      "label": "What Customers Think",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/what-customers-think.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "example-customer-types",
+      "label": "Example Customer Types",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/example-customer-types.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "customer-problems",
+      "label": "Customer Problems",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/customer-problems.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "other-shops-customers-may-choose",
+      "label": "Other Shops Customers May Choose",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/other-shops-customers-may-choose.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "post-ideas",
+      "label": "Post Ideas",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/post-ideas.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "ready-to-use-captions",
+      "label": "Ready-to-Use Captions",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/ready-to-use-captions.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "message-templates",
+      "label": "Message Templates",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/message-templates.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "brand-style",
+      "label": "Brand Style",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/brand-style.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "ad-result-calculator",
+      "label": "Ad Result Calculator",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/ad-result-calculator.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "advanced-growth-plan",
+      "label": "Advanced Growth Plan",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/advanced-growth-plan.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    },
+    {
+      "id": "full-plan",
+      "label": "Full Plan",
+      "found": true,
+      "screenshot": "reports/cartroid_full_tab_screenshots/full-plan.png",
+      "badTerms": [],
+      "rawTags": [],
+      "contentChecks": {
+        "hasCartroid": true,
+        "hasKozhikodeOrLocal": true,
+        "hasActionWords": true
+      },
+      "pass": true
+    }
+  ],
+  "pass": true
+}

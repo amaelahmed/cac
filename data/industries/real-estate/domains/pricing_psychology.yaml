@@ -1,0 +1,17 @@
+- title: "The 99k Threshold"
+  object_type: "Insight"
+  version: "1.0.0"
+  target_pricing: "Mid-Market"
+  target_goal: "Increase Footfall"
+  author: "CAC Psychology Team"
+  base_confidence: 95
+  quality_score: 90
+  expected_output: "Search engine bracket pricing strategy."
+  dependencies:
+    - "The Largest Purchase Fear"
+  tags:
+    - "pricing structure"
+    - "seo"
+  content:
+    insight: "Zillow and Redfin filters work in $50k or $100k increments."
+    implication: "Pricing a home at $499,000 places it in the '$400k-$500k' bracket, whereas $505,000 completely excludes buyers who hard-cap their search at $500k."

@@ -1,0 +1,17 @@
+- title: "The 21-Day Transformation"
+  object_type: "Campaign"
+  version: "1.0.0"
+  target_pricing: "Premium"
+  target_goal: "Increase Lead Quality"
+  author: "CAC Strategy Team"
+  base_confidence: 88
+  quality_score: 95
+  expected_output: "A low-barrier challenge designed to build habits before upselling."
+  dependencies:
+    - "Annual vs. Monthly Anchor"
+  tags:
+    - "challenge"
+    - "lead gen"
+  content:
+    hook: "Give us 21 days. We'll give you a habit you won't want to break."
+    execution: "Offer a high-ticket, short-duration front-end challenge ($199 for 21 days). Include accountability coaching. Convert them to the $39/month annual plan on day 18 when momentum is highest."

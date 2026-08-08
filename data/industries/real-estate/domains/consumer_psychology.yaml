@@ -1,0 +1,35 @@
+- title: "The Largest Purchase Fear"
+  object_type: "Insight"
+  version: "1.0.0"
+  target_pricing: "Premium"
+  target_goal: "Build Trust"
+  author: "CAC Research Team"
+  base_confidence: 95
+  quality_score: 92
+  expected_output: "Insight detailing the anxiety around hidden flaws and overpaying in real estate."
+  related_objects:
+    - "Neighborhood Identity"
+  tags:
+    - "trust"
+    - "anxiety"
+  content:
+    insight: "Buying a house is inherently terrifying because the cost of a mistake is catastrophic."
+    implication: "Marketing should over-index on transparency, detailed disclosures, and the agent's role as a protective guide, not a salesperson."
+
+- title: "Neighborhood Identity"
+  object_type: "Insight"
+  version: "1.0.0"
+  target_pricing: "ANY"
+  target_goal: "Increase Awareness"
+  author: "CAC Research Team"
+  base_confidence: 90
+  quality_score: 88
+  expected_output: "Understanding the importance of community in selling homes."
+  dependencies:
+    - "The Largest Purchase Fear"
+  tags:
+    - "community"
+    - "lifestyle"
+  content:
+    insight: "Buyers purchase access to a community first and a structure second."
+    implication: "Sell the neighborhood lifestyle in the copy before describing the granite countertops."

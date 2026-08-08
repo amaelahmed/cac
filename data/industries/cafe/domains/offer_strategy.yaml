@@ -1,0 +1,17 @@
+- title: "Morning Commute Ritual"
+  object_type: "Campaign"
+  version: "1.0.0"
+  target_pricing: "ANY"
+  target_goal: "Increase Footfall"
+  author: "CAC Strategy Team"
+  base_confidence: 92
+  quality_score: 90
+  expected_output: "A subscription or punch-card strategy aimed at the morning crowd."
+  dependencies:
+    - "The Upsize Nudge"
+  tags:
+    - "retention"
+    - "morning rush"
+  content:
+    hook: "Own the morning routine for the neighborhood."
+    execution: "Launch a 'Skip the Line' coffee subscription. For $30/month, they get their first drip coffee free every day, ordered ahead. You make the margin back on upsold pastries."

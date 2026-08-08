@@ -1,0 +1,25 @@
+{
+  "url": "http://localhost:8796/details/",
+  "checks": {
+    "title": 2,
+    "calendarHook": 3,
+    "calendarCaption": 3,
+    "noOldStrategyLabel": 0,
+    "noOldPsychologyLabel": 0,
+    "noOldPainPointsLabel": 0,
+    "strategyCard": 2,
+    "strategyCopyLine": 1,
+    "customerThought": 1,
+    "customerProblem": 1,
+    "competitor": 1,
+    "postIdea": 1,
+    "growthMove": 7,
+    "advanced": 2,
+    "modalHookLabel": 1,
+    "modalHow": 1,
+    "modalAction": 1
+  },
+  "bannedVisible": [],
+  "consoleErrors": [],
+  "pass": true
+}

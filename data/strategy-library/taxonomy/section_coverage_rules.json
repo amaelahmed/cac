@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "description": "Coverage quotas and batch planning rules for strategy-library generation. Counts are quality-approved target counts, not raw generated drafts.",
+  "minimum_per_archetype": {
+    "simple_summary_first_priority": 5,
+    "customer_problem": 10,
+    "what_customers_think": 10,
+    "example_customer_type": 5,
+    "competitor_comparison": 10,
+    "post_idea": 10,
+    "caption": 10,
+    "whatsapp_message": 10,
+    "google_business_local_action": 5,
+    "offer": 5,
+    "measurement": 5,
+    "advanced_growth": 10,
+    "calendar_day_or_recipe": 30
+  },
+  "minimum_total_per_archetype": 125,
+  "section_groups": [
+    { "id": "simple_summary_first_priority", "name": "Simple summary / first priority blocks", "minimum": 5, "layers": ["universal", "business_specific"] },
+    { "id": "customer_problem", "name": "Customer problem blocks", "minimum": 10, "layers": ["business_specific"] },
+    { "id": "what_customers_think", "name": "What customers think blocks", "minimum": 10, "layers": ["business_specific"] },
+    { "id": "example_customer_type", "name": "Example customer type blocks", "minimum": 5, "layers": ["business_specific"] },
+    { "id": "competitor_comparison", "name": "Competitor comparison blocks", "minimum": 10, "layers": ["business_specific", "channel"] },
+    { "id": "post_idea", "name": "Post idea blocks", "minimum": 10, "layers": ["channel", "business_specific"] },
+    { "id": "caption", "name": "Caption blocks", "minimum": 10, "layers": ["channel", "business_specific"] },
+    { "id": "whatsapp_message", "name": "WhatsApp/message blocks", "minimum": 10, "layers": ["channel"] },
+    { "id": "google_business_local_action", "name": "Google Business/local action blocks", "minimum": 5, "layers": ["channel"] },
+    { "id": "offer", "name": "Offer blocks", "minimum": 5, "layers": ["universal", "business_specific"] },
+    { "id": "measurement", "name": "Measurement blocks", "minimum": 5, "layers": ["universal"] },
+    { "id": "advanced_growth", "name": "Advanced growth blocks", "minimum": 10, "layers": ["business_specific", "universal"] },
+    { "id": "calendar_day_or_recipe", "name": "Calendar day blocks or reusable calendar recipes", "minimum": 30, "layers": ["channel", "business_specific"] }
+  ],
+  "block_target_split": {
+    "universal_business_action_blocks": 250,
+    "launch_stage_blocks": 250,
+    "channel_blocks": 350,
+    "product_retail_blocks": 250,
+    "food_drink_blocks": 200,
+    "beauty_wellness_blocks": 200,
+    "local_service_blocks": 200,
+    "education_clinic_professional_blocks": 200,
+    "content_calendar_blocks": 250,
+    "premium_advanced_growth_blocks": 150,
+    "possible_total": 2300
+  },
+  "batch_priorities": {
+    "batch_002": {
+      "target_draft_blocks": "300-500",
+      "purpose": "Prove coverage across multiple business models, not one deep vertical.",
+      "priority_archetypes": [
+        "salon",
+        "cafe",
+        "clothing_store",
+        "home_cleaning",
+        "plumber_electrician",
+        "customised_gifts",
+        "restaurant",
+        "bakery",
+        "tuition_centre",
+        "dental_clinic",
+        "general_clinic",
+        "photographer_videographer",
+        "event_planner",
+        "real_estate_agent",
+        "consulting_service"
+      ],
+      "recommended_per_priority_archetype": {
+        "core_business_specific": 12,
+        "channel": 10,
+        "stage": 8,
+        "calendar": 10
+      }
+    },
+    "batch_003": {
+      "purpose": "Broaden medium-priority local business coverage after Batch 002 proves matching and wrong-business guards.",
+      "priority_families": ["product_retail", "food_drink", "beauty_wellness", "local_service", "education_coaching", "health_clinic", "professional_service"]
+    },
+    "batch_004": {
+      "purpose": "Cover digital, hospitality, B2B, and long-tail edge cases after the core local-business engine is stable.",
+      "priority_families": ["digital_online", "hospitality_experience", "b2b_industrial"]
+    }
+  },
+  "runtime_matching_policy": {
+    "enough_approved_blocks_threshold": 40,
+    "partial_approved_blocks_threshold": 12,
+    "no_approved_blocks_behavior": "admin_testing_not_enough_approved_blocks",
+    "wrong_business_content_policy": "never_show"
+  },
+  "batch_test_matrix": [
+    "pre_launch version",
+    "running version",
+    "low-budget version",
+    "Instagram + WhatsApp version",
+    "Google Business/local version",
+    "wrong-match cafe should not get salon content",
+    "wrong-match salon should not get cafe content",
+    "wrong-match clothing should not get custom gift content unless customised clothing is selected",
+    "wrong-match clinic should not get restaurant content",
+    "wrong-match local service should not get product-store content",
+    "wrong-match software/SaaS should not appear unless business is software/SaaS"
+  ]
+}

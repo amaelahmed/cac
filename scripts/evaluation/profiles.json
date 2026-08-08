@@ -1,0 +1,158 @@
+[
+  {
+    "id": "cafe-budget",
+    "biz": {
+      "industry": "Cafe",
+      "goal": "Increase Footfall",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Budget",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "Student Brews"
+    }
+  },
+  {
+    "id": "cafe-luxury",
+    "biz": {
+      "industry": "Cafe",
+      "goal": "Increase AOV",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Mid-Market",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "Artisan Roasters"
+    }
+  },
+  {
+    "id": "gym-budget",
+    "biz": {
+      "industry": "Gym",
+      "goal": "Increase Retention",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Budget",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "Fit 24/7"
+    }
+  },
+  {
+    "id": "gym-luxury",
+    "biz": {
+      "industry": "Gym",
+      "goal": "Build Trust",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Premium",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "Equinox Elite"
+    }
+  },
+  {
+    "id": "real-estate-commercial",
+    "biz": {
+      "industry": "Real Estate",
+      "goal": "Increase Awareness",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Premium",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "Prime Commercial Real Estate"
+    }
+  },
+  {
+    "id": "real-estate-residential",
+    "biz": {
+      "industry": "Real Estate",
+      "goal": "Increase Footfall",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Mid-Market",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "Happy Homes Agency"
+    }
+  },
+  {
+    "id": "restaurant-fastfood",
+    "biz": {
+      "industry": "Restaurant",
+      "goal": "Increase Footfall",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Budget",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "Speedy Burgers"
+    }
+  },
+  {
+    "id": "restaurant-finedining",
+    "biz": {
+      "industry": "Restaurant",
+      "goal": "Increase AOV",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Premium",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "L'Epicure"
+    }
+  },
+  {
+    "id": "dental-clinic-cosmetic",
+    "biz": {
+      "industry": "Dental Clinic",
+      "goal": "Increase AOV",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Premium",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "Perfect Smiles"
+    }
+  },
+  {
+    "id": "dental-clinic-family",
+    "biz": {
+      "industry": "Dental Clinic",
+      "goal": "Build Trust",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Mid-Market",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "Family Care Dental"
+    }
+  },
+  {
+    "id": "hair-salon-budget",
+    "biz": {
+      "industry": "Hair Salon",
+      "goal": "Increase Footfall",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Budget",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "Quick Cuts"
+    }
+  },
+  {
+    "id": "hair-salon-luxury",
+    "biz": {
+      "industry": "Hair Salon",
+      "goal": "Increase AOV",
+      "audience": "ANY",
+      "location": "ANY",
+      "pricing": "Premium",
+      "type": "ANY",
+      "stage": "ANY",
+      "name": "Salon Elegance"
+    }
+  }
+]

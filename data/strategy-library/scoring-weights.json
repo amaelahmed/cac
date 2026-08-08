@@ -1,0 +1,24 @@
+{
+  "quality_gate": {
+    "rule": "Only active blocks with quality_score 4 or 5 can be used",
+    "required": true
+  },
+  "launch_status_match": 28,
+  "category_match": 24,
+  "customised_product_match": 24,
+  "product_type_match": 20,
+  "audience_match": 20,
+  "goal_match": 18,
+  "platform_match": 14,
+  "location_match": 14,
+  "problem_match": 14,
+  "business_model_match": 12,
+  "priority_urgent": 10,
+  "priority_important": 7,
+  "difficulty_easy": 8,
+  "difficulty_medium": 3,
+  "quality_score_5": 8,
+  "quality_score_4": 4,
+  "weak_or_generic_penalty": -40,
+  "repeated_topic_penalty": -30
+}

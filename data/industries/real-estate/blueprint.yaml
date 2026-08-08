@@ -1,0 +1,18 @@
+schema_version: "1.0"
+
+industry:
+  id: "ind-realestate-501"
+  name: "Real Estate"
+  parent_id: "ind-services-500"
+
+validation:
+  min_objects_total: 3
+  min_quality_score: 85
+  required_domains:
+    - "Consumer Psychology"
+    - "Pricing Psychology"
+    - "Offer Strategy"
+  required_object_types:
+    - "Insight"
+    - "Framework"
+    - "Campaign"

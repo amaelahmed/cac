@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS ko_analytics; DROP TABLE IF EXISTS ko_relationships; DROP TABLE IF EXISTS knowledge_objects; DROP TABLE IF EXISTS research_sources; DROP TABLE IF EXISTS research_projects; DROP TABLE IF EXISTS knowledge_domains; DROP TABLE IF EXISTS industries;

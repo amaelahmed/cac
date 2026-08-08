@@ -1,0 +1,108 @@
+{
+  "generatedAt": "2026-07-06T11:28:23.527Z",
+  "base": "http://localhost:8788",
+  "targetBusiness": "CartCraft Launch 57325",
+  "signedOutGate": true,
+  "loadedReport": {
+    "id": "86538e8c-f014-4cb5-a236-d33436a869d7",
+    "business": "CartCraft Launch 57325",
+    "savedTabCount": 13,
+    "savedFirstDay": "Demonstrate the custom gift preview before checkout",
+    "renderedHasSavedFirstDay": true
+  },
+  "allTabsFound": true,
+  "tabResults": [
+    {
+      "label": "Calendar / 30-Day Post Plan",
+      "found": true,
+      "textLength": 8029,
+      "forbiddenHits": []
+    },
+    {
+      "label": "Marketing Plan",
+      "found": true,
+      "textLength": 10967,
+      "forbiddenHits": []
+    },
+    {
+      "label": "What Customers Think",
+      "found": true,
+      "textLength": 3525,
+      "forbiddenHits": []
+    },
+    {
+      "label": "Example Customer Types",
+      "found": true,
+      "textLength": 4204,
+      "forbiddenHits": []
+    },
+    {
+      "label": "Customer Problems",
+      "found": true,
+      "textLength": 7381,
+      "forbiddenHits": []
+    },
+    {
+      "label": "Competitors / Alternatives",
+      "found": true,
+      "textLength": 3565,
+      "forbiddenHits": []
+    },
+    {
+      "label": "Post Ideas",
+      "found": true,
+      "textLength": 2620,
+      "forbiddenHits": []
+    },
+    {
+      "label": "Ready-to-Use Captions",
+      "found": true,
+      "textLength": 5251,
+      "forbiddenHits": []
+    },
+    {
+      "label": "Message Templates",
+      "found": true,
+      "textLength": 4095,
+      "forbiddenHits": []
+    },
+    {
+      "label": "Brand Style",
+      "found": true,
+      "textLength": 2457,
+      "forbiddenHits": []
+    },
+    {
+      "label": "Ad Result Calculator",
+      "found": true,
+      "textLength": 1777,
+      "forbiddenHits": []
+    },
+    {
+      "label": "Advanced Growth Plan",
+      "found": true,
+      "textLength": 1895,
+      "forbiddenHits": []
+    },
+    {
+      "label": "Full Plan",
+      "found": true,
+      "textLength": 13132,
+      "forbiddenHits": []
+    }
+  ],
+  "export": {
+    "pdfButtonFound": true,
+    "printCalled": true,
+    "browserPdfPath": "/tmp/cac-saved-report-frontend-current.pdf",
+    "browserPdfBytes": 216837
+  },
+  "mobile": {
+    "viewport": 390,
+    "docScrollWidth": 390,
+    "offenders": []
+  },
+  "consoleErrors": [],
+  "failedResponses": [],
+  "passed": true
+}

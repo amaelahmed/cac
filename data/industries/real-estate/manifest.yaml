@@ -1,0 +1,36 @@
+build_version: 4.0.0
+generator_version: 4.0.0
+schema_version: '1.0'
+build_timestamp: '2026-06-27T12:11:11.201Z'
+generator_commit: 9b54b25a1f3bbe6b90f66c6e13c2f69f0441a049
+validation_duration: 102ms
+build_status: VERIFIED
+lint_result: VERIFIED
+dry_run_result: IMPLEMENTED — NOT VERIFIED
+snapshot_hash: sha256:74b3216370d3563c2a28c252e65b7a725b87cc7d7724e93293a665919e1ff224
+sql_checksum: 8c5ab9491d7334745c2ba7aa5cc1d07eea5c03da117b53afc1fc2a186d1004b9
+total_objects: 4
+object_hash_count: 4
+relationship_count: 4
+research_source_count: 1
+total_domains: 3
+qa_grade: A
+coverage: 100%
+average_confidence: 92.5
+average_quality: 91.25
+freshness: 100%
+author_count: 3
+reviewer_count: 1
+objects:
+  69035a7c-7839-4d0d-a4ed-0a59b3bbf569:
+    version: 1.0.0
+    hash: a7b8328ec3fbd8f98756d45c99edc04ed7c31a5f6468dc7ad30062c54baeb280
+  f95d415a-437a-4e5f-a948-9a9097705211:
+    version: 1.0.0
+    hash: 2f6727a8ebe261dbb6acdf8bfe6d33eb8aa82b9b0f0f66eae657a325eff6fe4a
+  26d51b35-2fa6-40be-ab59-906e53025a96:
+    version: 1.0.0
+    hash: 3f53bae4b7f5116c9a33b22753878839421363e97b32f4c8ce6dcb0093ada6a6
+  5785a2bb-4c90-4c59-a01e-cb253ceeba12:
+    version: 1.0.0
+    hash: 059124f917b4346dc8ac45017d87e2dfbb8efa987f43a2ad397f8edd35a5eafb

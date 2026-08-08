@@ -1,0 +1,38 @@
+- title: "Premium Dining Fears"
+  object_type: "Framework"
+  version: "1.1.0"
+  target_pricing: "Premium"
+  target_goal: "Build Trust"
+  author: "CAC Research Team"
+  base_confidence: 90
+  quality_score: 95
+  expected_output: "Detailed consumer fears and trust signals for premium restaurants."
+  related_objects:
+    - "Visual Nature of Dining"
+    - "Decoy Pricing"
+  tags:
+    - "fine dining"
+    - "trust"
+  content:
+    core_fear: "Paying a premium for a mediocre or rushed experience."
+    trust_signals: "Immaculate plating, professional service staff, curated wine list."
+
+- title: "Visual Nature of Dining"
+  object_type: "Insight"
+  version: "1.1.0"
+  target_pricing: "ANY"
+  target_goal: "Increase Awareness"
+  author: "CAC Research Team"
+  base_confidence: 92
+  quality_score: 92
+  expected_output: "Insight on the visual nature of the restaurant industry."
+  dependencies:
+    - "Premium Dining Fears"
+  tags:
+    - "visuals"
+  content:
+    insight: "{{BUSINESS_NAME}} operates in a highly visual and experience-driven market."
+    trends:
+      - "User-generated content dominating discovery."
+      - "Shift from formal dining to experiential dining."
+    implication: "Marketing must highlight the atmosphere and visual appeal of the food."

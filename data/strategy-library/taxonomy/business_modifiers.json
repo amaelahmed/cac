@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "description": "Reusable modifiers used to adapt universal/channel/business-specific action cards without creating one-off blocks for every possible business.",
+  "launch_stages": [
+    {
+      "id": "pre_launch",
+      "name": "Pre-launch",
+      "focus": ["launch readiness", "first content", "first enquiries", "samples/proof", "trust before launch", "first 10 customers"],
+      "do_not_show": ["monthly revenue advice", "business age assumptions", "repeat customer advice as if customers already exist"]
+    },
+    {
+      "id": "newly_launched",
+      "name": "Newly launched",
+      "focus": ["first real customers", "reviews", "Google Business", "WhatsApp follow-up", "first proof", "offer clarity"],
+      "do_not_show": ["scale campaigns", "team process advice", "mature retention programs"]
+    },
+    {
+      "id": "running_struggling",
+      "name": "Running but struggling",
+      "focus": ["offer clarity", "trust improvement", "better content", "local search", "follow-ups", "competitor difference"],
+      "do_not_show": ["premium scaling before trust is fixed", "advanced paid ads before basic proof exists"]
+    },
+    {
+      "id": "running_stable",
+      "name": "Running and stable",
+      "focus": ["repeat customers", "referrals", "reviews", "offers", "paid ads readiness", "better systems"],
+      "do_not_show": ["pre-launch countdowns", "first sample advice unless launching a new offer"]
+    },
+    {
+      "id": "growing",
+      "name": "Growing",
+      "focus": ["campaigns", "retention", "team process", "upsells", "partnerships", "premium growth"],
+      "do_not_show": ["basic launch-only tasks unless a new branch/product is launching"]
+    }
+  ],
+  "channels": [
+    {
+      "id": "instagram",
+      "formats": ["reels", "stories", "carousel", "bio", "highlights"],
+      "safe_for": ["visual proof", "education", "launch content", "offers", "behind the scenes"]
+    },
+    {
+      "id": "whatsapp",
+      "formats": ["first_reply", "price_reply", "follow_up", "order_confirmation", "booking_confirmation", "review_request"],
+      "safe_for": ["enquiry handling", "booking", "order clarity", "aftercare", "repeat reminders"]
+    },
+    {
+      "id": "google_business",
+      "formats": ["photos", "reviews", "posts", "products_services", "local_search"],
+      "safe_for": ["local discovery", "trust", "directions", "review proof", "service list"]
+    },
+    {
+      "id": "website",
+      "formats": ["homepage_clarity", "proof_section", "offer_section", "contact_button", "faq"],
+      "safe_for": ["trust", "conversion", "service explanation", "location proof"]
+    },
+    {
+      "id": "local_groups",
+      "formats": ["community_post", "local_offer", "launch_notice", "proof_post"],
+      "safe_for": ["local discovery", "launch awareness", "nearby customer reach"]
+    },
+    {
+      "id": "offline",
+      "formats": ["counter_card", "poster", "flyer", "staff_script", "referral_card"],
+      "safe_for": ["walk-ins", "local trust", "staff consistency", "repeat visits"]
+    }
+  ],
+  "block_layers": [
+    {
+      "id": "universal",
+      "name": "Universal small business blocks",
+      "examples": ["explain what you sell clearly", "make WhatsApp reply simple", "show real photos/videos", "ask for reviews", "post price clarity", "create Google Business profile", "track enquiries", "follow up with interested customers"]
+    },
+    {
+      "id": "channel",
+      "name": "Channel blocks",
+      "examples": ["Instagram reels", "Instagram stories", "WhatsApp price reply", "WhatsApp follow-up", "Google Business photos", "Google reviews", "website proof section"]
+    },
+    {
+      "id": "business_specific",
+      "name": "Business-specific blocks",
+      "examples": ["custom gift preview before making", "salon hygiene proof", "cafe menu photos", "clothing size clarity", "local service emergency availability"]
+    }
+  ],
+  "business_specific_modifiers": {
+    "customised_gifts": ["preview before making", "spelling check", "advance payment", "delivery timing", "gift packing"],
+    "salon": ["before/after result", "appointment booking", "hygiene", "stylist proof", "bridal packages", "aftercare"],
+    "cafe": ["menu photos", "ambience reels", "location posts", "combo offers", "Google reviews"],
+    "clothing_store": ["outfit reels", "size clarity", "trial/exchange policy", "new arrivals", "styling ideas"],
+    "local_service": ["before/after work", "emergency availability", "service area", "price estimate", "trust proof"],
+    "clinic": ["doctor trust", "appointment clarity", "patient comfort", "hygiene", "review proof"],
+    "education": ["parent/student trust", "demo class", "results proof without fake claims", "batch timing", "fee clarity"],
+    "professional_service": ["case proof", "consultation process", "document checklist", "trust signals", "follow-up process"]
+  },
+  "fallback_rules": [
+    "If an archetype has enough approved blocks, show the full plan.",
+    "If an archetype has partial approved blocks, combine universal + channel + closest safe archetype blocks.",
+    "If an archetype has no approved blocks, admin/testing mode should show: Not enough approved blocks for this business type yet.",
+    "Never show wrong-business advice just to fill space."
+  ],
+  "wrong_business_tests": [
+    "cafe should not get salon content",
+    "salon should not get cafe content",
+    "clothing should not get custom gift content unless customised clothing is selected",
+    "clinic should not get restaurant content",
+    "local service should not get product-store content",
+    "software/SaaS content should not appear unless business is software/SaaS"
+  ]
+}

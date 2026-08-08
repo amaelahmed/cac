@@ -1,0 +1,17 @@
+- title: "Annual vs. Monthly Anchor"
+  object_type: "Framework"
+  version: "1.0.0"
+  target_pricing: "Mid-Market"
+  target_goal: "Increase AOV"
+  author: "CAC Psychology Team"
+  base_confidence: 92
+  quality_score: 90
+  expected_output: "Using an inflated monthly price to drive annual commitments."
+  dependencies:
+    - "Intimidation Factor"
+  tags:
+    - "pricing structure"
+    - "commitment"
+  content:
+    principle: "High short-term pricing makes long-term commitments seem financially irresponsible to ignore."
+    application: "Set the month-to-month rate at $79, but the 12-month commitment at $39/month. This makes the $79 option a decoy to force the long-term contract."

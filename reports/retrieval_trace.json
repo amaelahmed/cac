@@ -1,0 +1,40 @@
+[
+  {
+    "domain": "Consumer Psychology",
+    "object_id": "gen-framework-1",
+    "final_score": 55,
+    "confidence": 25,
+    "reasoning": [
+      "Exact Industry Match"
+    ],
+    "industry_match": 10,
+    "business_type_match": 5,
+    "budget_match": 5,
+    "goal_match": 5,
+    "audience_match": 5,
+    "matched_tags": [],
+    "fallback_reason": null,
+    "relationship_source": null,
+    "candidates_evaluated": 1,
+    "tied_count": 1
+  },
+  {
+    "domain": "Growth Strategy",
+    "object_id": "gen-growth-1",
+    "final_score": 55,
+    "confidence": 25,
+    "reasoning": [
+      "Exact Industry Match"
+    ],
+    "industry_match": 10,
+    "business_type_match": 5,
+    "budget_match": 5,
+    "goal_match": 5,
+    "audience_match": 5,
+    "matched_tags": [],
+    "fallback_reason": null,
+    "relationship_source": null,
+    "candidates_evaluated": 1,
+    "tied_count": 1
+  }
+]

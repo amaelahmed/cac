@@ -1,0 +1,10 @@
+{
+  "revenueHiddenForPrelaunch": true,
+  "ageHiddenForPrelaunch": true,
+  "hasLibraryStrategy": true,
+  "hasNaturalStrategyWhy": true,
+  "hasLibraryCalendarReason": true,
+  "noRawTagReason": true,
+  "noDeveloperLabels": true,
+  "consoleErrors": []
+}

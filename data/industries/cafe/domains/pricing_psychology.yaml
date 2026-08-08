@@ -1,0 +1,17 @@
+- title: "The Upsize Nudge"
+  object_type: "Framework"
+  version: "1.0.0"
+  target_pricing: "Mid-Market"
+  target_goal: "Increase AOV"
+  author: "CAC Psychology Team"
+  base_confidence: 95
+  quality_score: 95
+  expected_output: "Structuring pricing so the large size feels like a no-brainer deal."
+  dependencies:
+    - "Third Place Effect"
+  tags:
+    - "pricing structure"
+    - "aov"
+  content:
+    principle: "The 'Decoy Effect' applied to cup sizes."
+    application: "Price the Small at $3.50, the Medium at $4.50, and the Large at $4.75. The minimal difference between Medium and Large makes the Large seem like the best value, driving higher AOV."

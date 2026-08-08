@@ -1,0 +1,19 @@
+{
+  "profiles": [
+    {
+      "id": "dental-high-end",
+      "expected_objects": [
+        "dental_pricing_premium_01",
+        "dental_audience_high_income_01",
+        "dental_service_implants_01"
+      ]
+    },
+    {
+      "id": "hair-salon-budget",
+      "expected_objects": [
+        "hair_pricing_budget_01",
+        "hair_goal_volume_01"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+project:
+  id: "proj-gym-401"
+  name: "2026 Gym Marketing Insights"
+  created_by: "CAC Research Team"
+
+source:
+  id: "src-cac-expert-05"
+  type: "Internal"
+  url: "internal://cac/gym-2026"
+  publication_date: "2026-06-01"
+  reliability_score: 95
+  citation_notes: "CAC Expert Synthesis derived from 200+ fitness business analyses."

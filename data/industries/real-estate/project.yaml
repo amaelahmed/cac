@@ -1,0 +1,12 @@
+project:
+  id: "proj-realestate-501"
+  name: "2026 Real Estate Marketing Insights"
+  created_by: "CAC Research Team"
+
+source:
+  id: "src-cac-expert-06"
+  type: "Internal"
+  url: "internal://cac/realestate-2026"
+  publication_date: "2026-06-01"
+  reliability_score: 95
+  citation_notes: "CAC Expert Synthesis derived from 300+ real estate transactions and market analyses."

@@ -1,0 +1,17 @@
+- title: "Off-Market VIP List"
+  object_type: "Campaign"
+  version: "1.0.0"
+  target_pricing: "Premium"
+  target_goal: "Increase Lead Quality"
+  author: "CAC Strategy Team"
+  base_confidence: 90
+  quality_score: 95
+  expected_output: "A strategy to build buyer leads by offering exclusive access."
+  dependencies:
+    - "The 99k Threshold"
+  tags:
+    - "lead gen"
+    - "exclusivity"
+  content:
+    hook: "See homes before they hit Zillow."
+    execution: "Create an email capture campaign offering early access to listings 48 hours before they hit the MLS. This generates high-intent buyer leads without paying for portal ads."

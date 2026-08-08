@@ -1,0 +1,5 @@
+{
+  "id": "e4450125-1e35-42bb-92cc-49da43eef6b5",
+  "change_summary": "Test editing via cURL",
+  "content_json": "{\"insight\":\"This is edited via production.\"}"
+}

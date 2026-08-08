@@ -1,0 +1,212 @@
+{
+  "metadata": {
+    "timestamp": "2026-06-27T14:39:01.255Z",
+    "git_commit": "9b54b25a1f3bbe6b90f66c6e13c2f69f0441a049",
+    "environment": "evaluation",
+    "engine_version": "v3",
+    "dataset_version": "1.0"
+  },
+  "profiles": [
+    {
+      "id": "cafe-budget",
+      "expected_ids": [
+        "b78dd4e7-20d5-44fc-a7eb-7c828de67b7d"
+      ],
+      "expected_confidence": 50
+    },
+    {
+      "id": "cafe-luxury",
+      "expected_ids": [
+        "425e2b23-5b4b-4f26-a964-13571cead162",
+        "0f52ed41-31e5-496a-a68a-c3e5d310bcf0"
+      ],
+      "expected_confidence": 54
+    },
+    {
+      "id": "gym-budget",
+      "expected_ids": [
+        "61303b7f-259f-42ba-aaca-9b73fc12d176",
+        "ko-gym-overview-001",
+        "ko-gym-persona-001",
+        "ko-gym-comp-001"
+      ],
+      "expected_confidence": 47
+    },
+    {
+      "id": "gym-luxury",
+      "expected_ids": [
+        "4d5093cb-163b-4656-a6d3-abd4bdaa9903",
+        "ko-gym-overview-001",
+        "ko-gym-persona-001",
+        "ko-gym-comp-001"
+      ],
+      "expected_confidence": 48
+    },
+    {
+      "id": "real-estate-commercial",
+      "expected_ids": [
+        "f95d415a-437a-4e5f-a948-9a9097705211",
+        "ko-real-overview-001",
+        "ko-real-seo-001",
+        "ko-real-wa-001"
+      ],
+      "expected_confidence": 46
+    },
+    {
+      "id": "real-estate-residential",
+      "expected_ids": [
+        "5785a2bb-4c90-4c59-a01e-cb253ceeba12",
+        "ko-real-overview-001",
+        "ko-real-seo-001",
+        "ko-real-wa-001"
+      ],
+      "expected_confidence": 48
+    },
+    {
+      "id": "restaurant-fastfood",
+      "expected_ids": [
+        "0097e8df-d29b-410a-afbc-b2f150b11ea7",
+        "829ec420-9eb0-4a2f-afab-d0d63e4b5bc3",
+        "d8016893-3d3f-4491-af87-37c926a2823f",
+        "ko-rest-overview-001",
+        "ko-rest-seo-001",
+        "ko-rest-persona-001",
+        "ko-rest-wa-001"
+      ],
+      "expected_confidence": 46
+    },
+    {
+      "id": "restaurant-finedining",
+      "expected_ids": [
+        "86978101-cb3c-45b8-aa27-d3f1e8421c97",
+        "1a51737b-0388-4da6-a9f5-3a41edec6f87",
+        "829ec420-9eb0-4a2f-afab-d0d63e4b5bc3",
+        "ko-rest-overview-001",
+        "ko-rest-seo-001",
+        "ko-rest-persona-001",
+        "ko-rest-wa-001"
+      ],
+      "expected_confidence": 48
+    },
+    {
+      "id": "dental-clinic-cosmetic",
+      "expected_ids": [
+        "88245118-cb31-4676-a5ed-af55417fe63a",
+        "f498279e-3aa7-4139-b5ab-9204de27b5d9",
+        "08a5585f-ea79-4ed3-8b41-d7316e96bb54",
+        "3a244dd0-ee38-4290-99a9-0e7b6b24cbcc",
+        "f9ced3dd-8c10-43e2-8d25-8e51b24aa044",
+        "6d871a54-a936-47ce-a581-dbfa63b5088e",
+        "cf89b32f-df2d-4092-869c-f4613ffff999",
+        "63c746e3-198a-403b-a5da-9e56bcacf7ce",
+        "54f82955-e748-42ce-80c4-8d0889f1a2d4",
+        "c6204c0a-6a3d-437a-b9fa-3ffc7ecbb333",
+        "f8d056c8-b058-4441-84ac-94ab94855ca0",
+        "c9878442-d30f-4524-a287-881797a27520",
+        "0096c097-40a2-44ad-892f-ab56024beaf3",
+        "93dca530-3fbf-4b96-8e62-bbc9bc5162d9",
+        "aeeabdc9-1024-4400-8c17-09045b7be6e8",
+        "601aea48-f71a-44fc-8c03-7241b3abf964",
+        "a195c9e8-97b1-451d-a441-16ef3853c9bc",
+        "cb3f3f7a-b845-460b-ab99-2058d7b96cb4",
+        "9a06caf3-3167-4390-be94-dc509ea99e1f",
+        "81b8c57e-2e2a-4ea5-acc4-cf47001c0c02",
+        "0d1c242d-2fd5-43f9-a971-7f714ac028cb",
+        "468688f9-e487-4655-ba9e-a142bd17432b",
+        "fa286e5a-c3d7-41e1-a243-9551f621e29d",
+        "ea19fd13-1766-4498-994c-6ffcd69dcc1d",
+        "85066e89-819f-462e-bce4-34029a0bad55"
+      ],
+      "expected_confidence": 39
+    },
+    {
+      "id": "dental-clinic-family",
+      "expected_ids": [
+        "3a244dd0-ee38-4290-99a9-0e7b6b24cbcc",
+        "f9ced3dd-8c10-43e2-8d25-8e51b24aa044",
+        "6d871a54-a936-47ce-a581-dbfa63b5088e",
+        "cf89b32f-df2d-4092-869c-f4613ffff999",
+        "63c746e3-198a-403b-a5da-9e56bcacf7ce",
+        "54f82955-e748-42ce-80c4-8d0889f1a2d4",
+        "c6204c0a-6a3d-437a-b9fa-3ffc7ecbb333",
+        "f8d056c8-b058-4441-84ac-94ab94855ca0",
+        "c9878442-d30f-4524-a287-881797a27520",
+        "0096c097-40a2-44ad-892f-ab56024beaf3",
+        "93dca530-3fbf-4b96-8e62-bbc9bc5162d9",
+        "aeeabdc9-1024-4400-8c17-09045b7be6e8",
+        "601aea48-f71a-44fc-8c03-7241b3abf964",
+        "a195c9e8-97b1-451d-a441-16ef3853c9bc",
+        "cb3f3f7a-b845-460b-ab99-2058d7b96cb4",
+        "9a06caf3-3167-4390-be94-dc509ea99e1f",
+        "81b8c57e-2e2a-4ea5-acc4-cf47001c0c02",
+        "0d1c242d-2fd5-43f9-a971-7f714ac028cb",
+        "468688f9-e487-4655-ba9e-a142bd17432b",
+        "fa286e5a-c3d7-41e1-a243-9551f621e29d",
+        "ea19fd13-1766-4498-994c-6ffcd69dcc1d",
+        "85066e89-819f-462e-bce4-34029a0bad55"
+      ],
+      "expected_confidence": 38
+    },
+    {
+      "id": "hair-salon-budget",
+      "expected_ids": [
+        "d8b2fdd3-8c7a-4770-be74-04941003e1b0",
+        "bf372348-8c2d-4aa1-93fa-e6bc54d6ed17",
+        "7e71fdfb-5830-4995-bf9e-f7b5b81ed77a",
+        "2f5d7d1c-2ca8-42be-ad9e-b4ddfd77253c",
+        "57faba7b-025c-4919-adb4-374e5a4d214b",
+        "6de92bc3-f0dd-4270-ab18-d2f4a1e9e1ac",
+        "d5065884-0229-4607-af52-63e308ecb656",
+        "3b304bf3-305d-4631-9ebb-4c846a195da7",
+        "323a362a-569d-47d0-995b-96029b2933a6",
+        "0665540b-3842-4a7b-8cb9-070abd57d7a0",
+        "6afe207c-ff9a-4cbb-bfc2-8470e62c9b24",
+        "acabe5ed-6421-4566-a34a-2839e933e9b1",
+        "2f7eea7f-62b8-4851-ad59-4eca0858e3a5",
+        "272ae8a5-8b1b-40c6-b6aa-0268ea4a9455",
+        "53be25b3-3ca5-4888-8915-f7c765a324d1",
+        "634fea80-19e9-4523-8c62-08a9096a2534",
+        "2e55cb9a-11af-4e19-bf59-b356a7813e7e",
+        "5ffdd3a8-4c3b-4369-ac3d-39266a4c3487",
+        "6fae8593-4e11-497f-90dc-4e83e3eeddc5",
+        "f540d5ec-4729-4c25-99af-44051faab220",
+        "ca795755-1ecc-4989-9782-41431a9de233",
+        "e01712cb-f0b9-4007-9202-ac217d73d72b",
+        "dde60446-bc34-449d-8b17-88c905cda9d8"
+      ],
+      "expected_confidence": 38
+    },
+    {
+      "id": "hair-salon-luxury",
+      "expected_ids": [
+        "6146b8d3-f84f-40ab-b6b9-c90884020e78",
+        "b45b1ab8-dae6-4b56-9d28-48e6e2990d78",
+        "27b23b27-a25b-4ffb-b5bd-92dac77a4275",
+        "d8b2fdd3-8c7a-4770-be74-04941003e1b0",
+        "bf372348-8c2d-4aa1-93fa-e6bc54d6ed17",
+        "7e71fdfb-5830-4995-bf9e-f7b5b81ed77a",
+        "2f5d7d1c-2ca8-42be-ad9e-b4ddfd77253c",
+        "57faba7b-025c-4919-adb4-374e5a4d214b",
+        "6de92bc3-f0dd-4270-ab18-d2f4a1e9e1ac",
+        "d5065884-0229-4607-af52-63e308ecb656",
+        "3b304bf3-305d-4631-9ebb-4c846a195da7",
+        "323a362a-569d-47d0-995b-96029b2933a6",
+        "0665540b-3842-4a7b-8cb9-070abd57d7a0",
+        "6afe207c-ff9a-4cbb-bfc2-8470e62c9b24",
+        "acabe5ed-6421-4566-a34a-2839e933e9b1",
+        "2f7eea7f-62b8-4851-ad59-4eca0858e3a5",
+        "272ae8a5-8b1b-40c6-b6aa-0268ea4a9455",
+        "53be25b3-3ca5-4888-8915-f7c765a324d1",
+        "634fea80-19e9-4523-8c62-08a9096a2534",
+        "2e55cb9a-11af-4e19-bf59-b356a7813e7e",
+        "5ffdd3a8-4c3b-4369-ac3d-39266a4c3487",
+        "6fae8593-4e11-497f-90dc-4e83e3eeddc5",
+        "f540d5ec-4729-4c25-99af-44051faab220",
+        "ca795755-1ecc-4989-9782-41431a9de233",
+        "e01712cb-f0b9-4007-9202-ac217d73d72b",
+        "dde60446-bc34-449d-8b17-88c905cda9d8"
+      ],
+      "expected_confidence": 39
+    }
+  ]
+}

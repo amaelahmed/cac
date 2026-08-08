@@ -1,0 +1,12 @@
+project:
+  id: "proj-cafe-304"
+  name: "2026 Cafe Marketing Insights"
+  created_by: "CAC Research Team"
+
+source:
+  id: "src-cac-expert-04"
+  type: "Internal"
+  url: "internal://cac/cafe-2026"
+  publication_date: "2026-06-01"
+  reliability_score: 95
+  citation_notes: "CAC Expert Synthesis derived from 150+ cafe analyses."

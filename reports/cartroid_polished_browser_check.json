@@ -1,0 +1,15 @@
+{
+  "url": "http://localhost:8798/details/",
+  "hasQuickSummary": true,
+  "hasLaunchReadiness": true,
+  "hasTopPosts": true,
+  "hasOpenFullCalendar": true,
+  "hasInternalChecks": false,
+  "hasRawSourceId": false,
+  "mentionsCartroid": true,
+  "mentionsKozhikodeOrCalicut": true,
+  "consoleIssues": [],
+  "calendarModalHasCardFields": true,
+  "fullPlanScreenshot": "reports/cartroid_full_plan_polished.png",
+  "calendarModalScreenshot": "reports/cartroid_calendar_modal_polished.png"
+}

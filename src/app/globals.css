@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+@variant dark (&:is(.dark *));
+
+@theme {
+  --color-brand-primary: #000000;
+  --color-brand-secondary: #ffffff;
+  --color-brand-accent: #ff3300;
+  --color-brand-bg: #050505;
+  --color-brand-text: #f5f5f5;
+  --color-brand-muted: #9ca3af;
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-space-grotesk);
+}
+
+:root {
+  --background: var(--color-brand-bg);
+  --foreground: var(--color-brand-text);
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+/* Kept local to the post-July-5 sample route so it cannot alter historical pages. */
+.cac-shell {
+  width: min(100% - 2rem, 72rem);
+  margin-inline: auto;
+}
+
+.cac-page {
+  --page-bg: #f7f6f2;
+  --page-surface: #ffffff;
+  --page-surface-soft: #efede7;
+  --page-text: #11110f;
+  --page-muted: #6d6961;
+  --page-line: #d9d5cc;
+  --page-accent: #ff4a1f;
+  min-height: 100vh;
+  padding-block: 7rem 5rem;
+  background: var(--page-bg);
+  color: var(--page-text);
+}
+
+.dark .cac-page {
+  --page-bg: #0a0a09;
+  --page-surface: #121211;
+  --page-surface-soft: #1b1a18;
+  --page-text: #f5f3ed;
+  --page-muted: #a8a39a;
+  --page-line: #302e2a;
+  --page-accent: #ff5a30;
+}
+
+.cac-kicker {
+  color: var(--page-accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.cac-title {
+  max-width: 13ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 5.75rem);
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.cac-page-title {
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 4.25rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.cac-lede {
+  max-width: 42rem;
+  color: var(--page-muted);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.7;
+}
+
+.cac-panel {
+  border: 1px solid var(--page-line);
+  background: var(--page-surface);
+}
+
+.cac-panel-soft {
+  border: 1px solid var(--page-line);
+  background: var(--page-surface-soft);
+}
+
+.cac-action-rail {
+  border: 1px solid var(--page-line);
+  border-left: 4px solid var(--page-accent);
+  background: var(--page-surface);
+}
+
+.cac-button-primary,
+.cac-button-secondary {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+  padding: 0.7rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 750;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease;
+}
+
+.cac-button-primary {
+  background: var(--page-accent);
+  color: #11110f;
+}
+
+.cac-button-primary:hover {
+  background: #ff6b46;
+  transform: translateY(-1px);
+}
+
+.cac-button-secondary {
+  border-color: var(--page-line);
+  background: var(--page-surface);
+  color: var(--page-text);
+}
+
+.cac-button-secondary:hover {
+  border-color: var(--page-muted);
+  background: var(--page-surface-soft);
+}
+
+.cac-disclosure > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.cac-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.cac-disclosure > summary::after {
+  content: "+";
+  margin-left: auto;
+  color: var(--page-muted);
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.cac-disclosure[open] > summary::after {
+  content: "−";
+}
+
+@media (max-width: 640px) {
+  .cac-shell {
+    width: min(100% - 1.25rem, 72rem);
+  }
+
+  .cac-page {
+    padding-block: 5.75rem 3.5rem;
+  }
+}
+
+select {
+  color-scheme: light dark;
+}
+
+select option {
+  background: #ffffff;
+  color: #000000;
+}
+
+.dark select option {
+  background: #080808;
+  color: #f5f5f5;
+}
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  nav,
+  footer,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  main,
+  section,
+  div {
+    color: #000000 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  section {
+    break-inside: avoid;
+  }
+}

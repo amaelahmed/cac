@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "group": "salon",
+  "totalBlocks": 22,
+  "parseErrors": [],
+  "validation": [],
+  "warnings": [],
+  "counts": {
+    "bySectionType": {
+      "hygiene_proof_card": 1,
+      "whatsapp_reply_card": 1,
+      "review_request_card": 1,
+      "booking_trust_card": 1,
+      "customer_problem_card": 1,
+      "instagram_content_card": 1,
+      "repeat_visit_card": 1,
+      "service_menu_card": 1,
+      "simple_offer_card": 1,
+      "google_business_card": 1,
+      "stylist_trust_card": 1,
+      "delay_message_card": 1,
+      "aftercare_card": 1,
+      "bridal_trial_card": 1,
+      "walk_in_booking_card": 1,
+      "no_show_policy_card": 1,
+      "student_offer_card": 1,
+      "family_package_card": 1,
+      "men_grooming_card": 1,
+      "referral_card": 1,
+      "festival_booking_card": 1,
+      "local_discovery_card": 1
+    },
+    "byBusinessType": {
+      "salon": 22
+    },
+    "byCategory": {
+      "salon": 22,
+      "beauty_studio": 21,
+      "grooming_studio": 11
+    },
+    "byLaunchStatus": {
+      "running": 22,
+      "early_stage": 14
+    },
+    "byPlatform": {
+      "instagram": 4,
+      "whatsapp": 20,
+      "in_store": 15,
+      "google_business": 4
+    }
+  }
+}

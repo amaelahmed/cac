@@ -1,0 +1,1494 @@
+{
+  "checks": {
+    "id": "cartroid_custom_prelaunch",
+    "valid": true,
+    "selectedBlocks": 51,
+    "counts": {
+      "calendar": 30,
+      "strategy": 10,
+      "customerThoughts": 10,
+      "customerProblems": 10,
+      "competitors": 10,
+      "ideas": 20,
+      "advanced": 10
+    },
+    "firstStrategy": "Make 5 Sample Products First",
+    "firstCalendarHook": "Custom gifts are coming to Kozhikode.",
+    "customMarkers": [
+      "custom gifts are coming",
+      "make 5 sample products first",
+      "will the final product look good?",
+      "normal gift shops",
+      "preview challenge"
+    ],
+    "bannedMatches": [],
+    "pass": true
+  },
+  "sample": {
+    "calendarFirst10": [
+      {
+        "day": 1,
+        "post_type": "Reel",
+        "hook": "Custom gifts are coming to Kozhikode.",
+        "caption": "Cartroid is opening soon. Send your idea, see a preview, confirm it, and get your customised product made.",
+        "how_to_create": [
+          "Show 3 sample products on a table.",
+          "Record close-up shots.",
+          "Add text: Send idea -> See preview -> Confirm -> Get it made."
+        ],
+        "customer_action": "Message preview on WhatsApp.",
+        "why_this_works": "People understand what you sell when they see real sample products.",
+        "platform": "Instagram / WhatsApp",
+        "topic": "Custom gifts are coming to Kozhikode.",
+        "ready_caption": "Cartroid is opening soon. Send your idea, see a preview, confirm it, and get your customised product made.",
+        "what_to_show": "Show 3 sample products on a table. Record close-up shots. Add text: Send idea -> See preview -> Confirm -> Get it made.",
+        "full_caption": "Cartroid is opening soon. Send your idea, see a preview, confirm it, and get your customised product made.\n\nCustomer action: Message preview on WhatsApp.",
+        "hashtags": [
+          "#Kozhikode",
+          "#KozhikodeBusiness",
+          "#KozhikodeRetail",
+          "#customised",
+          "#photo",
+          "#gifts",
+          "#name",
+          "#supportlocal",
+          "#smallbusinessindia",
+          "#whatsapporders"
+        ],
+        "why_this_helps": "People understand what you sell when they see real sample products.",
+        "why_suggested": "People understand what you sell when they see real sample products.",
+        "theme": "Reel",
+        "post": "Show 3 sample products on a table. Record close-up shots. Add text: Send idea -> See preview -> Confirm -> Get it made."
+      },
+      {
+        "day": 2,
+        "post_type": "Story poll",
+        "hook": "Which design should we launch first?",
+        "caption": "Help us choose Cartroid's first design.",
+        "how_to_create": [
+          "Show two sample designs.",
+          "Add a poll sticker.",
+          "Share the winning design the next day."
+        ],
+        "customer_action": "Vote on the poll.",
+        "why_this_works": "Students remember the brand better when they help choose something.",
+        "platform": "Instagram / WhatsApp",
+        "topic": "Which design should we launch first?",
+        "ready_caption": "Help us choose Cartroid's first design.",
+        "what_to_show": "Show two sample designs. Add a poll sticker. Share the winning design the next day.",
+        "full_caption": "Help us choose Cartroid's first design.\n\nCustomer action: Vote on the poll.",
+        "hashtags": [
+          "#Kozhikode",
+          "#KozhikodeBusiness",
+          "#KozhikodeRetail",
+          "#customised",
+          "#photo",
+          "#gifts",
+          "#name",
+          "#supportlocal",
+          "#smallbusinessindia",
+          "#whatsapporders"
+        ],
+        "why_this_helps": "Students remember the brand better when they help choose something.",
+        "why_suggested": "Students remember the brand better when they help choose something.",
+        "theme": "Story poll",
+        "post": "Show two sample designs. Add a poll sticker. Share the winning design the next day."
+      },
+      {
+        "day": 3,
+        "post_type": "Carousel",
+        "hook": "Ordering from Cartroid is simple.",
+        "caption": "Send your idea. See a preview. Confirm the design. Get it made and delivered in Kozhikode.",
+        "how_to_create": [
+          "Make 4 slides.",
+          "Slide 1: send idea.",
+          "Slide 2: see preview.",
+          "Slide 3: confirm.",
+          "Slide 4: get it made and delivered."
+        ],
+        "customer_action": "Save the post or message on WhatsApp.",
+        "why_this_works": "A clear order process removes fear before the first message.",
+        "platform": "Instagram / WhatsApp",
+        "topic": "Ordering from Cartroid is simple.",
+        "ready_caption": "Send your idea. See a preview. Confirm the design. Get it made and delivered in Kozhikode.",
+        "what_to_show": "Make 4 slides. Slide 1: send idea. Slide 2: see preview. Slide 3: confirm. Slide 4: get it made and delivered.",
+        "full_caption": "Send your idea. See a preview. Confirm the design. Get it made and delivered in Kozhikode.\n\nCustomer action: Save the post or message on WhatsApp.",
+        "hashtags": [
+          "#Kozhikode",
+          "#KozhikodeBusiness",
+          "#KozhikodeRetail",
+          "#customised",
+          "#photo",
+          "#gifts",
+          "#name",
+          "#supportlocal",
+          "#smallbusinessindia",
+          "#whatsapporders"
+        ],
+        "why_this_helps": "A clear order process removes fear before the first message.",
+        "why_suggested": "A clear order process removes fear before the first message.",
+        "theme": "Carousel",
+        "post": "Make 4 slides. Slide 1: send idea. Slide 2: see preview. Slide 3: confirm. Slide 4: get it made and delivered."
+      },
+      {
+        "day": 4,
+        "post_type": "Reel",
+        "hook": "We make only after you confirm.",
+        "caption": "Before we make your custom product, we show you a preview. You can check name, photo, colour, size, and spelling.",
+        "how_to_create": [
+          "Show a sample preview on screen.",
+          "Then show the final product.",
+          "Keep the video short and clear."
+        ],
+        "customer_action": "Message preview.",
+        "why_this_works": "Preview confirmation makes custom orders feel safer.",
+        "platform": "Instagram / WhatsApp",
+        "topic": "We make only after you confirm.",
+        "ready_caption": "Before we make your custom product, we show you a preview. You can check name, photo, colour, size, and spelling.",
+        "what_to_show": "Show a sample preview on screen. Then show the final product. Keep the video short and clear.",
+        "full_caption": "Before we make your custom product, we show you a preview. You can check name, photo, colour, size, and spelling.\n\nCustomer action: Message preview.",
+        "hashtags": [
+          "#Kozhikode",
+          "#KozhikodeBusiness",
+          "#KozhikodeRetail",
+          "#customised",
+          "#photo",
+          "#gifts",
+          "#name",
+          "#supportlocal",
+          "#smallbusinessindia",
+          "#whatsapporders"
+        ],
+        "why_this_helps": "Preview confirmation makes custom orders feel safer.",
+        "why_suggested": "Preview confirmation makes custom orders feel safer.",
+        "theme": "Reel",
+        "post": "Show a sample preview on screen. Then show the final product. Keep the video short and clear."
+      },
+      {
+        "day": 5,
+        "post_type": "Post",
+        "hook": "No guessing about price.",
+        "caption": "Cartroid prices depend on product type, size, design detail, and delivery. Send your idea and we will guide you.",
+        "how_to_create": [
+          "Show 3 sample products.",
+          "Add starting from price placeholders.",
+          "Mention that final price depends on details."
+        ],
+        "customer_action": "Message your budget.",
+        "why_this_works": "Students may avoid messaging if they think it will be too expensive.",
+        "platform": "Instagram / WhatsApp",
+        "topic": "No guessing about price.",
+        "ready_caption": "Cartroid prices depend on product type, size, design detail, and delivery. Send your idea and we will guide you.",
+        "what_to_show": "Show 3 sample products. Add starting from price placeholders. Mention that final price depends on details.",
+        "full_caption": "Cartroid prices depend on product type, size, design detail, and delivery. Send your idea and we will guide you.\n\nCustomer action: Message your budget.",
+        "hashtags": [
+          "#Kozhikode",
+          "#KozhikodeBusiness",
+          "#KozhikodeRetail",
+          "#customised",
+          "#photo",
+          "#gifts",
+          "#name",
+          "#supportlocal",
+          "#smallbusinessindia",
+          "#whatsapporders"
+        ],
+        "why_this_helps": "Students may avoid messaging if they think it will be too expensive.",
+        "why_suggested": "Students may avoid messaging if they think it will be too expensive.",
+        "theme": "Post",
+        "post": "Show 3 sample products. Add starting from price placeholders. Mention that final price depends on details."
+      },
+      {
+        "day": 6,
+        "post_type": "Reel",
+        "hook": "From idea to gift.",
+        "caption": "A simple idea can become a personal gift when every detail is checked properly.",
+        "how_to_create": [
+          "Record hands making, cutting, packing, or arranging the product.",
+          "Show the final look at the end."
+        ],
+        "customer_action": "Ask how many days your idea will take.",
+        "why_this_works": "Making videos show that the product is real and handled with care.",
+        "platform": "Instagram / WhatsApp",
+        "topic": "From idea to gift.",
+        "ready_caption": "A simple idea can become a personal gift when every detail is checked properly.",
+        "what_to_show": "Record hands making, cutting, packing, or arranging the product. Show the final look at the end.",
+        "full_caption": "A simple idea can become a personal gift when every detail is checked properly.\n\nCustomer action: Ask how many days your idea will take.",
+        "hashtags": [
+          "#Kozhikode",
+          "#KozhikodeBusiness",
+          "#KozhikodeRetail",
+          "#customised",
+          "#photo",
+          "#gifts",
+          "#name",
+          "#supportlocal",
+          "#smallbusinessindia",
+          "#whatsapporders"
+        ],
+        "why_this_helps": "Making videos show that the product is real and handled with care.",
+        "why_suggested": "Making videos show that the product is real and handled with care.",
+        "theme": "Reel",
+        "post": "Record hands making, cutting, packing, or arranging the product. Show the final look at the end."
+      },
+      {
+        "day": 7,
+        "post_type": "Story",
+        "hook": "Which area should we deliver to first?",
+        "caption": "Cartroid is preparing delivery and pickup around Kozhikode. Reply with your area or college.",
+        "how_to_create": [
+          "Use a question sticker.",
+          "Ask for area or college name.",
+          "Save the answers in a simple list."
+        ],
+        "customer_action": "Reply with area name.",
+        "why_this_works": "Local delivery clarity reduces doubt before ordering.",
+        "platform": "Instagram / WhatsApp",
+        "topic": "Which area should we deliver to first?",
+        "ready_caption": "Cartroid is preparing delivery and pickup around Kozhikode. Reply with your area or college.",
+        "what_to_show": "Use a question sticker. Ask for area or college name. Save the answers in a simple list.",
+        "full_caption": "Cartroid is preparing delivery and pickup around Kozhikode. Reply with your area or college.\n\nCustomer action: Reply with area name.",
+        "hashtags": [
+          "#Kozhikode",
+          "#KozhikodeBusiness",
+          "#KozhikodeRetail",
+          "#customised",
+          "#photo",
+          "#gifts",
+          "#name",
+          "#supportlocal",
+          "#smallbusinessindia",
+          "#whatsapporders"
+        ],
+        "why_this_helps": "Local delivery clarity reduces doubt before ordering.",
+        "why_suggested": "Local delivery clarity reduces doubt before ordering.",
+        "theme": "Story",
+        "post": "Use a question sticker. Ask for area or college name. Save the answers in a simple list."
+      },
+      {
+        "day": 8,
+        "post_type": "Reel",
+        "hook": "For the friend who says no gifts.",
+        "caption": "Some gifts are kept because they feel personal. Send us a name, photo, or idea.",
+        "how_to_create": [
+          "Show one sample birthday gift.",
+          "Use simple packing.",
+          "End with the order step."
+        ],
+        "customer_action": "Tag a friend.",
+        "why_this_works": "Occasion-based posts help buyers imagine who the gift is for.",
+        "platform": "Instagram / WhatsApp",
+        "topic": "For the friend who says no gifts.",
+        "ready_caption": "Some gifts are kept because they feel personal. Send us a name, photo, or idea.",
+        "what_to_show": "Show one sample birthday gift. Use simple packing. End with the order step.",
+        "full_caption": "Some gifts are kept because they feel personal. Send us a name, photo, or idea.\n\nCustomer action: Tag a friend.",
+        "hashtags": [
+          "#Kozhikode",
+          "#KozhikodeBusiness",
+          "#KozhikodeRetail",
+          "#customised",
+          "#photo",
+          "#gifts",
+          "#name",
+          "#supportlocal",
+          "#smallbusinessindia",
+          "#whatsapporders"
+        ],
+        "why_this_helps": "Occasion-based posts help buyers imagine who the gift is for.",
+        "why_suggested": "Occasion-based posts help buyers imagine who the gift is for.",
+        "theme": "Reel",
+        "post": "Show one sample birthday gift. Use simple packing. End with the order step."
+      },
+      {
+        "day": 9,
+        "post_type": "Carousel",
+        "hook": "Custom orders need careful checking.",
+        "caption": "Before making, we check name, spelling, photo, colour, size, and delivery date.",
+        "how_to_create": [
+          "Create a checklist-style carousel.",
+          "Use one detail per slide.",
+          "End with preview confirmation."
+        ],
+        "customer_action": "Save before ordering.",
+        "why_this_works": "Mistake-prevention content builds trust before payment.",
+        "platform": "Instagram / WhatsApp",
+        "topic": "Custom orders need careful checking.",
+        "ready_caption": "Before making, we check name, spelling, photo, colour, size, and delivery date.",
+        "what_to_show": "Create a checklist-style carousel. Use one detail per slide. End with preview confirmation.",
+        "full_caption": "Before making, we check name, spelling, photo, colour, size, and delivery date.\n\nCustomer action: Save before ordering.",
+        "hashtags": [
+          "#Kozhikode",
+          "#KozhikodeBusiness",
+          "#KozhikodeRetail",
+          "#customised",
+          "#photo",
+          "#gifts",
+          "#name",
+          "#supportlocal",
+          "#smallbusinessindia",
+          "#whatsapporders"
+        ],
+        "why_this_helps": "Mistake-prevention content builds trust before payment.",
+        "why_suggested": "Mistake-prevention content builds trust before payment.",
+        "theme": "Carousel",
+        "post": "Create a checklist-style carousel. Use one detail per slide. End with preview confirmation."
+      },
+      {
+        "day": 10,
+        "post_type": "Reel",
+        "hook": "First 10 test orders are opening.",
+        "caption": "Cartroid is starting slowly so every custom detail is checked properly. Message slot to reserve one.",
+        "how_to_create": [
+          "Show sample products.",
+          "Show WhatsApp order steps.",
+          "Show the launch offer clearly."
+        ],
+        "customer_action": "Message slot.",
+        "why_this_works": "A small first batch helps the owner learn without taking too many orders.",
+        "platform": "Instagram / WhatsApp",
+        "topic": "First 10 test orders are opening.",
+        "ready_caption": "Cartroid is starting slowly so every custom detail is checked properly. Message slot to reserve one.",
+        "what_to_show": "Show sample products. Show WhatsApp order steps. Show the launch offer clearly.",
+        "full_caption": "Cartroid is starting slowly so every custom detail is checked properly. Message slot to reserve one.\n\nCustomer action: Message slot.",
+        "hashtags": [
+          "#Kozhikode",
+          "#KozhikodeBusiness",
+          "#KozhikodeRetail",
+          "#customised",
+          "#photo",
+          "#gifts",
+          "#name",
+          "#supportlocal",
+          "#smallbusinessindia",
+          "#whatsapporders"
+        ],
+        "why_this_helps": "A small first batch helps the owner learn without taking too many orders.",
+        "why_suggested": "A small first batch helps the owner learn without taking too many orders.",
+        "theme": "Reel",
+        "post": "Show sample products. Show WhatsApp order steps. Show the launch offer clearly."
+      }
+    ],
+    "strategyFirst10": [
+      {
+        "step": 1,
+        "title": "Make 5 Sample Products First",
+        "why_this_matters": "People will not trust a new custom product store without seeing real products.",
+        "reason": "People will not trust a new custom product store without seeing real products.",
+        "why_suggested": "People will not trust a new custom product store without seeing real products.",
+        "steps": [
+          "Make 5 sample products.",
+          "Record videos.",
+          "Post them on Instagram.",
+          "Share them on WhatsApp status.",
+          "Ask people which one they like."
+        ],
+        "action_steps": [
+          "Make 5 sample products.",
+          "Record videos.",
+          "Post them on Instagram.",
+          "Share them on WhatsApp status.",
+          "Ask people which one they like."
+        ],
+        "example_for_this_business": "Cartroid can make samples for birthdays, farewell, best friends, couples, and college gifts.",
+        "track_this": "Price questions, WhatsApp messages, and story replies.",
+        "what_to_check": "Price questions, WhatsApp messages, and story replies.",
+        "copy_ready_text": "Which sample should we launch first? Reply with your favourite.",
+        "priority": "Do this first",
+        "effort": "Simple task",
+        "timeline": "Do this today"
+      },
+      {
+        "step": 2,
+        "title": "Set Up WhatsApp Ordering",
+        "why_this_matters": "Custom orders need clear steps.",
+        "reason": "Custom orders need clear steps.",
+        "why_suggested": "Custom orders need clear steps.",
+        "steps": [
+          "Create WhatsApp Business profile.",
+          "Add business name and logo.",
+          "Add quick replies.",
+          "Add product photos.",
+          "Pin the order process."
+        ],
+        "action_steps": [
+          "Create WhatsApp Business profile.",
+          "Add business name and logo.",
+          "Add quick replies.",
+          "Add product photos.",
+          "Pin the order process."
+        ],
+        "example_for_this_business": "Cartroid can pin: Send your idea, see a preview, confirm, then we make it.",
+        "track_this": "More complete first messages.",
+        "what_to_check": "More complete first messages.",
+        "copy_ready_text": "Send your idea, see a preview, confirm, then we make it.",
+        "priority": "Do this first",
+        "effort": "Simple task",
+        "timeline": "Do this today"
+      },
+      {
+        "step": 3,
+        "title": "Create Instagram Highlights",
+        "why_this_matters": "New visitors should understand the shop in 10 seconds.",
+        "reason": "New visitors should understand the shop in 10 seconds.",
+        "why_suggested": "New visitors should understand the shop in 10 seconds.",
+        "steps": [
+          "Create highlights: How to Order, Samples, Prices, Delivery, FAQ, Offers.",
+          "Add one clear story to each highlight.",
+          "Update them when customers ask repeat questions."
+        ],
+        "action_steps": [
+          "Create highlights: How to Order, Samples, Prices, Delivery, FAQ, Offers.",
+          "Add one clear story to each highlight.",
+          "Update them when customers ask repeat questions."
+        ],
+        "example_for_this_business": "Cartroid can keep the order steps visible even when posts move down the feed.",
+        "track_this": "Profile visits turning into messages.",
+        "what_to_check": "Profile visits turning into messages.",
+        "copy_ready_text": "New here? Check How to Order before messaging us.",
+        "priority": "Do this first",
+        "effort": "Simple task",
+        "timeline": "Do this today"
+      },
+      {
+        "step": 4,
+        "title": "Run a 7-Day Launch Countdown",
+        "why_this_matters": "People need to see you more than once before they remember you.",
+        "reason": "People need to see you more than once before they remember you.",
+        "why_suggested": "People need to see you more than once before they remember you.",
+        "steps": [
+          "Day 1: teaser.",
+          "Day 2: sample product.",
+          "Day 3: how to order.",
+          "Day 4: price clarity.",
+          "Day 5: delivery area.",
+          "Day 6: launch offer.",
+          "Day 7: test orders open."
+        ],
+        "action_steps": [
+          "Day 1: teaser.",
+          "Day 2: sample product.",
+          "Day 3: how to order.",
+          "Day 4: price clarity.",
+          "Day 5: delivery area.",
+          "Day 6: launch offer.",
+          "Day 7: test orders open."
+        ],
+        "example_for_this_business": "Cartroid can repeat the same launch story in different simple formats.",
+        "track_this": "Story replies, saves, shares, and preview messages.",
+        "what_to_check": "Story replies, saves, shares, and preview messages.",
+        "copy_ready_text": "Test orders open soon. Follow today so you do not miss the first slots.",
+        "priority": "Do this this week",
+        "effort": "Simple task",
+        "timeline": "Do this within 7 days"
+      },
+      {
+        "step": 5,
+        "title": "Show Preview Before Making",
+        "why_this_matters": "This is the biggest trust step for custom products.",
+        "reason": "This is the biggest trust step for custom products.",
+        "why_suggested": "This is the biggest trust step for custom products.",
+        "steps": [
+          "Ask for name, photo, colour, size, and date.",
+          "Send preview.",
+          "Ask customer to confirm.",
+          "Start making only after confirmation."
+        ],
+        "action_steps": [
+          "Ask for name, photo, colour, size, and date.",
+          "Send preview.",
+          "Ask customer to confirm.",
+          "Start making only after confirmation."
+        ],
+        "example_for_this_business": "Cartroid can show a sample preview beside a final product.",
+        "track_this": "Fewer doubts before payment.",
+        "what_to_check": "Fewer doubts before payment.",
+        "copy_ready_text": "We make only after you confirm the preview.",
+        "priority": "Do this this week",
+        "effort": "Simple task",
+        "timeline": "Do this within 7 days"
+      },
+      {
+        "step": 6,
+        "title": "Start With First 10 Orders",
+        "why_this_matters": "Do not try to take too many orders at the start.",
+        "reason": "Do not try to take too many orders at the start.",
+        "why_suggested": "Do not try to take too many orders at the start.",
+        "steps": [
+          "Open only 10 test order slots.",
+          "Handle every order carefully.",
+          "Take photos and feedback.",
+          "Improve the process.",
+          "Then open more slots."
+        ],
+        "action_steps": [
+          "Open only 10 test order slots.",
+          "Handle every order carefully.",
+          "Take photos and feedback.",
+          "Improve the process.",
+          "Then open more slots."
+        ],
+        "example_for_this_business": "Cartroid can say: First 10 test orders are opening soon in Kozhikode.",
+        "track_this": "Slot messages and completed first orders.",
+        "what_to_check": "Slot messages and completed first orders.",
+        "copy_ready_text": "Message slot to reserve one.",
+        "priority": "Do this this week",
+        "effort": "Simple task",
+        "timeline": "Do this within 7 days"
+      },
+      {
+        "step": 7,
+        "title": "Make One Clear Price Post",
+        "why_this_matters": "Students may avoid messaging if they think it is expensive.",
+        "reason": "Students may avoid messaging if they think it is expensive.",
+        "why_suggested": "Students may avoid messaging if they think it is expensive.",
+        "steps": [
+          "Show starting price range.",
+          "Explain what changes price.",
+          "Mention delivery separately.",
+          "Ask people to send budget."
+        ],
+        "action_steps": [
+          "Show starting price range.",
+          "Explain what changes price.",
+          "Mention delivery separately.",
+          "Ask people to send budget."
+        ],
+        "example_for_this_business": "Cartroid can show three product examples with starting prices.",
+        "track_this": "Price questions from serious buyers.",
+        "what_to_check": "Price questions from serious buyers.",
+        "copy_ready_text": "Send your idea and budget. We will suggest the best option.",
+        "priority": "Do this this week",
+        "effort": "Simple task",
+        "timeline": "Do this within 7 days"
+      },
+      {
+        "step": 8,
+        "title": "Use Local Language Lightly",
+        "why_this_matters": "Cartroid should feel local, not like a random online page.",
+        "reason": "Cartroid should feel local, not like a random online page.",
+        "why_suggested": "Cartroid should feel local, not like a random online page.",
+        "steps": [
+          "Use simple Malayalam-English in some posts.",
+          "Keep order details in clear English.",
+          "Test one local-style caption each week."
+        ],
+        "action_steps": [
+          "Use simple Malayalam-English in some posts.",
+          "Keep order details in clear English.",
+          "Test one local-style caption each week."
+        ],
+        "example_for_this_business": "Gift venam, but basic aakaruthu. Send your idea. We'll show a preview.",
+        "track_this": "Shares and replies from local students.",
+        "what_to_check": "Shares and replies from local students.",
+        "copy_ready_text": "Gift venam, but basic aakaruthu. Send your idea. We'll show a preview.",
+        "priority": "Do after the basics",
+        "effort": "Simple task",
+        "timeline": "Do this within 30 days"
+      },
+      {
+        "step": 9,
+        "title": "Collect First Proof",
+        "why_this_matters": "After first orders, proof becomes your strongest marketing.",
+        "reason": "After first orders, proof becomes your strongest marketing.",
+        "why_suggested": "After first orders, proof becomes your strongest marketing.",
+        "steps": [
+          "Send final product photo.",
+          "Ask customer for review.",
+          "Ask permission to post.",
+          "Share packaging or delivery photo."
+        ],
+        "action_steps": [
+          "Send final product photo.",
+          "Ask customer for review.",
+          "Ask permission to post.",
+          "Share packaging or delivery photo."
+        ],
+        "example_for_this_business": "Cartroid can turn each first order into a future trust post.",
+        "track_this": "Reviews, customer photos, and permission to post.",
+        "what_to_check": "Reviews, customer photos, and permission to post.",
+        "copy_ready_text": "Your review helps a new local business grow.",
+        "priority": "Do after the basics",
+        "effort": "Simple task",
+        "timeline": "Do this within 30 days"
+      },
+      {
+        "step": 10,
+        "title": "Review Every Sunday",
+        "why_this_matters": "Do not guess what is working.",
+        "reason": "Do not guess what is working.",
+        "why_suggested": "Do not guess what is working.",
+        "steps": [
+          "Check which post got messages.",
+          "Check which product got price questions.",
+          "Check which story got replies.",
+          "Check which caption people shared.",
+          "Write the repeated question for next week's content."
+        ],
+        "action_steps": [
+          "Check which post got messages.",
+          "Check which product got price questions.",
+          "Check which story got replies.",
+          "Check which caption people shared.",
+          "Write the repeated question for next week's content."
+        ],
+        "example_for_this_business": "Cartroid can choose next week's posts from real replies, not random ideas.",
+        "track_this": "A clear list of what to repeat next week.",
+        "what_to_check": "A clear list of what to repeat next week.",
+        "copy_ready_text": "This week we learned what people ask most. Next week we will answer it better.",
+        "priority": "Do after the basics",
+        "effort": "Simple task",
+        "timeline": "Do this within 30 days"
+      }
+    ],
+    "psychologyFirst10": [
+      {
+        "customer_thought": "People trust what they can see",
+        "what_it_means": "Do not only say good quality.",
+        "what_to_show": "Show real videos, close-ups, and final product photos.",
+        "what_to_say": "Here is the material and finish before it becomes a gift.",
+        "why_this_works": "Seeing feels safer than reading."
+      },
+      {
+        "customer_thought": "People fear custom mistakes",
+        "what_it_means": "Custom orders can go wrong.",
+        "what_to_show": "Show preview confirmation.",
+        "what_to_say": "We make only after you confirm the preview.",
+        "why_this_works": "Customers feel safe when they approve before making."
+      },
+      {
+        "customer_thought": "Students avoid unknown prices",
+        "what_it_means": "Many students will not message if they think it is costly.",
+        "what_to_show": "Show starting prices.",
+        "what_to_say": "Send your idea and budget. We will suggest the best option.",
+        "why_this_works": "Clear price brings serious enquiries."
+      },
+      {
+        "customer_thought": "People need a simple next step",
+        "what_it_means": "Do not make them think too much.",
+        "what_to_show": "End posts with one action.",
+        "what_to_say": "Message preview on WhatsApp.",
+        "why_this_works": "One clear action gets more messages."
+      },
+      {
+        "customer_thought": "People like feeling involved",
+        "what_it_means": "Before launch, involve followers.",
+        "what_to_show": "Use polls and design voting.",
+        "what_to_say": "Which design should we launch first?",
+        "why_this_works": "People remember what they helped choose."
+      },
+      {
+        "customer_thought": "People buy gifts for moments",
+        "what_it_means": "They buy for birthdays, farewell, and memories.",
+        "what_to_show": "Post occasion-based gift ideas.",
+        "what_to_say": "Made for birthdays, farewell, best friends, couples, and college memories.",
+        "why_this_works": "Occasions create urgency."
+      },
+      {
+        "customer_thought": "People trust local clarity",
+        "what_it_means": "Local buyers want to know delivery and pickup.",
+        "what_to_show": "Mention Kozhikode delivery areas.",
+        "what_to_say": "Delivery and pickup available around Kozhikode. Send your area to confirm.",
+        "why_this_works": "Local clarity reduces doubt."
+      },
+      {
+        "customer_thought": "People like proof from others",
+        "what_it_means": "Early reviews matter.",
+        "what_to_show": "Post customer feedback after first orders.",
+        "what_to_say": "Your review helps a new local business grow.",
+        "why_this_works": "People trust other buyers more than brand claims."
+      },
+      {
+        "customer_thought": "People share simple ideas",
+        "what_it_means": "Simple content spreads faster.",
+        "what_to_show": "Use natural local captions.",
+        "what_to_say": "Gift venam, but basic aakaruthu.",
+        "why_this_works": "It feels natural and shareable."
+      },
+      {
+        "customer_thought": "People need repeated reminders",
+        "what_it_means": "One post is not enough.",
+        "what_to_show": "Repeat the order process in different formats.",
+        "what_to_say": "Send idea -> See preview -> Confirm -> Get it made.",
+        "why_this_works": "People understand after seeing it more than once."
+      }
+    ],
+    "painFirst10": [
+      {
+        "problem": "Will the final product look good?",
+        "customer_problem": "Will the final product look good?",
+        "why_they_feel_this": "Customers worry the product may not look like the sample.",
+        "your_solution": "Send preview before making.",
+        "text_to_use": "We make only after you confirm the preview.",
+        "content_idea": "Show a sample preview beside the final product.",
+        "what_to_do": "Send preview before making.",
+        "what_to_say": "We make only after you confirm the preview.",
+        "post_idea": "Show a sample preview beside the final product."
+      },
+      {
+        "problem": "How much will it cost?",
+        "customer_problem": "How much will it cost?",
+        "why_they_feel_this": "People may not message if price is unclear.",
+        "your_solution": "Show starting price range.",
+        "text_to_use": "Price depends on size, detail, and delivery. Send your idea and budget.",
+        "content_idea": "Make a simple starting price post.",
+        "what_to_do": "Show starting price range.",
+        "what_to_say": "Price depends on size, detail, and delivery. Send your idea and budget.",
+        "post_idea": "Make a simple starting price post."
+      },
+      {
+        "problem": "Will it reach on time?",
+        "customer_problem": "Will it reach on time?",
+        "why_they_feel_this": "Gift buyers usually need the product before a date.",
+        "your_solution": "Ask the needed date first.",
+        "text_to_use": "Tell us the date first. We will confirm timing before taking the order.",
+        "content_idea": "Post a timing chart for normal and urgent orders.",
+        "what_to_do": "Ask the needed date first.",
+        "what_to_say": "Tell us the date first. We will confirm timing before taking the order.",
+        "post_idea": "Post a timing chart for normal and urgent orders."
+      },
+      {
+        "problem": "What if spelling is wrong?",
+        "customer_problem": "What if spelling is wrong?",
+        "why_they_feel_this": "Custom names and text can go wrong.",
+        "your_solution": "Check spelling before making.",
+        "text_to_use": "Please check the spelling in the preview. We start only after confirmation.",
+        "content_idea": "Make a spelling-check carousel.",
+        "what_to_do": "Check spelling before making.",
+        "what_to_say": "Please check the spelling in the preview. We start only after confirmation.",
+        "post_idea": "Make a spelling-check carousel."
+      },
+      {
+        "problem": "Do I need to pay advance?",
+        "customer_problem": "Do I need to pay advance?",
+        "why_they_feel_this": "Advance payment can feel risky.",
+        "your_solution": "Explain it calmly.",
+        "text_to_use": "Advance is taken only after preview confirmation so we can reserve material.",
+        "content_idea": "Make a simple payment rules story.",
+        "what_to_do": "Explain it calmly.",
+        "what_to_say": "Advance is taken only after preview confirmation so we can reserve material.",
+        "post_idea": "Make a simple payment rules story."
+      },
+      {
+        "problem": "Can I change the design?",
+        "customer_problem": "Can I change the design?",
+        "why_they_feel_this": "Customers may want edits.",
+        "your_solution": "Allow changes before final confirmation.",
+        "text_to_use": "You can ask for changes before confirming the preview.",
+        "content_idea": "Show before-confirmation edit examples.",
+        "what_to_do": "Allow changes before final confirmation.",
+        "what_to_say": "You can ask for changes before confirming the preview.",
+        "post_idea": "Show before-confirmation edit examples."
+      },
+      {
+        "problem": "Is delivery available?",
+        "customer_problem": "Is delivery available?",
+        "why_they_feel_this": "Local buyers need delivery clarity.",
+        "your_solution": "Mention delivery and pickup areas.",
+        "text_to_use": "Delivery and pickup available around Kozhikode. Send your area to confirm.",
+        "content_idea": "Ask followers to reply with their area.",
+        "what_to_do": "Mention delivery and pickup areas.",
+        "what_to_say": "Delivery and pickup available around Kozhikode. Send your area to confirm.",
+        "post_idea": "Ask followers to reply with their area."
+      },
+      {
+        "problem": "Is the quality good?",
+        "customer_problem": "Is the quality good?",
+        "why_they_feel_this": "A new business has no trust yet.",
+        "your_solution": "Post material close-ups and making videos.",
+        "text_to_use": "Here is the material and finish before it becomes a gift.",
+        "content_idea": "Post a material close-up Reel.",
+        "what_to_do": "Post material close-ups and making videos.",
+        "what_to_say": "Here is the material and finish before it becomes a gift.",
+        "post_idea": "Post a material close-up Reel."
+      },
+      {
+        "problem": "I do not know what to order.",
+        "customer_problem": "I do not know what to order.",
+        "why_they_feel_this": "Some customers want a gift but have no idea.",
+        "your_solution": "Ask occasion and budget.",
+        "text_to_use": "Tell us the occasion and budget. We will suggest 2-3 ideas.",
+        "content_idea": "Make gift idea posts by budget and occasion.",
+        "what_to_do": "Ask occasion and budget.",
+        "what_to_say": "Tell us the occasion and budget. We will suggest 2-3 ideas.",
+        "post_idea": "Make gift idea posts by budget and occasion."
+      },
+      {
+        "problem": "Can I gift this to someone?",
+        "customer_problem": "Can I gift this to someone?",
+        "why_they_feel_this": "Customers need to imagine use cases.",
+        "your_solution": "Show birthday, farewell, best friend, couple, and college gift examples.",
+        "text_to_use": "Made for birthdays, farewell, best friends, couples, and college memories.",
+        "content_idea": "Show one gift use case per post.",
+        "what_to_do": "Show birthday, farewell, best friend, couple, and college gift examples.",
+        "what_to_say": "Made for birthdays, farewell, best friends, couples, and college memories.",
+        "post_idea": "Show one gift use case per post."
+      }
+    ],
+    "competitorsFirst10": [
+      {
+        "label": "Normal gift shops",
+        "other_option": "Normal gift shops",
+        "strengths": [
+          "Easy to visit and buy quickly."
+        ],
+        "what_they_do_well": "Easy to visit and buy quickly.",
+        "where_this_business_can_win": "Custom gifts feel more personal.",
+        "message_to_use": "Normal gifts are easy. Personal gifts are remembered.",
+        "post_idea": "Compare a normal gift with a personalised one.",
+        "how_to_beat_them": "Custom gifts feel more personal."
+      },
+      {
+        "label": "Instagram gift pages",
+        "other_option": "Instagram gift pages",
+        "strengths": [
+          "They show many product photos."
+        ],
+        "what_they_do_well": "They show many product photos.",
+        "where_this_business_can_win": "Show clearer order steps and preview before making.",
+        "message_to_use": "Know exactly how your order works before paying.",
+        "post_idea": "Post the full WhatsApp order process.",
+        "how_to_beat_them": "Show clearer order steps and preview before making."
+      },
+      {
+        "label": "Cheap online sellers",
+        "other_option": "Cheap online sellers",
+        "strengths": [
+          "Low price."
+        ],
+        "what_they_do_well": "Low price.",
+        "where_this_business_can_win": "Local support, preview, and faster communication.",
+        "message_to_use": "Talk to a real person before your gift is made.",
+        "post_idea": "Show local reply speed and preview steps.",
+        "how_to_beat_them": "Local support, preview, and faster communication."
+      },
+      {
+        "label": "Amazon / Flipkart",
+        "other_option": "Amazon / Flipkart",
+        "strengths": [
+          "Fast delivery and many options."
+        ],
+        "what_they_do_well": "Fast delivery and many options.",
+        "where_this_business_can_win": "More personal designs and local help.",
+        "message_to_use": "Not just delivered. Made for your person.",
+        "post_idea": "Show why a custom gift feels more personal.",
+        "how_to_beat_them": "More personal designs and local help."
+      },
+      {
+        "label": "Local printing shops",
+        "other_option": "Local printing shops",
+        "strengths": [
+          "They can print quickly."
+        ],
+        "what_they_do_well": "They can print quickly.",
+        "where_this_business_can_win": "Better gifting style, packaging, and Instagram-friendly designs.",
+        "message_to_use": "Custom product + gift feel + clear preview.",
+        "post_idea": "Show packaging and final gift feel.",
+        "how_to_beat_them": "Better gifting style, packaging, and Instagram-friendly designs."
+      },
+      {
+        "label": "College sellers",
+        "other_option": "College sellers",
+        "strengths": [
+          "They know students personally."
+        ],
+        "what_they_do_well": "They know students personally.",
+        "where_this_business_can_win": "Look more organised with WhatsApp steps, previews, and delivery clarity.",
+        "message_to_use": "Easy to order. Easy to confirm. Easy to gift.",
+        "post_idea": "Show highlight tabs and order steps.",
+        "how_to_beat_them": "Look more organised with WhatsApp steps, previews, and delivery clarity."
+      },
+      {
+        "label": "Big gift stores",
+        "other_option": "Big gift stores",
+        "strengths": [
+          "They look established."
+        ],
+        "what_they_do_well": "They look established.",
+        "where_this_business_can_win": "Personal attention and flexible customisation.",
+        "message_to_use": "Your idea gets personal attention, not just a shelf product.",
+        "post_idea": "Show a one-idea-to-final-product story.",
+        "how_to_beat_them": "Personal attention and flexible customisation."
+      },
+      {
+        "label": "Cheaper custom pages",
+        "other_option": "Cheaper custom pages",
+        "strengths": [
+          "They attract price-sensitive buyers."
+        ],
+        "what_they_do_well": "They attract price-sensitive buyers.",
+        "where_this_business_can_win": "Show quality, material, and mistake-prevention process.",
+        "message_to_use": "Cheap is not useful if the name, photo, or date goes wrong.",
+        "post_idea": "Post the mistake-prevention checklist.",
+        "how_to_beat_them": "Show quality, material, and mistake-prevention process."
+      },
+      {
+        "label": "Trendy product pages",
+        "other_option": "Trendy product pages",
+        "strengths": [
+          "They follow trends."
+        ],
+        "what_they_do_well": "They follow trends.",
+        "where_this_business_can_win": "Turn trends into local custom gift ideas.",
+        "message_to_use": "Trending style, made personal for your friend.",
+        "post_idea": "Post a trend as a local gift idea.",
+        "how_to_beat_them": "Turn trends into local custom gift ideas."
+      },
+      {
+        "label": "No competitor given",
+        "other_option": "No competitor given",
+        "strengths": [
+          "Customers still compare with common choices."
+        ],
+        "what_they_do_well": "Customers still compare with common choices.",
+        "where_this_business_can_win": "Cartroid can compare against normal gifts, online sellers, printing shops, Instagram pages, and cheap sellers.",
+        "message_to_use": "Cartroid is safer and easier to order from.",
+        "post_idea": "Make a simple comparison carousel.",
+        "how_to_beat_them": "Cartroid can compare against normal gifts, online sellers, printing shops, Instagram pages, and cheap sellers."
+      }
+    ],
+    "ideasFirst20": [
+      {
+        "idea": 1,
+        "title": "Preview Challenge",
+        "idea_title": "Preview Challenge",
+        "opportunity": "Preview Challenge",
+        "where_to_post": "Instagram Reels",
+        "why_it_can_work": "This gives people a clear reason to react, save, share, or message.",
+        "expected_help": "More replies, saves, shares, and clear product interest.",
+        "what_to_do": "Show one design preview and ask people to guess the final product.",
+        "what_to_show": "Show one design preview and ask people to guess the final product.",
+        "copy_ready_text": "Guess what this becomes.",
+        "caption": "Guess what this becomes.",
+        "customer_action": "Comment your guess.",
+        "track_this": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "what_to_check": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This week",
+        "how_to_try": [
+          "Show one design preview and ask people to guess the final product."
+        ]
+      },
+      {
+        "idea": 2,
+        "title": "₹500 Gift Ideas",
+        "idea_title": "₹500 Gift Ideas",
+        "opportunity": "₹500 Gift Ideas",
+        "where_to_post": "Instagram carousel",
+        "why_it_can_work": "This gives people a clear reason to react, save, share, or message.",
+        "expected_help": "More replies, saves, shares, and clear product interest.",
+        "what_to_do": "Show 3 personal gift ideas under ₹500.",
+        "what_to_show": "Show 3 personal gift ideas under ₹500.",
+        "copy_ready_text": "Need a gift without spending too much? Start here.",
+        "caption": "Need a gift without spending too much? Start here.",
+        "customer_action": "Save this post.",
+        "track_this": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "what_to_check": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This week",
+        "how_to_try": [
+          "Show 3 personal gift ideas under ₹500."
+        ]
+      },
+      {
+        "idea": 3,
+        "title": "Best Friend Gift Reel",
+        "idea_title": "Best Friend Gift Reel",
+        "opportunity": "Best Friend Gift Reel",
+        "where_to_post": "Instagram Reels",
+        "why_it_can_work": "This gives people a clear reason to react, save, share, or message.",
+        "expected_help": "More replies, saves, shares, and clear product interest.",
+        "what_to_do": "Show a funny best-friend gift idea.",
+        "what_to_show": "Show a funny best-friend gift idea.",
+        "copy_ready_text": "For the friend who deserves drama and love.",
+        "caption": "For the friend who deserves drama and love.",
+        "customer_action": "Tag your best friend.",
+        "track_this": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "what_to_check": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This week",
+        "how_to_try": [
+          "Show a funny best-friend gift idea."
+        ]
+      },
+      {
+        "idea": 4,
+        "title": "Farewell Gift Carousel",
+        "idea_title": "Farewell Gift Carousel",
+        "opportunity": "Farewell Gift Carousel",
+        "where_to_post": "Instagram carousel",
+        "why_it_can_work": "This gives people a clear reason to react, save, share, or message.",
+        "expected_help": "More replies, saves, shares, and clear product interest.",
+        "what_to_do": "Show 5 farewell gift ideas.",
+        "what_to_show": "Show 5 farewell gift ideas.",
+        "copy_ready_text": "Farewell gift ideas that are not boring.",
+        "caption": "Farewell gift ideas that are not boring.",
+        "customer_action": "Share with your class group.",
+        "track_this": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "what_to_check": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This week",
+        "how_to_try": [
+          "Show 5 farewell gift ideas."
+        ]
+      },
+      {
+        "idea": 5,
+        "title": "Mistake Check Reel",
+        "idea_title": "Mistake Check Reel",
+        "opportunity": "Mistake Check Reel",
+        "where_to_post": "Instagram Reels",
+        "why_it_can_work": "This gives people a clear reason to react, save, share, or message.",
+        "expected_help": "More replies, saves, shares, and clear product interest.",
+        "what_to_do": "Show spelling and photo check before making.",
+        "what_to_show": "Show spelling and photo check before making.",
+        "copy_ready_text": "Custom gifts need careful checking.",
+        "caption": "Custom gifts need careful checking.",
+        "customer_action": "Message preview.",
+        "track_this": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "what_to_check": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This week",
+        "how_to_try": [
+          "Show spelling and photo check before making."
+        ]
+      },
+      {
+        "idea": 6,
+        "title": "Packing ASMR Video",
+        "idea_title": "Packing ASMR Video",
+        "opportunity": "Packing ASMR Video",
+        "where_to_post": "Instagram Reels / WhatsApp Status",
+        "why_it_can_work": "This gives people a clear reason to react, save, share, or message.",
+        "expected_help": "More replies, saves, shares, and clear product interest.",
+        "what_to_do": "Record packing sounds and close-ups.",
+        "what_to_show": "Record packing sounds and close-ups.",
+        "copy_ready_text": "Packing your gift like it matters.",
+        "caption": "Packing your gift like it matters.",
+        "customer_action": "Ask for gift packing.",
+        "track_this": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "what_to_check": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This week",
+        "how_to_try": [
+          "Record packing sounds and close-ups."
+        ]
+      },
+      {
+        "idea": 7,
+        "title": "Poll: Name or Photo?",
+        "idea_title": "Poll: Name or Photo?",
+        "opportunity": "Poll: Name or Photo?",
+        "where_to_post": "Instagram Story",
+        "why_it_can_work": "This gives people a clear reason to react, save, share, or message.",
+        "expected_help": "More replies, saves, shares, and clear product interest.",
+        "what_to_do": "Ask which custom style people like.",
+        "what_to_show": "Ask which custom style people like.",
+        "copy_ready_text": "Name design or photo design?",
+        "caption": "Name design or photo design?",
+        "customer_action": "Vote on the story.",
+        "track_this": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "what_to_check": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This week",
+        "how_to_try": [
+          "Ask which custom style people like."
+        ]
+      },
+      {
+        "idea": 8,
+        "title": "Design Battle",
+        "idea_title": "Design Battle",
+        "opportunity": "Design Battle",
+        "where_to_post": "Instagram Story / Reel",
+        "why_it_can_work": "This gives people a clear reason to react, save, share, or message.",
+        "expected_help": "More replies, saves, shares, and clear product interest.",
+        "what_to_do": "Show two sample designs.",
+        "what_to_show": "Show two sample designs.",
+        "copy_ready_text": "Which one should launch first?",
+        "caption": "Which one should launch first?",
+        "customer_action": "Vote A or B.",
+        "track_this": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "what_to_check": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This week",
+        "how_to_try": [
+          "Show two sample designs."
+        ]
+      },
+      {
+        "idea": 9,
+        "title": "Local Delivery Post",
+        "idea_title": "Local Delivery Post",
+        "opportunity": "Local Delivery Post",
+        "where_to_post": "Instagram post / WhatsApp Status",
+        "why_it_can_work": "This gives people a clear reason to react, save, share, or message.",
+        "expected_help": "More replies, saves, shares, and clear product interest.",
+        "what_to_do": "Ask which area in Kozhikode needs delivery.",
+        "what_to_show": "Ask which area in Kozhikode needs delivery.",
+        "copy_ready_text": "Which Kozhikode area should we deliver to first?",
+        "caption": "Which Kozhikode area should we deliver to first?",
+        "customer_action": "Reply with area.",
+        "track_this": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "what_to_check": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This week",
+        "how_to_try": [
+          "Ask which area in Kozhikode needs delivery."
+        ]
+      },
+      {
+        "idea": 10,
+        "title": "Gift Reminder Story",
+        "idea_title": "Gift Reminder Story",
+        "opportunity": "Gift Reminder Story",
+        "where_to_post": "Instagram Story",
+        "why_it_can_work": "This gives people a clear reason to react, save, share, or message.",
+        "expected_help": "More replies, saves, shares, and clear product interest.",
+        "what_to_do": "Remind people to order early before birthdays.",
+        "what_to_show": "Remind people to order early before birthdays.",
+        "copy_ready_text": "Birthday next week? Do not wait until the last day.",
+        "caption": "Birthday next week? Do not wait until the last day.",
+        "customer_action": "Message early.",
+        "track_this": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "what_to_check": "Replies, saves, shares, votes, and WhatsApp messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This week",
+        "how_to_try": [
+          "Remind people to order early before birthdays."
+        ]
+      },
+      {
+        "idea": 11,
+        "title": "First 10 Test Orders",
+        "idea_title": "First 10 Test Orders",
+        "opportunity": "First 10 Test Orders",
+        "where_to_post": "Instagram and WhatsApp",
+        "why_it_can_work": "This turns attention into a small practical business result.",
+        "expected_help": "More useful enquiries, proof, and ordering confidence.",
+        "what_to_do": "Post: First 10 test orders opening soon.",
+        "what_to_show": "Post: First 10 test orders opening soon.",
+        "copy_ready_text": "First 10 test orders opening soon.",
+        "caption": "First 10 test orders opening soon.",
+        "customer_action": "Slot messages.",
+        "track_this": "Slot messages.",
+        "what_to_check": "Slot messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This month",
+        "how_to_try": [
+          "Post: First 10 test orders opening soon."
+        ]
+      },
+      {
+        "idea": 12,
+        "title": "Friend Referral",
+        "idea_title": "Friend Referral",
+        "opportunity": "Friend Referral",
+        "where_to_post": "WhatsApp Status and Instagram Story",
+        "why_it_can_work": "This turns attention into a small practical business result.",
+        "expected_help": "More useful enquiries, proof, and ordering confidence.",
+        "what_to_do": "Give a small add-on when two friends order.",
+        "what_to_show": "Give a small add-on when two friends order.",
+        "copy_ready_text": "Order with a friend and both get free gift packing.",
+        "caption": "Order with a friend and both get free gift packing.",
+        "customer_action": "Referral messages.",
+        "track_this": "Referral messages.",
+        "what_to_check": "Referral messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This month",
+        "how_to_try": [
+          "Give a small add-on when two friends order."
+        ]
+      },
+      {
+        "idea": 13,
+        "title": "College Gift Packs",
+        "idea_title": "College Gift Packs",
+        "opportunity": "College Gift Packs",
+        "where_to_post": "Instagram Reels and carousel",
+        "why_it_can_work": "This turns attention into a small practical business result.",
+        "expected_help": "More useful enquiries, proof, and ordering confidence.",
+        "what_to_do": "Create 3 sample packs.",
+        "what_to_show": "Create 3 sample packs.",
+        "copy_ready_text": "Gift ideas for your college gang.",
+        "caption": "Gift ideas for your college gang.",
+        "customer_action": "Pack enquiries.",
+        "track_this": "Pack enquiries.",
+        "what_to_check": "Pack enquiries.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This month",
+        "how_to_try": [
+          "Create 3 sample packs."
+        ]
+      },
+      {
+        "idea": 14,
+        "title": "Design of the Week",
+        "idea_title": "Design of the Week",
+        "opportunity": "Design of the Week",
+        "where_to_post": "Instagram and WhatsApp",
+        "why_it_can_work": "This turns attention into a small practical business result.",
+        "expected_help": "More useful enquiries, proof, and ordering confidence.",
+        "what_to_do": "Post one design every week.",
+        "what_to_show": "Post one design every week.",
+        "copy_ready_text": "This week's design is open for custom orders.",
+        "caption": "This week's design is open for custom orders.",
+        "customer_action": "Votes and custom order messages.",
+        "track_this": "Votes and custom order messages.",
+        "what_to_check": "Votes and custom order messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This month",
+        "how_to_try": [
+          "Post one design every week."
+        ]
+      },
+      {
+        "idea": 15,
+        "title": "WhatsApp Status Selling",
+        "idea_title": "WhatsApp Status Selling",
+        "opportunity": "WhatsApp Status Selling",
+        "where_to_post": "WhatsApp Status",
+        "why_it_can_work": "This turns attention into a small practical business result.",
+        "expected_help": "More useful enquiries, proof, and ordering confidence.",
+        "what_to_do": "Post one product, one order step, and one offer every day.",
+        "what_to_show": "Post one product, one order step, and one offer every day.",
+        "copy_ready_text": "Reply preview to see how this order works.",
+        "caption": "Reply preview to see how this order works.",
+        "customer_action": "Replies to status.",
+        "track_this": "Replies to status.",
+        "what_to_check": "Replies to status.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This month",
+        "how_to_try": [
+          "Post one product, one order step, and one offer every day."
+        ]
+      },
+      {
+        "idea": 16,
+        "title": "Google Business Trust",
+        "idea_title": "Google Business Trust",
+        "opportunity": "Google Business Trust",
+        "where_to_post": "Google Business and Instagram",
+        "why_it_can_work": "This turns attention into a small practical business result.",
+        "expected_help": "More useful enquiries, proof, and ordering confidence.",
+        "what_to_do": "Add product photos, hours, and WhatsApp number.",
+        "what_to_show": "Add product photos, hours, and WhatsApp number.",
+        "copy_ready_text": "Find Cartroid on Google soon.",
+        "caption": "Find Cartroid on Google soon.",
+        "customer_action": "Profile views and WhatsApp taps.",
+        "track_this": "Profile views and WhatsApp taps.",
+        "what_to_check": "Profile views and WhatsApp taps.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This month",
+        "how_to_try": [
+          "Add product photos, hours, and WhatsApp number."
+        ]
+      },
+      {
+        "idea": 17,
+        "title": "Gift Reminder Content",
+        "idea_title": "Gift Reminder Content",
+        "opportunity": "Gift Reminder Content",
+        "where_to_post": "Instagram Story and WhatsApp Status",
+        "why_it_can_work": "This turns attention into a small practical business result.",
+        "expected_help": "More useful enquiries, proof, and ordering confidence.",
+        "what_to_do": "Post reminders for birthdays, farewell, anniversaries, and college events.",
+        "what_to_show": "Post reminders for birthdays, farewell, anniversaries, and college events.",
+        "copy_ready_text": "Need a gift by Friday? Message early.",
+        "caption": "Need a gift by Friday? Message early.",
+        "customer_action": "Date-based messages.",
+        "track_this": "Date-based messages.",
+        "what_to_check": "Date-based messages.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This month",
+        "how_to_try": [
+          "Post reminders for birthdays, farewell, anniversaries, and college events."
+        ]
+      },
+      {
+        "idea": 18,
+        "title": "Packaging Upgrade",
+        "idea_title": "Packaging Upgrade",
+        "opportunity": "Packaging Upgrade",
+        "where_to_post": "Instagram Reels",
+        "why_it_can_work": "This turns attention into a small practical business result.",
+        "expected_help": "More useful enquiries, proof, and ordering confidence.",
+        "what_to_do": "Show gift packing as an add-on.",
+        "what_to_show": "Show gift packing as an add-on.",
+        "copy_ready_text": "Make it ready to gift.",
+        "caption": "Make it ready to gift.",
+        "customer_action": "Gift-packing requests.",
+        "track_this": "Gift-packing requests.",
+        "what_to_check": "Gift-packing requests.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This month",
+        "how_to_try": [
+          "Show gift packing as an add-on."
+        ]
+      },
+      {
+        "idea": 19,
+        "title": "Customer Idea Polls",
+        "idea_title": "Customer Idea Polls",
+        "opportunity": "Customer Idea Polls",
+        "where_to_post": "Instagram Story",
+        "why_it_can_work": "This turns attention into a small practical business result.",
+        "expected_help": "More useful enquiries, proof, and ordering confidence.",
+        "what_to_do": "Ask: What should Cartroid make next?",
+        "what_to_show": "Ask: What should Cartroid make next?",
+        "copy_ready_text": "What should Cartroid make next?",
+        "caption": "What should Cartroid make next?",
+        "customer_action": "Poll votes and replies.",
+        "track_this": "Poll votes and replies.",
+        "what_to_check": "Poll votes and replies.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This month",
+        "how_to_try": [
+          "Ask: What should Cartroid make next?"
+        ]
+      },
+      {
+        "idea": 20,
+        "title": "Early Buyer Proof",
+        "idea_title": "Early Buyer Proof",
+        "opportunity": "Early Buyer Proof",
+        "where_to_post": "Instagram and WhatsApp",
+        "why_it_can_work": "This turns attention into a small practical business result.",
+        "expected_help": "More useful enquiries, proof, and ordering confidence.",
+        "what_to_do": "Ask for photo, review, or simple feedback.",
+        "what_to_show": "Ask for photo, review, or simple feedback.",
+        "copy_ready_text": "Your review helps a new local business grow.",
+        "caption": "Your review helps a new local business grow.",
+        "customer_action": "Reviews and customer photos.",
+        "track_this": "Reviews and customer photos.",
+        "what_to_check": "Reviews and customer photos.",
+        "difficulty": "Easy",
+        "cost": "Low cost",
+        "when_to_try": "This month",
+        "how_to_try": [
+          "Ask for photo, review, or simple feedback."
+        ]
+      }
+    ],
+    "premiumFirst10": [
+      {
+        "module": 1,
+        "title": "First 30 Customers Plan",
+        "what_user_gets": "A step-by-step plan to get the first 30 buyers.",
+        "small_preview": "Start with 10 test orders, then 10 referral orders, then 10 occasion-based orders.",
+        "why_this_helps": "The owner gets a clear target instead of random posting.",
+        "why": "The owner gets a clear target instead of random posting.",
+        "unlock_message": "Unlock the full first 30 customers plan.",
+        "timeline": "This month"
+      },
+      {
+        "module": 2,
+        "title": "WhatsApp Follow-Up System",
+        "what_user_gets": "Messages for people who asked price but did not order.",
+        "small_preview": "Hi, just checking. Do you want us to suggest a design based on your budget?",
+        "why_this_helps": "Many people need one reminder before buying.",
+        "why": "Many people need one reminder before buying.",
+        "unlock_message": "Unlock the follow-up message set.",
+        "timeline": "This month"
+      },
+      {
+        "module": 3,
+        "title": "College Ambassador Plan",
+        "what_user_gets": "A simple way to make students promote the business.",
+        "small_preview": "Give one student free gift packing or commission for bringing orders.",
+        "why_this_helps": "Students trust other students.",
+        "why": "Students trust other students.",
+        "unlock_message": "Unlock the college ambassador plan.",
+        "timeline": "This month"
+      },
+      {
+        "module": 4,
+        "title": "Launch Week Command Plan",
+        "what_user_gets": "A daily launch checklist.",
+        "small_preview": "Day 1 samples, Day 2 order steps, Day 3 price post, Day 4 launch offer, Day 5 test orders.",
+        "why_this_helps": "The owner knows exactly what to do each day.",
+        "why": "The owner knows exactly what to do each day.",
+        "unlock_message": "Unlock the launch week command plan.",
+        "timeline": "This month"
+      },
+      {
+        "module": 5,
+        "title": "Product Drop System",
+        "what_user_gets": "A weekly design launch plan.",
+        "small_preview": "Every Friday, release one Design of the Week.",
+        "why_this_helps": "People get a reason to return.",
+        "why": "People get a reason to return.",
+        "unlock_message": "Unlock the weekly product drop system.",
+        "timeline": "After the basics work"
+      },
+      {
+        "module": 6,
+        "title": "Review Collection System",
+        "what_user_gets": "Review request messages and posting plan.",
+        "small_preview": "Thank you for ordering. Can you send a small review or photo? It helps our new business build trust.",
+        "why_this_helps": "Reviews make a new store feel real.",
+        "why": "Reviews make a new store feel real.",
+        "unlock_message": "Unlock the review collection system.",
+        "timeline": "After the basics work"
+      },
+      {
+        "module": 7,
+        "title": "Price Ladder Plan",
+        "what_user_gets": "A simple way to show low, medium, and premium options.",
+        "small_preview": "Basic gift, better gift, special gift.",
+        "why_this_helps": "Customers can choose based on budget.",
+        "why": "Customers can choose based on budget.",
+        "unlock_message": "Unlock the price ladder plan.",
+        "timeline": "After the basics work"
+      },
+      {
+        "module": 8,
+        "title": "Local Google Trust Plan",
+        "what_user_gets": "A checklist to make Google Business look active.",
+        "small_preview": "Add photos, hours, WhatsApp, products, launch post, and first reviews.",
+        "why_this_helps": "Local buyers trust businesses they can find on Google.",
+        "why": "Local buyers trust businesses they can find on Google.",
+        "unlock_message": "Unlock the local Google trust plan.",
+        "timeline": "After the basics work"
+      },
+      {
+        "module": 9,
+        "title": "Repeat Buyer Plan",
+        "what_user_gets": "A plan to bring customers back after first order.",
+        "small_preview": "Send occasion reminders and new design updates.",
+        "why_this_helps": "Gift buyers may buy again for another friend.",
+        "why": "Gift buyers may buy again for another friend.",
+        "unlock_message": "Unlock the repeat buyer plan.",
+        "timeline": "After the basics work"
+      },
+      {
+        "module": 10,
+        "title": "Monthly Growth Review",
+        "what_user_gets": "A simple monthly checkup.",
+        "small_preview": "Which post got messages? Which product got price questions? Which offer worked? Which area asked for delivery?",
+        "why_this_helps": "The business improves every month.",
+        "why": "The business improves every month.",
+        "unlock_message": "Unlock the monthly growth review.",
+        "timeline": "After the basics work"
+      }
+    ]
+  }
+}

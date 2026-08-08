@@ -1,0 +1,35 @@
+- title: "Intimidation Factor"
+  object_type: "Insight"
+  version: "1.0.0"
+  target_pricing: "ANY"
+  target_goal: "Build Trust"
+  author: "CAC Research Team"
+  base_confidence: 95
+  quality_score: 92
+  expected_output: "Understanding the primary barrier to entry for new members."
+  related_objects:
+    - "Annual vs. Monthly Anchor"
+  tags:
+    - "friction"
+    - "trust"
+  content:
+    insight: "The number one reason prospects don't sign up is fear of looking foolish or being judged."
+    implication: "Marketing should de-emphasize 'hardcore' fitness models and highlight beginner-friendly onboarding."
+
+- title: "The January Rush & Fall-off"
+  object_type: "Insight"
+  version: "1.0.0"
+  target_pricing: "ANY"
+  target_goal: "Increase Retention"
+  author: "CAC Research Team"
+  base_confidence: 90
+  quality_score: 88
+  expected_output: "Understanding the lifecycle of the New Year resolutioner."
+  dependencies:
+    - "Intimidation Factor"
+  tags:
+    - "seasonality"
+    - "retention"
+  content:
+    insight: "Most gyms see a 40% influx in January, followed by a 60% drop-off by March."
+    implication: "Retention campaigns must begin on day 14, not day 60, focusing on small habit formation rather than massive results."

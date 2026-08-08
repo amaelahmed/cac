@@ -1,0 +1,35 @@
+- title: "Third Place Effect"
+  object_type: "Insight"
+  version: "1.0.0"
+  target_pricing: "ANY"
+  target_goal: "Build Trust"
+  author: "CAC Research Team"
+  base_confidence: 90
+  quality_score: 90
+  expected_output: "Insight on positioning the cafe as a space between work and home."
+  related_objects:
+    - "The Wi-Fi Squatter Dilemma"
+  tags:
+    - "atmosphere"
+    - "community"
+  content:
+    insight: "{{BUSINESS_NAME}} acts as a 'third place'—a crucial social environment separate from the two usual environments of home and workplace."
+    implication: "Marketing should focus not just on the coffee, but on the environment, comfort, and sense of community."
+
+- title: "The Wi-Fi Squatter Dilemma"
+  object_type: "Framework"
+  version: "1.0.0"
+  target_pricing: "Mid-Market"
+  target_goal: "Increase AOV"
+  author: "CAC Research Team"
+  base_confidence: 88
+  quality_score: 85
+  expected_output: "Strategies to convert long-stay laptop workers into repeat purchasers."
+  dependencies:
+    - "Third Place Effect"
+  tags:
+    - "revenue optimization"
+    - "customer behavior"
+  content:
+    problem: "Customers buying a single $4 coffee and staying for 6 hours."
+    solution: "Implement 'bottomless' drip coffee subscriptions, or offer a 'Work from Cafe' tier that includes lunch for a fixed higher price."

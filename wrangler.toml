@@ -1,0 +1,9 @@
+name = "cac"
+pages_build_output_dir = "out"
+compatibility_date = "2024-03-20"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cac_production_d1"
+database_id = "ef0eb756-2f76-4f5a-821a-2cad4eefb643"

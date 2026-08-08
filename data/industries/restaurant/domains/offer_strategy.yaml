@@ -1,0 +1,18 @@
+- title: "Wine Down Wednesday"
+  object_type: "Campaign"
+  version: "1.1.0"
+  target_pricing: "Mid-Market"
+  target_goal: "Increase Footfall"
+  author: "CAC Strategy Team"
+  base_confidence: 85
+  quality_score: 90
+  expected_output: "A mid-week promotion strategy to drive slower day traffic."
+  dependencies:
+    - "Premium Dining Fears"
+  tags:
+    - "promotion"
+    - "mid-week"
+  content:
+    hook: "Turn the slowest day of the week into a recurring event."
+    execution: "Offer 50% off select bottles of wine with the purchase of two entrees."
+    upsell_path: "Train servers to recommend the premium dessert menu after the meal, as the customer feels they saved money on the wine."

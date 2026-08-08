@@ -1,0 +1,149 @@
+{
+  "version": "manual-test-p0-001",
+  "rules": [
+    {
+      "id": "restaurant",
+      "match": ["restaurant", "dine-in", "food"],
+      "form_defaults": {
+        "biz_type": "Local physical business",
+        "biz_customer_model": "Individual customers",
+        "biz_offer": "Dine-in meals",
+        "biz_revenue_model": "UPI / cash / card / delivery apps",
+        "biz_ticket": "₹200-₹500",
+        "biz_budget": "Under ₹5,000",
+        "biz_challenge": "Not getting enough leads or enquiries",
+        "biz_usp": "Better quality",
+        "biz_personality": "Warm & friendly"
+      },
+      "platforms": ["Instagram", "WhatsApp", "Google Business", "Zomato/Swiggy"],
+      "goals": ["customers", "credibility", "retention"],
+      "note": "We filled a few common restaurant details. You can change them."
+    },
+    {
+      "id": "cafe",
+      "match": ["cafe", "coffee", "tea"],
+      "form_defaults": {
+        "biz_type": "Local physical business",
+        "biz_customer_model": "Individual customers",
+        "biz_offer": "Coffee / Tea / Beverages",
+        "biz_revenue_model": "UPI / cash / card / delivery apps",
+        "biz_ticket": "₹200-₹500",
+        "biz_budget": "Under ₹5,000",
+        "biz_challenge": "Low brand awareness",
+        "biz_usp": "Local authenticity",
+        "biz_personality": "Warm & friendly"
+      },
+      "platforms": ["Instagram", "WhatsApp", "Google Business"],
+      "goals": ["customers", "credibility", "retention"],
+      "note": "We filled a few common cafe details. You can change them."
+    },
+    {
+      "id": "salon",
+      "match": ["salon", "beauty", "barber", "spa", "skincare"],
+      "form_defaults": {
+        "biz_type": "Local physical business",
+        "biz_customer_model": "Individual customers",
+        "biz_offer": "Personal service",
+        "biz_revenue_model": "Service fee",
+        "biz_ticket": "₹500-₹2,000",
+        "biz_budget": "Under ₹5,000",
+        "biz_challenge": "People ask but don't buy",
+        "biz_usp": "Better customer care",
+        "biz_personality": "Professional & trustworthy"
+      },
+      "platforms": ["Instagram", "WhatsApp", "Google Business"],
+      "goals": ["customers", "credibility", "retention"],
+      "note": "We filled a few common salon details. You can change them."
+    },
+    {
+      "id": "clothing_store",
+      "match": ["clothing", "fashion", "boutique", "apparel"],
+      "form_defaults": {
+        "biz_type": "Local physical business",
+        "biz_customer_model": "Individual customers",
+        "biz_offer": "Retail products",
+        "biz_revenue_model": "One-time purchase",
+        "biz_ticket": "₹500-₹2,000",
+        "biz_budget": "Under ₹5,000",
+        "biz_challenge": "Poor social media growth",
+        "biz_usp": "Better quality",
+        "biz_personality": "Modern & minimal"
+      },
+      "platforms": ["Instagram", "WhatsApp", "Google Business"],
+      "goals": ["customers", "credibility", "online_sales"],
+      "note": "We filled a few common clothing store details. You can change them."
+    },
+    {
+      "id": "custom_gift_store",
+      "match": ["custom gifts", "personalised", "personalized", "printing", "merchandise", "gift shop"],
+      "form_defaults": {
+        "biz_type": "Online + physical",
+        "biz_customer_model": "Individual customers",
+        "biz_offer": "Customised gifts / products",
+        "biz_revenue_model": "One-time purchase",
+        "biz_ticket": "₹200-₹500",
+        "biz_budget": "Under ₹5,000",
+        "biz_challenge": "People don't understand the product",
+        "biz_usp": "Better customer care",
+        "biz_personality": "Gen-Z / meme-friendly"
+      },
+      "platforms": ["Instagram", "WhatsApp", "Google Business"],
+      "goals": ["launch", "credibility", "customers"],
+      "note": "We filled a few common custom gift store details. You can change them."
+    },
+    {
+      "id": "local_service_business",
+      "match": ["cleaning", "laundry", "repair", "maintenance", "auto service", "car care", "logistics", "delivery"],
+      "form_defaults": {
+        "biz_type": "Service at customer location",
+        "biz_customer_model": "Individual customers",
+        "biz_offer": "Repair / Maintenance",
+        "biz_revenue_model": "Service fee",
+        "biz_ticket": "₹500-₹2,000",
+        "biz_budget": "Under ₹5,000",
+        "biz_challenge": "Not getting enough leads or enquiries",
+        "biz_usp": "Faster service",
+        "biz_personality": "Professional & trustworthy"
+      },
+      "platforms": ["WhatsApp", "Google Business", "Instagram"],
+      "goals": ["customers", "credibility"],
+      "note": "We filled a few common local service details. You can change them."
+    },
+    {
+      "id": "clinic",
+      "match": ["clinic", "dental", "healthcare", "ayurveda", "wellness"],
+      "form_defaults": {
+        "biz_type": "Local physical business",
+        "biz_customer_model": "Individual customers",
+        "biz_offer": "Healthcare / Wellness",
+        "biz_revenue_model": "Service fee",
+        "biz_ticket": "₹500-₹2,000",
+        "biz_budget": "Under ₹5,000",
+        "biz_challenge": "Need first 100 users",
+        "biz_usp": "Niche expertise",
+        "biz_personality": "Professional & trustworthy"
+      },
+      "platforms": ["Google Business", "WhatsApp", "Instagram"],
+      "goals": ["credibility", "customers", "retention"],
+      "note": "We filled a few common clinic details. You can change them."
+    },
+    {
+      "id": "tuition_coaching_centre",
+      "match": ["education", "coaching", "tuition", "school", "preschool"],
+      "form_defaults": {
+        "biz_type": "Local physical business",
+        "biz_customer_model": "Individual customers",
+        "biz_offer": "Course / Community",
+        "biz_revenue_model": "Monthly subscription",
+        "biz_ticket": "₹2,000-₹10,000",
+        "biz_budget": "Under ₹5,000",
+        "biz_challenge": "Not getting enough leads or enquiries",
+        "biz_usp": "Niche expertise",
+        "biz_personality": "Professional & trustworthy"
+      },
+      "platforms": ["WhatsApp", "Google Business", "Instagram"],
+      "goals": ["customers", "credibility", "retention"],
+      "note": "We filled a few common tuition/coaching details. You can change them."
+    }
+  ]
+}

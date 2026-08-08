@@ -1,0 +1,40 @@
+[
+  {
+    "id": "running_cafe",
+    "valid": true,
+    "selectedBlocks": 0,
+    "counts": {
+      "calendar": 30,
+      "strategy": 10,
+      "customerThoughts": 0,
+      "customerProblems": 3,
+      "competitors": 2,
+      "ideas": 20,
+      "advanced": 8
+    },
+    "firstStrategy": "Tell people why they should choose you in one sentence",
+    "firstCalendarHook": "Show the problem you solve",
+    "customMarkers": [],
+    "bannedMatches": [],
+    "pass": true
+  },
+  {
+    "id": "clothing_non_custom",
+    "valid": true,
+    "selectedBlocks": 0,
+    "counts": {
+      "calendar": 30,
+      "strategy": 10,
+      "customerThoughts": 0,
+      "customerProblems": 3,
+      "competitors": 2,
+      "ideas": 20,
+      "advanced": 8
+    },
+    "firstStrategy": "Tell people why they should choose you in one sentence",
+    "firstCalendarHook": "Show the problem you solve",
+    "customMarkers": [],
+    "bannedMatches": [],
+    "pass": true
+  }
+]

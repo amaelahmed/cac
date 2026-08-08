@@ -1,0 +1,193 @@
+{
+  "generated_at": "2026-07-06T11:24:51.891Z",
+  "total": 5,
+  "passed": 5,
+  "allPassed": true,
+  "results": [
+    {
+      "id": "messy_hostel_cafe",
+      "business": "Hostel Bite 57325",
+      "status": "PASS",
+      "latency_ms": 24392,
+      "meta": {
+        "ai_calls_count": 1,
+        "ai_enhanced": true,
+        "generation_source": "master_strategy_ai",
+        "provider": "nvidia_nim",
+        "model": "meta/llama-3.1-8b-instruct",
+        "fallback_used": false,
+        "fallback_reason": "",
+        "report_schema_valid": true,
+        "semantic_failures": [],
+        "template_likeness_hits": []
+      },
+      "counts": {
+        "calendar": 30,
+        "strategy": 10,
+        "captions": 12,
+        "templates": 8,
+        "pain": 15,
+        "psychology": 6,
+        "growth": 6
+      },
+      "bannedHits": [],
+      "sample": {
+        "day1": "Launch the hostel dinner combo with price and pickup time",
+        "day2": "Prove the budget order can fill a student group",
+        "day3": "Turn spice level into a simple parcel-order choice",
+        "caption1": "Hostel dinner should not become a budget argument. Send spend limit, spice comfort, and pickup time before choosing shawarma.",
+        "message1": "Want shawarma fastest? Share budget, spice level, and pickup time. We will suggest the filling option without sending the whole menu.",
+        "pain1": "Is the food safe to eat?",
+        "growth1": "Week 1: build the proof system around shawarma"
+      }
+    },
+    {
+      "id": "messy_finance_saas",
+      "business": "LedgerPilot QA 57325",
+      "status": "PASS",
+      "latency_ms": 36099,
+      "meta": {
+        "ai_calls_count": 1,
+        "ai_enhanced": true,
+        "generation_source": "master_strategy_ai",
+        "provider": "nvidia_nim",
+        "model": "meta/llama-3.1-8b-instruct",
+        "fallback_used": false,
+        "fallback_reason": "",
+        "report_schema_valid": true,
+        "semantic_failures": [],
+        "template_likeness_hits": []
+      },
+      "counts": {
+        "calendar": 30,
+        "strategy": 10,
+        "captions": 12,
+        "templates": 8,
+        "pain": 15,
+        "psychology": 6,
+        "growth": 6
+      },
+      "bannedHits": [],
+      "sample": {
+        "day1": "Map the unpaid invoice follow-up before and after setup",
+        "day2": "Compare the cashflow dashboard with the messy payment sheet",
+        "day3": "Turn one GST reminder workflow into a clear demo",
+        "caption1": "An accounting demo should start with the unpaid invoice problem, not a feature parade. Reply with the finance workflow you want cleaned up.",
+        "message1": "Invoice follow-up automation workflow stuck? Send invoice or payment follow-up your team still handles manually. We will show the exact LedgerPilot QA 57325 screen path for that job.",
+        "pain1": "They need to see the invoice or payment reminder workflow before trusting invoice follow-up automation.",
+        "growth1": "Week 1: build the proof system around invoice follow-up automation"
+      }
+    },
+    {
+      "id": "messy_skin_clinic",
+      "business": "DermaNest 57325",
+      "status": "PASS",
+      "latency_ms": 16039,
+      "meta": {
+        "ai_calls_count": 1,
+        "ai_enhanced": true,
+        "generation_source": "master_strategy_ai",
+        "provider": "nvidia_nim",
+        "model": "meta/llama-3.1-8b-instruct",
+        "fallback_used": false,
+        "fallback_reason": "",
+        "report_schema_valid": true,
+        "semantic_failures": [],
+        "template_likeness_hits": []
+      },
+      "counts": {
+        "calendar": 30,
+        "strategy": 10,
+        "captions": 12,
+        "templates": 8,
+        "pain": 15,
+        "psychology": 6,
+        "growth": 6
+      },
+      "bannedHits": [],
+      "sample": {
+        "day1": "Explain the consultation before acne or laser package talk",
+        "day2": "Show patch-test and doctor proof before treatment pressure",
+        "day3": "Turn side-effect fear into one calm clinic visit",
+        "caption1": "Skin treatment feels safer when the clinic explains consultation, patch test, timing, and side-effect care. Message the concern and ask what the doctor checks first.",
+        "message1": "Booking acne consultation? Send your skin concern, how long it has been there, and preferred visit time. We will explain the consultation step and what to bring.",
+        "pain1": "They worry acne consultation will not be safe, realistic, or worth the cost.",
+        "growth1": "Week 1: build the proof system around acne consultation"
+      }
+    },
+    {
+      "id": "messy_real_estate",
+      "business": "Northline Homes 57325",
+      "status": "PASS",
+      "latency_ms": 32769,
+      "meta": {
+        "ai_calls_count": 1,
+        "ai_enhanced": true,
+        "generation_source": "master_strategy_ai",
+        "provider": "nvidia_nim",
+        "model": "meta/llama-3.1-8b-instruct",
+        "fallback_used": false,
+        "fallback_reason": "",
+        "report_schema_valid": true,
+        "semantic_failures": [],
+        "template_likeness_hits": []
+      },
+      "counts": {
+        "calendar": 30,
+        "strategy": 10,
+        "captions": 12,
+        "templates": 8,
+        "pain": 15,
+        "psychology": 6,
+        "growth": 6
+      },
+      "bannedHits": [],
+      "sample": {
+        "day1": "Localize the Kozhikode area filter before listings",
+        "day2": "Qualify budget, landmark, and move-in timing before options",
+        "day3": "Build a local property shortlist with must-have fit",
+        "caption1": "Kozhikode property search gets easier when budget and landmark preference come before random visits.",
+        "message1": "Searching for apartments? Share max budget, preferred area, and move-in timeline. We will remove random listings from the reply.",
+        "pain1": "How do I know the property listings are accurate?",
+        "growth1": "Week 1: build the proof system around apartments"
+      }
+    },
+    {
+      "id": "messy_custom_gifts",
+      "business": "CartCraft Launch 57325",
+      "status": "PASS",
+      "latency_ms": 25018,
+      "meta": {
+        "ai_calls_count": 1,
+        "ai_enhanced": true,
+        "generation_source": "master_strategy_ai",
+        "provider": "nvidia_nim",
+        "model": "meta/llama-3.1-8b-instruct",
+        "fallback_used": false,
+        "fallback_reason": "",
+        "report_schema_valid": true,
+        "semantic_failures": [],
+        "template_likeness_hits": []
+      },
+      "counts": {
+        "calendar": 30,
+        "strategy": 10,
+        "captions": 12,
+        "templates": 8,
+        "pain": 15,
+        "psychology": 6,
+        "growth": 6
+      },
+      "bannedHits": [],
+      "sample": {
+        "day1": "Demonstrate the custom gift preview before checkout",
+        "day2": "Bundle real photo, price, and delivery date in one preview",
+        "day3": "Clarify gift customisation choices before confirmation",
+        "caption1": "Custom gifts need proof before checkout. Ask for real photo, preview, delivery date, and what can be changed.",
+        "message1": "Checking custom hampers stock in Kozhikode? Share occasion, budget, and needed date. We will show real photo, price, and customisation option.",
+        "pain1": "Are the products affordable?",
+        "growth1": "Week 1: build the proof system around custom hampers"
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+[
+  {
+    "id": "ko-test-001",
+    "domain_id": "test-domain",
+    "industry_id": "test-industry",
+    "object_type": "Fact",
+    "author": "admin@example.com",
+    "content_json": "{\"text\": \"This is a test object\"}",
+    "review_status": "Published"
+  }
+]
