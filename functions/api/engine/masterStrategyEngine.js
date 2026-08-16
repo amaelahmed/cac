@@ -2400,8 +2400,7 @@ function growthIdeaExperiment(context, brief, index) {
   };
 }
 
-function ensureUniqueRecommendationItems(items, fields, context, group) {
-  const seen = new Set();
+function ensureUniqueRecommendationItems(items, fields, context, group, seen = new Set()) {
   return asArray(items).map((item, index) => {
     const next = { ...(item || {}) };
     const field = fields.find(name => clean(next[name]));
@@ -5799,12 +5798,18 @@ function expandMasterStrategy(core, { marketingOS, intelligence }) {
     })),
   };
 
-  const uniquePillars = ensureUniqueRecommendationItems(pillars, ["pillar", "title"], context, "pillar");
-  const uniquePriorities = ensureUniqueRecommendationItems(priorities, ["priority", "title"], context, "priority");
-  const uniqueGrowthSteps = ensureUniqueRecommendationItems(growthSteps, ["title"], context, "strategy");
-  const uniquePainPoints = ensureUniqueRecommendationItems(painPoints, ["problem", "customer_problem"], context, "pain");
-  const uniqueCalendar = ensureUniqueRecommendationItems(calendar, ["title"], context, "calendar");
-  const uniqueGrowthIdeas = ensureUniqueRecommendationItems(growthIdeas, ["title"], context, "idea");
+  // Shared across every section so a title/line used in one part of the report
+  // (Marketing Plan, Growth Moves, Calendar, etc.) can never reappear verbatim
+  // in another part. Previously each section deduped only against itself,
+  // which let Growth Moves silently reuse the same items as Marketing Plan
+  // (both are seeded from `priorities`), producing identical cards.
+  const usedRecommendationSignatures = new Set();
+  const uniquePillars = ensureUniqueRecommendationItems(pillars, ["pillar", "title"], context, "pillar", usedRecommendationSignatures);
+  const uniquePriorities = ensureUniqueRecommendationItems(priorities, ["priority", "title"], context, "priority", usedRecommendationSignatures);
+  const uniqueGrowthSteps = ensureUniqueRecommendationItems(growthSteps, ["title"], context, "strategy", usedRecommendationSignatures);
+  const uniquePainPoints = ensureUniqueRecommendationItems(painPoints, ["problem", "customer_problem"], context, "pain", usedRecommendationSignatures);
+  const uniqueCalendar = ensureUniqueRecommendationItems(calendar, ["title"], context, "calendar", usedRecommendationSignatures);
+  const uniqueGrowthIdeas = ensureUniqueRecommendationItems(growthIdeas, ["title"], context, "idea", usedRecommendationSignatures);
 
   const expandedMaster = {
     ...merged,
