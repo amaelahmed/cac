@@ -2761,7 +2761,15 @@ function businessKind(context) {
     context.productsOrServices,
     context.audience,
   ].join(" "));
-  if (context.briefSubtype) return "local";
+  // NOTE: previously this returned "local" immediately whenever
+  // context.briefSubtype was set — which is true for essentially every
+  // business (subtype is chosen during onboarding). That meant the
+  // industry-specific content below (retail/food/salon/gym/etc.) never
+  // ran for almost anyone, and everyone got the same generic "local"
+  // boilerplate steps throughout the whole report. None of the other
+  // briefSubtype checks in this file depend on kind === "local", so
+  // removing this early return is safe and lets real businesses get
+  // matched to their actual industry.
   if (context.vertical === "software" || context.parentCategory === "software") return "software";
   if (context.vertical === "gym" || /gym|fitness|workout|trainer|membership/.test(source)) return "gym";
   if (context.vertical === "law_firm" || /law|legal|lawyer|advocate|contract|document/.test(source)) return "law_firm";
