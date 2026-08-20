@@ -14,7 +14,7 @@ const root = mkdtempSync(join(tmpdir(), "cac-cal-"));
 cpSync("functions/api/engine", join(root, "engine"), { recursive: true });
 cpSync("functions/api/utils", join(root, "utils"), { recursive: true });
 writeFileSync(join(root, "package.json"), '{"type":"module"}');
-const { expandCalendarWithAi, validateSlice, mergeDay } =
+const { expandCalendarWithAi, validateSlice, mergeDay, readingGrade } =
   await import(pathToFileURL(join(root, "engine", "calendarExpander.js")).href);
 
 let failures = 0;
@@ -57,6 +57,34 @@ check("duplicate topic inside a slice is rejected",
 check("topic already used by an earlier slice is rejected",
   !validateSlice([goodDay(11)], { startDay: 11, endDay: 11, seenTopics: new Set(["real topic 11"]) }).ok);
 check("a clean slice is accepted", validateSlice([goodDay(1), goodDay(2)], { startDay: 1, endDay: 2 }).ok);
+
+console.log("\n=== plain language: the reader has no marketing training ===");
+const plain = n => ({
+  day: n, topic: `Show what a name looks like once it is engraved ${n}`,
+  hook: `People ask if it will look cheap. Here is the answer.`,
+  what_to_show: `Hold the gift up close so the letters are easy to read.`,
+  caption: `We engrave it, take a photo, and send it to you before it ships.`,
+  customer_action: `Send us the name you want on it.`,
+  why_this_helps: `It answers the doubt that stops people buying.`,
+});
+check("plain copy passes", validateSlice([plain(1)], { startDay: 1, endDay: 1 }).ok);
+check("marketing jargon is rejected",
+  !validateSlice([{ ...plain(1), why_this_helps: "This improves our conversion rate and CTA." }],
+    { startDay: 1, endDay: 1 }).ok);
+check("'funnel' is rejected",
+  !validateSlice([{ ...plain(1), caption: "Move buyers down the funnel." }], { startDay: 1, endDay: 1 }).ok);
+const dense = n => ({
+  ...plain(n),
+  caption: "Utilising sophisticated demonstrable authenticity signals throughout the consideration phase " +
+    "substantially accelerates predisposition toward transactional commitment among discerning purchasers.",
+  why_this_helps: "Demonstrable authenticity substantially accelerates purchasing predisposition among " +
+    "discerning consideration-phase individuals evaluating comparable alternatives.",
+});
+check("dense corporate prose is rejected on reading grade",
+  !validateSlice([dense(1)], { startDay: 1, endDay: 1 }).ok,
+  validateSlice([dense(1)], { startDay: 1, endDay: 1 }).reason);
+check("readingGrade scores plain lower than dense",
+  readingGrade(Object.values(plain(1)).join(". ")) < readingGrade(Object.values(dense(1)).join(". ")));
 
 console.log("\n=== merge keeps structure, takes copy ===");
 const merged = mergeDay(ruleDay(3), goodDay(3));

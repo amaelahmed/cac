@@ -31,6 +31,43 @@ const BANNED = [
   "digital landscape", "cutting-edge", "seamless experience", "robust solution",
 ];
 
+/**
+ * Marketing vocabulary the reader is not assumed to have. The audience is an
+ * owner with no marketing training, or a student who just signed their first
+ * client - if they have to look a word up, the plan has failed them. Scoped to
+ * calendar copy, so product features like the ROI Calculator are unaffected.
+ */
+const JARGON = [
+  "funnel", "top-of-funnel", "bottom-of-funnel", "conversion rate", "cta",
+  "roi", "kpi", "retargeting", "impressions", "organic reach", "value proposition",
+  "psychographic", "brand equity", "touchpoint", "omnichannel", "lead magnet",
+  "drip campaign", "nurture sequence", "engagement rate", "audience segment",
+];
+
+/**
+ * Flesch-Kincaid grade level. The deterministic templates this replaces score
+ * 6.9-9.0, so AI copy is held to the same bar rather than being allowed to
+ * quietly raise the reading age of the product.
+ */
+const MAX_READING_GRADE = 9.5;
+
+function syllables(word) {
+  const w = word.toLowerCase().replace(/[^a-z]/g, "");
+  if (w.length <= 3) return 1;
+  const trimmed = w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, "").replace(/^y/, "");
+  return (trimmed.match(/[aeiouy]{1,2}/g) || ["x"]).length;
+}
+
+export function readingGrade(sample) {
+  const sentences = sample.split(/[.!?]+/).map(part => part.trim())
+    .filter(part => part.split(/\s+/).length > 2);
+  const words = sample.split(/\s+/).filter(word => /[a-z]/i.test(word));
+  if (!sentences.length || !words.length) return 0;
+  const wordsPerSentence = words.length / sentences.length;
+  const syllablesPerWord = words.reduce((sum, word) => sum + syllables(word), 0) / words.length;
+  return 0.39 * wordsPerSentence + 11.8 * syllablesPerWord - 15.59;
+}
+
 /** Content fields the model owns. Everything else stays with the plan. */
 const AI_FIELDS = ["topic", "hook", "what_to_show", "caption", "customer_action", "why_this_helps"];
 
@@ -65,7 +102,10 @@ function buildSlicePrompt({ businessFacts, brain, plan, startDay, endDay }) {
     "Every day must be a DIFFERENT idea. Never restate another day's topic in new words.",
     "The hook is the first line the customer reads. It must NOT repeat the topic.",
     "Use only the supplied business facts. Do not invent locations, prices, awards or numbers.",
+    "The reader has NO marketing training. They may be a shop owner, or a student with their first client.",
+    "Write at a reading age of 12. Short sentences. Everyday words. If a word needs explaining, use a simpler one.",
     `Never use these phrases: ${BANNED.join(", ")}.`,
+    `Never use this jargon: ${JARGON.join(", ")}. Say what it means in plain words instead.`,
     "Return valid JSON only. No markdown, no commentary, no trailing commas.",
   ].join(" ");
 
@@ -163,10 +203,21 @@ export function validateSlice(days, { startDay, endDay, seenTopics = new Set() }
     const banned = BANNED.find(phrase => blob.includes(phrase));
     if (banned) return { ok: false, reason: `day ${dayNumber} used "${banned}"` };
 
+    const jargon = JARGON.find(term => new RegExp(`\\b${term}\\b`, "i").test(blob));
+    if (jargon) return { ok: false, reason: `day ${dayNumber} used marketing jargon "${jargon}"` };
+
     if (text(day.caption).length > 600) return { ok: false, reason: `day ${dayNumber} caption too long` };
   }
 
-  return { ok: true, reason: "", topics: localTopics };
+  // Judge reading level across the whole slice: one long sentence is fine, a
+  // slice that consistently reads like a marketing deck is not.
+  const sample = days.flatMap(day => AI_FIELDS.map(field => text(day[field]))).join(". ");
+  const grade = readingGrade(sample);
+  if (grade > MAX_READING_GRADE) {
+    return { ok: false, reason: `reading grade ${grade.toFixed(1)} exceeds ${MAX_READING_GRADE}` };
+  }
+
+  return { ok: true, reason: "", topics: localTopics, grade };
 }
 
 /**
