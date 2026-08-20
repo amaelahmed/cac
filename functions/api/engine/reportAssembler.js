@@ -1,4 +1,5 @@
 import { buildMarketingOSReport, validateMarketingOutput, validateSemanticAlignment } from "./marketingIntelligence.js";
+import { runDiagnostics, rankRecommendations, headlineAction } from "./diagnostics.js";
 
 const REQUIRED_SECTIONS = [
   "Business Health Snapshot",
@@ -3141,6 +3142,51 @@ export function assembleReport({ hydratedStrategy, businessProfile, rawBiz, conf
     marketingOS.industryPack,
     marketingOS.goalStrategy,
   );
+  // --- Evidence-based diagnostics -----------------------------------------
+  // Replaces the old buildScores() output, which scored form completeness.
+  // Everything below is derived from checks we can point at, and anything we
+  // could not check is reported as unchecked rather than folded into a number.
+  const diagnostics = runDiagnostics({ businessProfile: profile, rawBiz, internetSignals });
+  const existingSteps = Array.isArray(finalReport.tabs?.strategy?.steps) ? finalReport.tabs.strategy.steps : [];
+  const rankedSteps = rankRecommendations(existingSteps, diagnostics, { rawBiz, profile });
+  const headline = headlineAction(rankedSteps, diagnostics);
+
+  finalReport.scores = cleanPlainValue(diagnostics.scores);
+  finalReport.diagnostics = cleanPlainValue({
+    coverage: diagnostics.coverage,
+    checks: diagnostics.checks,
+    headline_action: headline,
+  });
+
+  if (rankedSteps.length) {
+    finalReport.tabs = finalReport.tabs || {};
+    finalReport.tabs.strategy = { ...(finalReport.tabs.strategy || {}), steps: cleanPlainValue(rankedSteps) };
+    finalReport.tabs.fullReport = cleanPlainValue({
+      ...(finalReport.tabs.fullReport || {}),
+      "If You Only Do One Thing": headline,
+      "Do This First": rankedSteps.slice(0, 5).map(step => ({
+        rank: step.rank,
+        title: step.title,
+        when: step.when,
+        time_needed: step.effort,
+        cost: step.money,
+        impact: step.impact_label,
+        why_this_one: step.because,
+        do_this: step.steps || step.action_steps || [step.action],
+        copy_ready_text: step.copy_ready_text,
+        how_to_know_it_worked: step.target?.watch,
+        good_sign: step.target?.good_sign,
+        bad_sign: step.target?.bad_sign,
+      })),
+      "What We Checked": {
+        note: `We ran ${diagnostics.coverage.checks_run} of ${diagnostics.coverage.checks_total} checks${diagnostics.coverage.checks_verified ? `, ${diagnostics.coverage.checks_verified} of them by opening your website` : " using only what you typed in"}.`,
+        confidence: diagnostics.coverage.confidence,
+        to_get_a_sharper_report: diagnostics.coverage.how_to_improve || "",
+        not_checked: diagnostics.scores.flatMap(score => (score.not_checked || []).map(item => item.question)),
+      },
+    });
+  }
+
   finalReport.marketing_os = buildMarketingOSEnvelope(finalReport, report, profile, rawBiz, internetSignals);
   finalReport.exportable_report_data = finalReport.marketing_os.exportable_report_data;
   const finalValidation = validateReportSchema(finalReport);

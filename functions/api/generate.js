@@ -19,6 +19,9 @@ function json(body, status = 200) {
 }
 
 const WORKSPACE_FULL_REPORT_KEYS = new Set([
+    "If You Only Do One Thing",
+    "Do This First",
+    "What We Checked",
     "Quick Summary",
     "Launch Readiness",
     "What To Fix First",
@@ -42,6 +45,7 @@ function buildWorkspaceResponseReport(report) {
     return {
         business: report?.business || {},
         scores: Array.isArray(report?.scores) ? report.scores : [],
+        diagnostics: report?.diagnostics || null,
         tabs: {
             ...tabs,
             fullReport: simpleFullReport,
@@ -258,6 +262,7 @@ async function saveGeneratedWorkspace(db, uid, generationId, businessProfile, ra
     const storageReport = {
         business: report.business,
         scores: report.scores,
+        diagnostics: report.diagnostics || null,
         tabs: report.tabs,
         meta: report.meta,
     };

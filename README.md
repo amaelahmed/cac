@@ -98,6 +98,28 @@ The app expects a D1 binding named `DB`, configured in `wrangler.toml`. The know
 - `data/industries/**`
 - `scripts/seed/expand_library.mjs`
 
+## Report Scoring
+
+The four headline numbers on `/details` come from `functions/api/engine/diagnostics.js`,
+not from the business brief's completeness. Each number is the weighted pass-rate
+of a set of named checks (`CHECKS` in that file). A check reports `pass`, `fail`,
+or `unknown`, and `unknown` checks are excluded from the score and listed to the
+user as "not checked" instead of being folded into a number.
+
+Checks also record whether their evidence was `verified` (CAC fetched the page and
+inspected it) or `self_reported` (the user ticked a box). A group whose checks are
+all self-reported, or which had only one runnable check, carries a caveat in the UI
+so a high number cannot read as a verdict it has not earned.
+
+`rankRecommendations()` in the same file orders the growth steps. Impact is earned
+from how many failed checks a step repairs, weighted by those checks' importance;
+effort and cost are inferred conservatively (when several rules match a step, the
+most expensive one wins) so a two-week job is never presented as a quick win.
+
+When adding a check, give it a plain-language `question`, a `weight`, and an
+`evidence` string that quotes back what was actually observed. Never add a check
+that scores how much the user typed.
+
 ## Verification
 
 Before shipping a change:
