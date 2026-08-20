@@ -107,6 +107,11 @@ function claimQuality(value) {
  * Every check is a pure function of the gathered context. Keeping them as data
  * means the report can list exactly what was and was not inspected.
  */
+function quote(value, limit = 120) {
+  const source = String(value || "").replace(/\s+/g, " ").trim();
+  return source.length > limit ? `${source.slice(0, limit - 1)}\u2026` : source;
+}
+
 const CHECKS = [
   // ---- Group: findability -------------------------------------------------
   {
@@ -213,9 +218,25 @@ const CHECKS = [
       if (/\b(everyone|anyone|all|general public|any ?body)\b/i.test(audience)) {
         return { status: "fail", source: SELF_REPORTED, evidence: `You described your customer as "${audience}". Selling to everyone means writing for no one.` };
       }
-      return wordCount(audience) >= 3
-        ? { status: "pass", source: SELF_REPORTED, evidence: `You described your customer as "${audience}".` }
-        : { status: "fail", source: SELF_REPORTED, evidence: `"${audience}" is too broad to write a single post for.` };
+      // Word count is not evidence. A three-word blob passes a length test while
+      // describing nobody, which is exactly the "scores how much you typed"
+      // failure this module exists to remove. Judge the claim, like usp_is_specific does.
+      const quality = claimQuality(audience);
+      if (quality.verdict === "specific") {
+        return { status: "pass", source: SELF_REPORTED, evidence: `You described your customer as "${quote(audience)}".` };
+      }
+      if (quality.generic.length) {
+        return {
+          status: "fail",
+          source: SELF_REPORTED,
+          evidence: `"${quote(audience)}" leans on "${quality.generic[0]}", which describes almost any buyer. Name who they are, where they are, and what they are trying to get done.`,
+        };
+      }
+      return {
+        status: "fail",
+        source: SELF_REPORTED,
+        evidence: `"${quote(audience)}" does not narrow anyone down yet. Name who they are, where they are, and what they are trying to get done.`,
+      };
     },
   },
   {
@@ -532,7 +553,7 @@ function effortTier(id) {
  * Deliberately conservative: when unsure we assume more work, not less, so we
  * never tell someone a two-week job is a quick win.
  */
-const MONEY_TIERS = ["Free", "Under ₹2,000", "₹2,000+"];
+const MONEY_TIERS = ["Free", "Small spend", "Real budget"];
 
 function estimateCost(title, action) {
   const blob = `${text(title)} ${text(action)}`.toLowerCase();
@@ -543,9 +564,9 @@ function estimateCost(title, action) {
     { match: /\b(google business|maps listing|claim)\b/, effort: "hour", money: "Free" },
     { match: /\b(ask .*(review|referral)|message .*(customer|past)|share with friends)\b/, effort: "hour", money: "Free" },
     { match: /\b(post|story|reel|carousel|photo|video|shoot|record)\b/, effort: "half_day", money: "Free" },
-    { match: /\b(website|landing page|checkout|form)\b/, effort: "days", money: "Under ₹2,000" },
-    { match: /\b(sample|prototype|make \d|prepare \d|inventory|stock|menu card|packaging)\b/, effort: "weeks", money: "₹2,000+" },
-    { match: /\b(ad|ads|boost|campaign|paid)\b/, effort: "half_day", money: "₹2,000+" },
+    { match: /\b(website|landing page|checkout|form)\b/, effort: "days", money: "Small spend" },
+    { match: /\b(sample|prototype|make \d|prepare \d|inventory|stock|menu card|packaging)\b/, effort: "weeks", money: "Real budget" },
+    { match: /\b(ad|ads|boost|campaign|paid)\b/, effort: "half_day", money: "Real budget" },
   ];
 
   // A task described as "shoot photos of 5 samples" is a sampling job that also

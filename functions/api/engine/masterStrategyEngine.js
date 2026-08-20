@@ -3237,7 +3237,7 @@ function visibleCaptionOverride(context, kind, index, offer) {
     ],
     after_class_cafe: [
       `After class, nobody wants a long menu debate. Ask what combo is fresh, pocket-friendly, and ready before the group splits.`,
-      `Calicut cafe plans move faster when the reply says price, portion, and ready time in one shot.`,
+      `Cafe plans move faster when the reply says price, portion, and ready time in one shot.`,
       `For a student order, send budget, hunger, and parcel time. We will point you to one combo that fits today.`,
     ],
     event_salon: [
@@ -3316,7 +3316,7 @@ function visibleCaptionOverride(context, kind, index, offer) {
       `Before booking a visit, request three options that match your budget and one reason each is worth seeing.`,
     ],
     local_property: [
-      `Kozhikode property search gets easier when budget and landmark preference come before random visits.`,
+      `A property search gets easier when budget and landmark preference come before random visits.`,
       `A useful rental reply filters by area, move-in date, and must-have before sending listings.`,
       `Do not spend Saturday chasing mismatched properties. Send budget, location, and property type first.`,
     ],
@@ -3506,7 +3506,7 @@ function naturalDayTitleForKind(context, kind, index, { focus, objection, person
       `Turn college snack confusion into one combo`,
       `Show the pocket-friendly order without hiding portion size`,
       `Film the parcel counter path for students`,
-      `Make the Calicut cafe plan fit budget and hunger`,
+      `Make the cafe plan fit budget and hunger`,
       `Show the fresh snack option before the menu scroll`,
       `Record the group table order with max spend visible`,
       `Turn after-class hunger into one useful reply`,
@@ -3692,7 +3692,7 @@ function naturalDayTitleForKind(context, kind, index, { focus, objection, person
       `Turn investment doubt into one useful shortlist`,
     ],
     local_property: [
-      `Localize the Kozhikode area filter before listings`,
+      `Localize the area filter before listings`,
       `Qualify budget, landmark, and move-in timing before options`,
       `Build a local property shortlist with must-have fit`,
       `Turn mismatched enquiries into one buyer filter`,
@@ -5031,7 +5031,7 @@ function agencyTitleForKind(context, kind, index, { focus, persona }) {
       `Make the property visit feel filtered, not random`,
     ],
     local_property: [
-      `Film the Kozhikode property filter before sending listings`,
+      `Film the property filter before sending listings`,
       `Show budget, preferred landmark, availability, and visit timing`,
       `Turn random property enquiries into a useful shortlist`,
     ],
