@@ -18,6 +18,17 @@ function json(body, status = 200) {
     });
 }
 
+// Fields the workspace UI actually renders for a calendar day. The engine
+// attaches a great deal more per day - shot_list, expected_outcome and
+// visual_direction were each repeating the SAME sentence across all 30 days
+// (308x, 289x, 88x) while never being displayed. Shipping them cost ~80% of
+// the calendar payload and made the plan read as boilerplate on export.
+const WORKSPACE_CALENDAR_DAY_KEYS = new Set([
+    "day", "platform", "post_type", "theme", "topic", "hook", "post",
+    "what_to_show", "how_to_create", "caption", "ready_caption", "full_caption",
+    "hashtags", "customer_action", "why_this_helps", "why_this_works",
+]);
+
 const WORKSPACE_FULL_REPORT_KEYS = new Set([
     "If You Only Do One Thing",
     "Do This First",
@@ -42,12 +53,25 @@ function buildWorkspaceResponseReport(report) {
         Object.entries(fullReport).filter(([key]) => WORKSPACE_FULL_REPORT_KEYS.has(key))
     );
 
+    const calendar = tabs.calendar && typeof tabs.calendar === "object" ? tabs.calendar : null;
+    const trimmedCalendar = calendar && Array.isArray(calendar.days)
+        ? {
+            ...calendar,
+            days: calendar.days.map(day => (day && typeof day === "object"
+                ? Object.fromEntries(
+                    Object.entries(day).filter(([key]) => WORKSPACE_CALENDAR_DAY_KEYS.has(key))
+                )
+                : day)),
+        }
+        : calendar;
+
     return {
         business: report?.business || {},
         scores: Array.isArray(report?.scores) ? report.scores : [],
         diagnostics: report?.diagnostics || null,
         tabs: {
             ...tabs,
+            ...(trimmedCalendar ? { calendar: trimmedCalendar } : {}),
             fullReport: simpleFullReport,
         },
         meta: report?.meta || {},

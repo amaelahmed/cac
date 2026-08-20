@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:engine": "node tests/engine-quality.mjs"
   },
   "dependencies": {
     "@better-auth/client": "^0.0.2-alpha.3",
