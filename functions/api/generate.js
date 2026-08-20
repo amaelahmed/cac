@@ -8,6 +8,7 @@ import { validateBusinessPayload } from "./utils/input-quality";
 import { assembleReport, validateReportSchema, sanitizeBusinessProfileForOutput } from "./engine/reportAssembler";
 import { StrategyBlockRetrieval } from "./engine/strategyBlockRetrieval";
 import { createMasterStrategy } from "./engine/masterStrategyEngine.js";
+import { expandCalendarWithAi } from "./engine/calendarExpander.js";
 import { fetchWebSnapshot } from "./utils/web-fetch.js";
 import { extractInternetSignals } from "./engine/internetSignals.js";
 
@@ -408,6 +409,31 @@ export async function onRequestPost(context) {
             forceRuleBased,
             forceAiFailure,
         });
+        // Second AI pass: the master prompt deliberately refuses to write final
+        // calendar days, so without this the days are only ever template
+        // expansion. Slices are independent and each one falls back to the
+        // deterministic days on refusal, so this can partially succeed.
+        if (masterResult.masterStrategy && !forceRuleBased && !forceAiFailure) {
+            const expansion = await expandCalendarWithAi(context, {
+                sessionUserId: session.user.id,
+                businessProfile,
+                masterStrategy: masterResult.masterStrategy,
+                businessFacts: {
+                    name: businessProfile?.identity?.name || enrichedBiz?.biz_name || "",
+                    industry: businessProfile?.market?.industry || enrichedBiz?.biz_industry || "",
+                    location: businessProfile?.market?.location || enrichedBiz?.biz_location || "",
+                    audience: businessProfile?.customers?.audience || enrichedBiz?.biz_audience || "",
+                    offer: businessProfile?.offering?.coreOffer || enrichedBiz?.biz_offer || "",
+                    website_facts: compactSnapshot(enrichedBiz?.own_website_snapshot),
+                },
+                enabled: env.CALENDAR_AI_EXPANSION !== "false",
+            });
+            if (expansion.days.length === masterResult.masterStrategy.content_calendar_30_days.length) {
+                masterResult.masterStrategy.content_calendar_30_days = expansion.days;
+            }
+            Object.assign(telemetry, expansion.telemetry);
+        }
+
         const masterTelemetry = masterResult.telemetry || {};
         telemetry.master_strategy_enabled = true;
         telemetry.generation_source = masterTelemetry.generation_source || telemetry.generation_source;
