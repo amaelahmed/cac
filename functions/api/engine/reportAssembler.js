@@ -2610,7 +2610,12 @@ function masterCalendarDay(day, index, profile, rawBiz, city, hashtags) {
     recommended_format: masterText(day.recommended_format, postType),
     title,
     topic: title,
-    hook: masterText(day.hook, title),
+    // A hook that repeats the topic verbatim is not a hook. Omit rather than
+    // duplicate; the UI falls back to topic on its own.
+    hook: (() => {
+      const supplied = masterText(day.hook, "");
+      return supplied && supplied !== title ? supplied : undefined;
+    })(),
     objective: masterText(day.objective, day.goalIntent, "Move the customer one step closer to action."),
     target_customer: masterText(day.target_customer, targetLabel(profile, rawBiz)),
     customer_objection: masterText(day.customer_objection, "They need more clarity before acting."),

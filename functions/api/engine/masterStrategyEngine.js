@@ -791,6 +791,19 @@ function reviewerScorecard(metrics) {
   };
 }
 
+function asContinuation(text, context) {
+  const value = String(text || "").trim();
+  if (!value) return "";
+  const firstWord = value.split(/\s+/)[0].replace(/[^A-Za-z']/g, "");
+  const proper = new Set([
+    ...String(context?.businessName || "").split(/\s+/).filter(Boolean),
+    "WhatsApp", "Instagram", "Google", "Facebook", "YouTube", "LinkedIn", "Reels", "DM", "DMs",
+  ]);
+  if (proper.has(firstWord)) return value;
+  // Only downcase Sentence-case words; leaves ALLCAPS acronyms untouched.
+  return /^[A-Z][a-z]/.test(value) ? value[0].toLowerCase() + value.slice(1) : value;
+}
+
 function scoreMasterStrategy(master, context, intelligence) {
   const duplicate = duplicateRecommendationScore(master);
   const generic = genericLanguageScore(master);
@@ -1710,7 +1723,7 @@ function defaultMasterCore({ marketingOS, intelligence }) {
     },
     psychology: unique(intelligence.units.flatMap(unit => unit.psychology)).slice(0, 8).map(name => ({
       principle: name,
-      use_it_by: `Apply ${name} to make ${context.businessName} easier to trust before asking people to ${actionPhrase(context)}.`,
+      use_it_by: `apply ${name} to make the offer easier to trust before asking people to ${actionPhrase(context)}.`,
     })),
     offers: unique([
       ...offersForVertical(context, marketingOS),
@@ -4107,7 +4120,7 @@ function calendarCreative(context, index, { pillar, objection, persona, psych, o
     title,
     hook: title,
     caption,
-    visual_direction: sanitizeGeneratedText(`${context.businessName}: show ${proof} connected to ${focus}.`, context),
+    visual_direction: sanitizeGeneratedText(`Frame the first shot so "${lower(title)}" is obvious without sound, then show ${proof}.`, context),
     shot_list: shots.map(step => sanitizeGeneratedText(step, context)),
     script: sanitizeGeneratedText(`${context.businessName} should answer "${doubt || `Need ${focus}?`}" with ${proof}, the first step, and this exact action: ${cta}`, context),
     how_to_create: [
@@ -4116,7 +4129,7 @@ function calendarCreative(context, index, { pillar, objection, persona, psych, o
       sanitizeGeneratedText(`Close with: ${cta}`, context),
     ],
     customer_action: cta,
-    why_this_works: sanitizeGeneratedText(`For ${context.businessName}, ${clean(psych?.use_it_by, `this reduces doubt and gives ${context.audience} a clear action.`)}`, context),
+    why_this_works: sanitizeGeneratedText(`For ${context.businessName}, ${asContinuation(clean(psych?.use_it_by, `this reduces doubt and gives ${context.audience} a clear action.`), context)}`, context),
     offer_used: businessFacingFocus(context, clean(offer?.offer, focus), index),
     objective: sanitizeGeneratedText(clean(pillar?.purpose, `Make ${focus} easier to understand and act on.`), context),
   };

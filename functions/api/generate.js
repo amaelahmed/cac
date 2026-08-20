@@ -24,9 +24,9 @@ function json(body, status = 200) {
 // (308x, 289x, 88x) while never being displayed. Shipping them cost ~80% of
 // the calendar payload and made the plan read as boilerplate on export.
 const WORKSPACE_CALENDAR_DAY_KEYS = new Set([
-    "day", "platform", "post_type", "theme", "topic", "hook", "post",
-    "what_to_show", "how_to_create", "caption", "ready_caption", "full_caption",
-    "hashtags", "customer_action", "why_this_helps", "why_this_works",
+    "day", "platform", "post_type", "theme", "topic", "hook",
+    "what_to_show", "how_to_create", "caption", "full_caption",
+    "hashtags", "customer_action", "why_this_helps",
 ]);
 
 const WORKSPACE_FULL_REPORT_KEYS = new Set([

@@ -66,9 +66,9 @@ const report = assembleReport({
 rmSync(root, { recursive: true, force: true });
 
 // Same whitelist the API applies before responding.
-const KEEP = new Set(["day", "platform", "post_type", "theme", "topic", "hook", "post",
-  "what_to_show", "how_to_create", "caption", "ready_caption", "full_caption",
-  "hashtags", "customer_action", "why_this_helps", "why_this_works"]);
+const KEEP = new Set(["day", "platform", "post_type", "theme", "topic", "hook",
+  "what_to_show", "how_to_create", "caption", "full_caption",
+  "hashtags", "customer_action", "why_this_helps"]);
 const days = (report.tabs?.calendar?.days || [])
   .map(d => Object.fromEntries(Object.entries(d).filter(([k]) => KEEP.has(k))));
 
