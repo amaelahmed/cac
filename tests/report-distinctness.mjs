@@ -195,6 +195,26 @@ check(
   familyCopy ? "family-specific copy reached a commuter clinic's report" : ""
 );
 
+console.log("\n=== a shop must be described as the shop it is ===");
+// A bakery was classed as a sit-down restaurant, so its plan talked about the
+// seafood choice, dine-in versus pickup, and table-size ordering.
+const bakeryCopy = [...flat.bakery.values()].join(" ").toLowerCase();
+const WRONG_FOR_A_BAKERY = ["seafood", "dine-in", "table-size", "biryani", "headcount"];
+const strays = WRONG_FOR_A_BAKERY.filter(word => bakeryCopy.includes(word));
+check(
+  "a bakery is not handed restaurant copy",
+  strays.length === 0,
+  strays.length ? `found: ${strays.join(", ")}` : ""
+);
+// The offer field is blank in this fixture, so intake copies the industry into
+// it. "Fresh artisan bakery just came out" is what that used to produce.
+const tradeNameSold = /\b(fresh|order|buy|try) (?:the )?artisan bakery\b/.test(bakeryCopy);
+check(
+  "the industry name is not used as if it were a product",
+  !tradeNameSold,
+  tradeNameSold ? "the trade name is being sold as a product" : ""
+);
+
 if (failures) {
   console.log(`\n${failures} DISTINCTNESS CHECK(S) FAILED\n`);
   process.exit(1);

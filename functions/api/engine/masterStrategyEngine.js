@@ -1959,7 +1959,9 @@ function naturalOfferFocus(context, index = 0) {
   ].join(" "));
   const kind = businessKind(context);
   const sets = {
-    food: /shawarma|hostel|student dinner|grilled/.test(source)
+    food: /bakery|baker|bread|sourdough|patisserie|pastry|cake|croissant|bun\b/.test(source)
+      ? ["today's fresh batch", "loaf from the morning bake", "counter pick", "box to take home"]
+      : /shawarma|hostel|student dinner|grilled/.test(source)
       ? ["shawarma combo", "student dinner order", "quick parcel meal", "juice combo"]
       : /coffee|workspace|pastr|cold coffee|brownie|sandwich/.test(source)
         ? ["coffee break order", "student combo", "brownie-and-drink pick", "takeaway snack"]
@@ -1995,11 +1997,14 @@ function naturalOfferFocus(context, index = 0) {
 // trial session". Rotating the business's own promise through them is what
 // makes two same-industry plans read differently, and it costs no AI call.
 function differentiatorFocuses(context) {
-  const promise = clean(context.differentiator);
+  const promise = trimEndPunctuation(clean(context.differentiator));
   if (!promise) return [];
-  const short = compactPhrase(promise, promise, 6);
-  const who = audiencePhrase(context, "your customers");
-  return unique([short, `${short} proof`, `${short} for ${lowerFirst(who)}`].filter(Boolean));
+  // compactPhrase strips articles, which turns "sourdough baked twice a day"
+  // into "sourdough baked twice day". This is the owner's own sentence, so keep
+  // its words and only limit the length.
+  const words = promise.split(/\s+/).filter(Boolean);
+  const short = trimDanglingWord(words.slice(0, 6).join(" ")) || promise;
+  return unique([short, `${short} proof`].filter(Boolean));
 }
 
 function differentiatorDetails(context) {
@@ -2021,15 +2026,40 @@ function blendDifferentiator(context, industryFocus, index = 0) {
   return index % 2 === 0 ? own[Math.floor(index / 2) % own.length] : industryFocus;
 }
 
+// "artisan bakery" for a bakery, "dental clinic" for a dental clinic: the offer
+// field is just the trade name with an adjective in front. Anything that adds
+// two or more real words ("wedding cakes", "same-day denture repair") is a
+// genuine offer and is left alone.
+function isIndustryRestatement(value, context) {
+  const type = lower(context.businessType);
+  const source = lower(value);
+  if (!type || !source) return false;
+  const escaped = type.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const remainder = source
+    .replace(new RegExp(`\\b${escaped}\\b`, "g"), " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return remainder.split(/\s+/).filter(Boolean).length <= 1;
+}
+
 function businessFacingFocus(context, value, index = 0) {
   const source = clean(value);
   if (!source) return naturalOfferFocus(context, index);
+  // When the owner leaves the offer blank, intake copies the industry into it.
+  // The "offer" then becomes "artisan bakery", and captions read "Fresh artisan
+  // bakery just came out." An industry is not a thing anyone buys, so fall back
+  // to something from the counter.
+  if (isIndustryRestatement(source, context)) return naturalOfferFocus(context, index);
   if (/\b(opening day tasting plate|first visit package|clearance bundle|checkup camp|matched property shortlist|guided trial(?: session)?|early access|paid strategy audit|content direction sprint|document checklist review|consultation slot|verified listing walkthrough|new arrival drop|weekend slot offer|family combo|service recommendation tool|real example on website|workflow audit)\b/i.test(source)) {
     return naturalOfferFocus(context, index);
   }
   if (/\bon\s+(website|instagram|whatsapp|google business|linkedin|email)\b/i.test(source)) {
     return naturalOfferFocus(context, index);
   }
+  // The focus may already BE the owner's promise, handed down from an earlier
+  // call. Compacting it again strips its articles: "sourdough baked twice a
+  // day" comes back as "sourdough baked twice day".
+  if (differentiatorFocuses(context).some(phrase => lower(phrase) === lower(source))) return source;
   return compactPhrase(source, naturalOfferFocus(context, index), 4);
 }
 
@@ -2355,6 +2385,16 @@ function growthIdeaExperiment(context, brief, index) {
       [`one feature into a buyer job`, `the feature only after naming the real job it solves for ${lowerFirst(buyer)}, then close with the demo question`],
       [`the first-week result as the promise`, `what gets faster or cleaner in seven days, using one screen and one measurable outcome`],
     ],
+    counter_bakery: [
+      [`the shelf at two times of day`, `what is out at opening and what is left by afternoon, so people learn when to come`],
+      [`how long ${lowerFirst(focus)} stays good`, `the honest keeping time, how to store it, and when it is best eaten`],
+      [`one pick for a first-time buyer`, `the single thing regulars buy, its price, and why it is the safe first try`],
+      [`pre-orders for dates people plan`, `what needs ordering ahead, how far ahead, and how to reserve it`],
+      [`the price list before the visit`, `every item and price in one image, so nobody has to ask at the counter`],
+      [`what sells out and when`, `the item that goes first, the hour it goes, and the time to arrive for it`],
+      [`a gift box people can send`, `what fits in a box, what it costs, and how to order one for someone else`],
+      [`the batch times as a habit`, `the hours the oven finishes, so buying fresh becomes a routine, not luck`],
+    ],
     food: [
       [`two order paths around ${lowerFirst(focus)}`, `two choices: fastest pickup and safest family order; ask for headcount, budget, and pickup time, then track which reply comes faster`],
       [`portion, ready time, and parcel detail before the menu`, `a real plate or parcel with size reference, ready-time note, and the keyword buyers should message`],
@@ -2446,7 +2486,8 @@ function growthIdeaExperiment(context, brief, index) {
       [`the first action path from post to reply`, `what buyers see, what they send, how the owner replies, and what gets tracked`],
     ],
   };
-  const selected = (options[kind] || options.local)[index % (options[kind] || options.local).length];
+  const pool = options[contextVariant(context, kind)] || options[kind] || options.local;
+  const selected = pool[index % pool.length];
   const titleRest = stripLeadingAction(selected[0]) || selected[0];
   const actionRest = stripLeadingAction(selected[1]) || selected[1];
   return {
@@ -2900,6 +2941,16 @@ function industryCta(context, kind, index = 0) {
   };
   const subtypeList = subtypeVariants[context.briefSubtype];
   if (subtypeList) return subtypeList[index % subtypeList.length];
+  // A bakery has a counter and a batch, not a menu and a parcel. Route it
+  // before the shared food wording.
+  if (kind === "food" && contextVariant(context, kind) === "counter_bakery") {
+    const bakery = [
+      "Message FRESH and we will tell you what is on the shelf right now.",
+      "Send the day and time you want it, and we will hold one for you.",
+      "Ask what came out of the oven today before you walk over.",
+    ];
+    return bakery[index % bakery.length];
+  }
   const variants = {
     software: [
       "Reply DEMO and we will show the workflow before you sign up.",
@@ -3074,7 +3125,23 @@ function customerCaptionForKind(context, index, { focus, objection, proof, perso
       `Good businesses make the first step clear. Ask about ${focus}, see ${proofText}, and then decide. ${cta}`,
     ],
   };
-  const list = lines[kind] || lines.local;
+  // The shared food pool is written for a sit-down place: headcount, dine-in,
+  // spice comfort, group-chat debates. None of that is how anyone buys bread.
+  const bakeryLines = [
+    `Fresh ${offer} is out now. Ask what is on the shelf before you walk over.`,
+    `We bake in small batches, so the shelf changes through the day. Message to check what is left.`,
+    `Buying for someone else? Tell us the occasion and we will pick one thing from today's batch.`,
+    `Ask how long ${offer} stays good, so you know whether to buy today or tomorrow.`,
+    `Want it kept aside? Send the time you can collect and we will hold it.`,
+    `Prices are on every item. Ask before you come and we will send them.`,
+    `Some things sell out early. Ask what usually goes first and when to arrive.`,
+    `Ordering for a party? Give us the date and we will tell you what to book ahead.`,
+    `Not sure what to try first? Ask for the one thing regulars buy every week.`,
+    `We can box it for a gift. Ask what fits before you decide.`,
+  ];
+  const list = kind === "food" && contextVariant(context, kind) === "counter_bakery"
+    ? bakeryLines
+    : lines[kind] || lines.local;
   return sanitizeGeneratedText(pickSeeded(list, context, `caption:${kind}:${moment}:human`, index), context);
 }
 
@@ -3095,6 +3162,7 @@ function actionNounForKind(kind) {
 
 function titleFlavorForKind(context, kind, index) {
   const flavors = {
+    counter_bakery: ["with the batch time shown", "through shelf freshness", "with the price visible", "before it sells out", "around keeping time", "with one honest recommendation"],
     software: ["with workflow proof", "without setup confusion", "for team buy-in", "through a screen-level demo", "around week-one adoption", "against manual-work confusion"],
     food: ["with portion clarity", "through pickup timing", "with freshness proof", "for group orders", "before the menu decision", "with ready-time detail"],
     salon: ["with reference-photo clarity", "before the slot is chosen", "through result proof", "around prep timing", "with budget comfort", "through consultation detail"],
@@ -3106,7 +3174,7 @@ function titleFlavorForKind(context, kind, index) {
     retail: ["with real-photo proof", "through stock clarity", "before preview confidence", "around delivery timing", "with size-and-style fit", "with checkout confidence"],
     local: ["with proof clarity", "around reply confidence", "through timing detail", "before the fit check", "with first-step ease", "around buyer trust"],
   };
-  const list = flavors[kind] || flavors.local;
+  const list = flavors[contextVariant(context, kind)] || flavors[kind] || flavors.local;
   return list[seededIndex(context, `title-flavor:${kind}`, index, list.length)];
 }
 
@@ -3132,6 +3200,7 @@ function contextVariant(context, kind) {
     context.location,
   ].join(" "));
   if (kind === "food") {
+    if (/bakery|baker|bake[dr]?\b|bread|sourdough|patisserie|pastry shop|cake shop|confection/.test(source)) return "counter_bakery";
     if (/shawarma|hostel|grilled|student dinner/.test(source)) return "hostel_food";
     if (/cold coffee|brownies|sandwich|after|combo/.test(source)) return "after_class_cafe";
     if (/coffee|workspace|pastries|remote|weekday/.test(source)) return "workday_cafe";
@@ -3161,6 +3230,11 @@ function visibleTitleOverride(context, kind, index, offer) {
   if (index > 2) return "";
   const variant = contextVariant(context, kind);
   const lines = {
+    counter_bakery: [
+      "Post today's fresh batch with the time it came out of the oven",
+      "Show what is still on the shelf before the afternoon rush",
+      "Turn a first-time buyer into one easy pick from the counter",
+    ],
     family_food: [
       "Plan one family order around headcount, parcel time, and portion proof",
       "Sort the seafood choice by freshness, wait time, and pickup comfort",
@@ -3284,6 +3358,11 @@ function visibleCaptionOverride(context, kind, index, offer) {
   if (index > 2) return "";
   const variant = contextVariant(context, kind);
   const lines = {
+    counter_bakery: [
+      `Fresh ${offer} just came out. Ask what is on the shelf right now and we will hold one for you.`,
+      `Not sure what to pick? Tell us who it is for and we will name one thing from today's batch.`,
+      `We bake in small batches, so the shelf changes through the day. Message before you walk over.`,
+    ],
     family_food: [
       `Ordering for family? Send the headcount and pickup time. We will point you to the ${offer} option that keeps the table simple.`,
       `A good family order needs portion clarity first. Ask what serves 3-4 people, what is fresh now, and when it can be packed.`,
@@ -3402,6 +3481,11 @@ function visibleMessageOverride(context, kind, index, offer) {
   if (index > 2) return "";
   const variant = contextVariant(context, kind);
   const lines = {
+    counter_bakery: [
+      `Send FRESH and we will tell you what is on the shelf now, the price, and how long it will last.`,
+      `Message what you need it for and when. We will reply with one ${offer} pick and the pickup time.`,
+      `Ask us to hold something from today's batch. Tell us the time you can collect.`,
+    ],
     family_food: [
       `Send FAMILY with headcount, parcel or dine-in, and pickup time. We will suggest one ${offer} order with portion and price.`,
       `Message what time you need food and how many people are eating. We will reply with the safest family order.`,
@@ -3527,6 +3611,18 @@ function naturalDayTitleForKind(context, kind, index, { focus, objection, person
   const market = place || (kind === "software" ? "for the buyer team" : "for the buyer");
   const variant = contextVariant(context, kind);
   const variantTitles = {
+    counter_bakery: [
+      `Film the batch coming out of the oven with the time on screen`,
+      `Show what is left on the shelf at the same hour every day`,
+      `Help a first-time buyer pick one thing from the counter`,
+      `Show how long ${offer} stays good after it is bought`,
+      `Film the wrapping and the box for a gift order`,
+      `Show the price of each item without making people ask`,
+      `Record a regular customer saying what they always buy`,
+      `Show what sells out first and when to come for it`,
+      `Film a pre-order being collected at the promised time`,
+      `Show the difference between today's batch and yesterday's`,
+    ],
     family_food: [
       `Run a family portion test with parcel timing on screen`,
       `Simplify table-size ordering for the WhatsApp group`,
@@ -4195,6 +4291,17 @@ function calendarCreative(context, index, { pillar, objection, persona, psych, o
   };
 }
 
+const BAKERY_MESSAGE_TEMPLATES = [
+  "Message FRESH and we will tell you what came out of the oven today.",
+  "Send the time you can collect and we will hold something from this batch.",
+  "Tell us the occasion and we will pick one thing from today's shelf.",
+  "Ask for prices and we will send the full list before you come.",
+  "Planning ahead? Send the date and we will tell you what to order in advance.",
+  "Ask what usually sells out first, so you know when to arrive.",
+  "Want it boxed as a gift? Tell us who it is for and we will suggest one.",
+  "Ask how long it stays fresh and we will tell you the honest answer.",
+];
+
 function messageTemplateForContext(context, index, { objection, persona, focus }) {
   const kind = businessKind(context);
   const customer = clean(persona?.name, "customer");
@@ -4221,6 +4328,7 @@ function messageTemplateForContext(context, index, { objection, persona, focus }
       `${moment} fastest test: send the repeated task, current tool, and team size. We will reply with the cleanest first use case.`,
       `Not ready to switch? Ask for a week-one walkthrough and compare it with how your team works today.`,
     ],
+    counter_bakery: BAKERY_MESSAGE_TEMPLATES,
     food: [
       `${moment} order? Tell us headcount, budget, and parcel or dine-in. We will suggest one ${offer} option with price and ready time.`,
       `For ${offer}, message the item name and pickup time. We will confirm availability, price, and the easiest order step.`,
@@ -4313,7 +4421,7 @@ function messageTemplateForContext(context, index, { objection, persona, focus }
       `If the choice feels unclear, ask for price, timing, and proof in one message. We will make the decision easier.`,
     ],
   };
-  const list = templates[kind] || templates.local;
+  const list = templates[contextVariant(context, kind)] || templates[kind] || templates.local;
   const selected = sanitizeGeneratedText(pickSeeded(list, context, `message:${kind}:${moment}`, index), context);
   return {
     type: `${customer} reply`,
@@ -4720,6 +4828,10 @@ function anchorSpecificText(text, context, index) {
   const source = sanitizeGeneratedText(removeRepeatedWords(text), context);
   if (!source || hasContextSignal(source, context)) return source;
   if (STRONG_ACTION_VERB_PATTERN.test(source) && source.split(/\s+/).length >= 6) return source;
+  // Finished copy - a caption is a whole post, not a phrase waiting for a
+  // suffix. Gluing "for box to take home" onto the end of two sentences reads
+  // as broken English to the person who has to publish it.
+  if (source.split(/[.!?]+\s+/).filter(part => clean(part)).length > 1) return source;
   const focus = businessFacingFocus(context, offerFocus(context, index), index);
   if (/^(how|what|when|where|why|will|can|do|does|is|are)\b/i.test(source)) {
     return sanitizeGeneratedText(`For ${lowerFirst(focus)}, ${lowerFirst(trimEndPunctuation(source))}?`, context);
@@ -5086,6 +5198,11 @@ function agencyTitleForKind(context, kind, index, { focus, persona }) {
   const consultantTitle = consultantTitleForKind(context, kind, index, { focus, persona });
   if (consultantTitle) return withOwnVoice(consultantTitle, context, index);
   const titles = {
+    counter_bakery: [
+      `Film the fresh batch of ${offer} with the baking time shown`,
+      `Show shelf stock, price, and how long ${offer} keeps`,
+      `Make the first counter pick easy with one honest ${offer} recommendation`,
+    ],
     family_food: [
       `Film staff recommending one ${offer} order for a family`,
       `Show portion size, parcel packing, and ready time for ${offer}`,
