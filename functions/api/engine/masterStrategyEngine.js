@@ -990,11 +990,22 @@ function contextFromProfile(businessProfile = {}, rawBiz = {}) {
   ].filter(Boolean).join(" "));
   const hasSoftwareIntent = /saas|software|micro[-\s]?saas|ai tool|developer tool|subscription app|subscription software/.test(industrySource)
     || /software|automation platform|dashboard|developer tool|subscription app|crm|app for|platform for/.test(offerSource);
-  const vertical = /gym|fitness|workout|strength|weight loss|training/.test(industrySource)
+  // "training" on its own is NOT a gym word. "Professional Training / Education"
+  // is the industry a tuition centre picks, and matching the bare word turned
+  // one into a gym - thirty days of workout and trainer posts for a business
+  // that teaches classes. Only fitness-specific training counts here.
+  const isFitness = /\bgym\b|fitness|workout|weight loss|(?:personal|strength|weight|circuit|athletic)\s+training/.test(industrySource);
+  // The education answer is checked FIRST, because somebody who ticked an
+  // education industry has already told us the trade. Loose words elsewhere in
+  // their answers do not get to overrule that.
+  const isEducation = /education|tuition|coaching|school|academy|teacher|study centre|study center|demo class|batch|student|parent/.test(source);
+  const vertical = (isEducation && !/\bgym\b|fitness|workout/.test(industrySource))
+    ? "education"
+    : isFitness
     ? "gym"
     : hasSoftwareIntent
     ? "software"
-    : /education|tuition|coaching|school|academy|teacher|study centre|study center|demo class|batch|student|parent/.test(source)
+    : isEducation
       ? "education"
     : /salon|beauty|bridal|makeup|facial|haircut|hair styling|grooming|party grooming/.test(source)
       ? "salon"
@@ -2870,12 +2881,42 @@ function businessKind(context) {
     context.audience,
   ].join(" "));
   if (context.briefSubtype) return "local";
-  if (context.vertical === "software" || context.parentCategory === "software") return "software";
-  if (context.vertical === "gym" || /gym|fitness|workout|trainer|membership/.test(source)) return "gym";
-  if (context.vertical === "law_firm" || /law|legal|lawyer|advocate|contract|document/.test(source)) return "law_firm";
-  if (context.vertical === "real_estate" || /real estate|property|apartment|flat|villa|plot|rental|site visit/.test(source)) return "real_estate";
-  if (context.vertical === "marketing_agency" || /agency|marketing|creative|branding|advertising|content strategy/.test(source)) return "agency";
-  if (context.vertical === "education" || context.parentCategory === "education" || /education|tuition|coaching|school|academy|teacher|study centre|study center|demo class|batch|student|parent/.test(source)) return "local";
+
+  // The trade is whatever the owner ticked, not whatever word happens to appear
+  // somewhere in their answers. Before this, ONE stray word could overrule the
+  // industry question: a tuition centre that ticked "Membership / subscription"
+  // as its PAYMENT MODEL came out as a gym, and thirty days of trainer and
+  // workout posts went to a business that teaches classes.
+  //
+  // So: an explicit vertical first, then the industry answer, and only then the
+  // loose keyword sniffing - which is now a tie-breaker, not the decider.
+  const VERTICAL_KIND = {
+    software: "software",
+    gym: "gym",
+    law_firm: "law_firm",
+    real_estate: "real_estate",
+    marketing_agency: "agency",
+    education: "local",
+  };
+  if (VERTICAL_KIND[context.vertical]) return VERTICAL_KIND[context.vertical];
+
+  const INDUSTRY_KIND = {
+    software: "software",
+    education: "local",
+    healthcare: "clinic",
+    food_beverage: "food",
+    ecommerce: "retail",
+    retail: "retail",
+  };
+  if (INDUSTRY_KIND[context.parentCategory]) return INDUSTRY_KIND[context.parentCategory];
+
+  // "membership" is deliberately NOT here. It is a way of paying, not a trade -
+  // gyms, tuition centres, software and clubs all sell memberships.
+  if (/gym|fitness|workout|trainer/.test(source)) return "gym";
+  if (/law|legal|lawyer|advocate|contract|document/.test(source)) return "law_firm";
+  if (/real estate|property|apartment|flat|villa|plot|rental|site visit/.test(source)) return "real_estate";
+  if (/agency|marketing|creative|branding|advertising|content strategy/.test(source)) return "agency";
+  if (/education|tuition|coaching|school|academy|teacher|study centre|study center|demo class|batch|student|parent/.test(source)) return "local";
   if (/restaurant|cafe|coffee|bakery|food|kitchen|cloud kitchen|biryani|juice|snack|menu/.test(source)) return "food";
   if (/dental|clinic|doctor|health|patient|appointment|treatment|derma|dermatology|laser|acne|pigmentation/.test(source)) return "clinic";
   if (/salon|beauty|spa|makeup|hair|skin|bridal|facial/.test(source)) return "salon";
