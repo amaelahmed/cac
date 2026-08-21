@@ -2,6 +2,7 @@ import { buildMarketingOSReport, validateMarketingOutput, validateSemanticAlignm
 import { runDiagnostics, rankRecommendations, headlineAction } from "./diagnostics.js";
 import { onePick } from "./multiPick.js";
 import { buildNextSteps } from "./nextSteps.js";
+import { buildBusinessSummary } from "./businessSummary.js";
 
 const REQUIRED_SECTIONS = [
   "Business Health Snapshot",
@@ -3219,6 +3220,12 @@ export function assembleReport({ hydratedStrategy, businessProfile, rawBiz, conf
   finalReport.tabs = finalReport.tabs || {};
   finalReport.tabs.nextSteps = cleanPlainValue(
     buildNextSteps({ diagnostics, rankedSteps, headline })
+  );
+
+  // The opening: what the business is, what people are really buying, and the
+  // lines the owner can use today. Built from the form answers only.
+  finalReport.tabs.oneMinute = cleanPlainValue(
+    buildBusinessSummary({ context: marketingOS.context, rawBiz, diagnostics })
   );
 
   if (rankedSteps.length) {

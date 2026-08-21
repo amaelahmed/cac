@@ -7,6 +7,7 @@ import {
   BarChart3,
   BookOpenText,
   BrainCircuit,
+  Building2,
   CalendarDays,
   Flag,
   FileText,
@@ -69,6 +70,7 @@ type StrategyWorkspaceProps = {
 };
 
 const tabDefs = [
+  { id: "oneMinute", label: "Your Business", icon: Building2 },
   { id: "nextSteps", label: "Start Here", icon: Flag },
   { id: "calendar", label: "Calendar / 30-Day Post Plan", icon: CalendarDays },
   { id: "strategy", label: "Marketing Plan", icon: Target },
@@ -215,6 +217,7 @@ function fallbackTabs(report: StrategyRecord) {
     // Empty is correct here: this fallback runs when the engine did not answer,
     // and the Start Here tab renders its own "we could not measure that" copy
     // rather than inventing a priority.
+    oneMinute: {},
     nextSteps: {},
     calendar: { days: asArray(report["30-Day Content Calendar"]) },
     strategy: { steps: asArray(report["10-Step Growth Strategy"]) },
@@ -320,7 +323,7 @@ export function StrategyWorkspace({
     () => normalizeWorkspace(result, payload),
     [result, payload],
   );
-  const [activeTab, setActiveTab] = useState<WorkspaceTabId>("nextSteps");
+  const [activeTab, setActiveTab] = useState<WorkspaceTabId>("oneMinute");
   const [selectedDay, setSelectedDay] = useState<StrategyRecord | null>(null);
   const [extraCustomers, setExtraCustomers] = useState(10);
   const [conversionRate, setConversionRate] = useState(8);
@@ -331,6 +334,10 @@ export function StrategyWorkspace({
   const strategySteps = asArray(asRecord(tabs.strategy).steps)
     .map((step) => asRecord(step))
     .slice(0, 10);
+  const oneMinute = asRecord(asRecord(tabs.oneMinute).inOneMinute);
+  const whatToSell = asRecord(asRecord(tabs.oneMinute).whatToSell);
+  const yourMessage = asRecord(asRecord(tabs.oneMinute).yourMessage);
+  const opportunity = asRecord(oneMinute.biggest_opportunity);
   const nextSteps = asRecord(tabs.nextSteps);
   const oneThing = asRecord(nextSteps.oneThing);
   const biggestProblem = asRecord(nextSteps.biggestProblem);
@@ -570,6 +577,149 @@ export function StrategyWorkspace({
             </button>
           ))}
         </div>
+
+        {activeTab === "oneMinute" && (
+          <WorkspaceSection
+            title="Your Business in One Minute"
+            subtitle="What you do, who it is for, and what people are really buying when they buy from you."
+          >
+            <div className="grid gap-4">
+              <article className="rounded-sm border border-black/10 bg-white p-5">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <div className="text-[11px] font-bold uppercase tracking-wider text-[#ff3300]">
+                      What you do
+                    </div>
+                    <p className="mt-1 font-display text-xl font-bold leading-snug">
+                      {asText(oneMinute.what_you_do)}
+                    </p>
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-bold uppercase tracking-wider text-[#ff3300]">
+                      Who you serve
+                    </div>
+                    <p className="mt-1 font-display text-xl font-bold leading-snug">
+                      {asText(oneMinute.who_you_serve)}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 border-t border-black/10 pt-4">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-black/45">
+                    What customers are actually buying
+                  </div>
+                  <p className="mt-1 text-base leading-7">
+                    {asText(oneMinute.what_customers_are_buying)}
+                  </p>
+                </div>
+              </article>
+
+              <div className="grid gap-4 lg:grid-cols-2">
+                <article className="rounded-sm border border-black/10 bg-white p-5">
+                  <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-[#ff3300]">
+                    Where you are right now
+                  </div>
+                  <ul className="grid gap-2">
+                    {asArray(oneMinute.current_situation).map((item, index) => (
+                      <li key={index} className="flex gap-2 text-sm leading-6">
+                        <span className="text-black/35">&#8226;</span>
+                        <span>{asText(item)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {asArray(oneMinute.we_do_not_know).length > 0 && (
+                    <p className="mt-4 border-t border-black/10 pt-3 text-xs leading-5 text-black/45">
+                      We still do not know:{" "}
+                      {asArray(oneMinute.we_do_not_know)
+                        .map((item) => asText(item))
+                        .join(", ")}
+                      . Add these and run it again for a sharper report.
+                    </p>
+                  )}
+                </article>
+
+                <article className="rounded-sm border-2 border-[#ff3300] bg-white p-5">
+                  <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-[#ff3300]">
+                    Your biggest opportunity
+                  </div>
+                  <h3 className="font-display text-2xl font-bold leading-tight">
+                    {asText(opportunity.opportunity)}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-black/70">
+                    {asText(opportunity.why)}
+                  </p>
+                </article>
+              </div>
+
+              <article className="rounded-sm border border-black/10 bg-white p-5">
+                <div className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#ff3300]">
+                  What you should sell
+                </div>
+                <div className="grid gap-3 md:grid-cols-3">
+                  <div className="rounded-sm border border-black/10 bg-[#faf7f2] p-3">
+                    <div className="text-[11px] font-bold uppercase tracking-wider text-black/45">
+                      You are selling
+                    </div>
+                    <p className="mt-1 text-sm leading-6">
+                      {asText(whatToSell.you_are_selling)}
+                    </p>
+                  </div>
+                  <div className="rounded-sm border border-black/10 bg-[#faf7f2] p-3">
+                    <div className="text-[11px] font-bold uppercase tracking-wider text-black/45">
+                      But they are really buying
+                    </div>
+                    <p className="mt-1 text-sm leading-6">
+                      {asText(whatToSell.customers_are_really_buying)}
+                    </p>
+                  </div>
+                  <div className="rounded-sm border border-black/10 bg-[#faf7f2] p-3">
+                    <div className="text-[11px] font-bold uppercase tracking-wider text-black/45">
+                      So your marketing should
+                    </div>
+                    <p className="mt-1 text-sm leading-6">
+                      {asText(whatToSell.so_your_marketing_should)}
+                    </p>
+                  </div>
+                </div>
+              </article>
+
+              <article className="rounded-sm border border-black/10 bg-white p-5">
+                <div className="mb-1 text-[11px] font-bold uppercase tracking-wider text-[#ff3300]">
+                  Your marketing message
+                </div>
+                <p className="mb-3 text-sm leading-6 text-black/55">
+                  Copy these straight out. They are built from your own answers.
+                </p>
+                <div className="divide-y divide-black/10 border-t border-black/10">
+                  {(
+                    [
+                      ["Main message", yourMessage.main_message],
+                      ["Short version", yourMessage.short_version],
+                      ["Website headline", yourMessage.website_headline],
+                      ["Instagram bio", yourMessage.instagram_bio],
+                      ["Call to action", yourMessage.call_to_action],
+                    ] as [string, StrategyValue][]
+                  )
+                    .filter(([, value]) => asText(value).trim())
+                    .map(([label, value]) => (
+                      <div key={label} className="py-3">
+                        <div className="text-[11px] font-bold uppercase tracking-wider text-black/45">
+                          {label}
+                        </div>
+                        <p className="mt-1 whitespace-pre-line text-sm leading-6">
+                          {asText(value)}
+                        </p>
+                      </div>
+                    ))}
+                </div>
+                {asText(yourMessage.a_note).trim() && (
+                  <p className="mt-3 border-t border-black/10 pt-3 text-xs leading-5 text-black/45">
+                    {asText(yourMessage.a_note)}
+                  </p>
+                )}
+              </article>
+            </div>
+          </WorkspaceSection>
+        )}
 
         {activeTab === "nextSteps" && (
           <WorkspaceSection

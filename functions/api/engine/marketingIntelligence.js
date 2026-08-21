@@ -947,6 +947,10 @@ function detectBusinessType(profile = {}, rawBiz = {}, briefSubtype = "") {
     [/clinic|doctor|physician|diagnostic|healthcare/, "clinic"],
     [/tuition|coaching center|coaching centre|exam class|study centre|study center/, "tuition center"],
     [/preschool|playschool|kindergarten|daycare/, "preschool"],
+    // Sits AFTER the gym and fitness-coach aliases on purpose, so "personal
+    // trainer" is still a trainer. Everything left saying "training" here is
+    // somebody teaching a skill.
+    [/\btraining\b|\beducation\b|academy|institute|upskill|edtech|\bcourses?\b/, "training centre"],
     [/boutique/, "boutique"],
     [/clothing|fashion|apparel|garment/, "clothing store"],
     [/mobile repair|phone repair|smartphone repair/, "mobile repair shop"],
@@ -970,7 +974,9 @@ function detectBusinessType(profile = {}, rawBiz = {}, briefSubtype = "") {
   if (match) return match[1];
   if (/shop|store|retail|gift|stationery|jewellery|accessories/.test(text)) return "local retail business";
   if (/service|repair|maintenance|technician|home visit/.test(text)) return "local service business";
-  if (/agency|professional|legal|accounting|ca /.test(text)) return "professional service";
+  // Was /professional/ on its own, which caught the industry "Professional
+  // Training / Education" and called a tuition centre a professional service.
+  if (/agency|legal|accounting|\bca\b|professional service|consulting/.test(text)) return "professional service";
   return clean(rawBiz.biz_industry || profile.market?.industry, "local business");
 }
 
