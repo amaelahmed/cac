@@ -2614,7 +2614,19 @@ function masterCalendarDay(day, index, profile, rawBiz, city, hashtags) {
     // duplicate; the UI falls back to topic on its own.
     hook: (() => {
       const supplied = masterText(day.hook, "");
-      return supplied && supplied !== title ? supplied : undefined;
+      if (!supplied) return undefined;
+      // The hook is derived from the title, so the two can differ only by the
+      // trailing "built around <the owner's promise>" clause. To a reader that
+      // is still the same sentence twice.
+      // Drop the trailing promise clause AND the opening verb: the hook is the
+      // title with its first word swapped ("Show ..." becomes "Turn ..."), and
+      // that is still one sentence printed twice.
+      const bare = text => clean(text, "")
+        .replace(/,\s+(?:built around|and name|so)\s+.+$/i, "")
+        .trim()
+        .toLowerCase()
+        .replace(/^\S+\s+/, "");
+      return bare(supplied) && bare(supplied) !== bare(title) ? supplied : undefined;
     })(),
     objective: masterText(day.objective, day.goalIntent, "Move the customer one step closer to action."),
     target_customer: masterText(day.target_customer, targetLabel(profile, rawBiz)),
