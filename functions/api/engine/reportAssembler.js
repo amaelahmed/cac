@@ -1,6 +1,7 @@
 import { buildMarketingOSReport, validateMarketingOutput, validateSemanticAlignment } from "./marketingIntelligence.js";
 import { runDiagnostics, rankRecommendations, headlineAction } from "./diagnostics.js";
 import { onePick } from "./multiPick.js";
+import { buildNextSteps } from "./nextSteps.js";
 
 const REQUIRED_SECTIONS = [
   "Business Health Snapshot",
@@ -3212,6 +3213,13 @@ export function assembleReport({ hydratedStrategy, businessProfile, rawBiz, conf
     checks: diagnostics.checks,
     headline_action: headline,
   });
+
+  // "What do I actually do?" - answered in front of the owner instead of buried
+  // in the Full Plan tab. Same analysis, pulled forward.
+  finalReport.tabs = finalReport.tabs || {};
+  finalReport.tabs.nextSteps = cleanPlainValue(
+    buildNextSteps({ diagnostics, rankedSteps, headline })
+  );
 
   if (rankedSteps.length) {
     finalReport.tabs = finalReport.tabs || {};

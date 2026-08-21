@@ -692,6 +692,143 @@ const TARGETS_BY_FIX = {
 };
 
 /**
+ * The repair for each failed check, in the owner's language.
+ *
+ * The report could already say "you have no website" but had no action that
+ * said "make one" - the ranked list is built from content ideas, so the fix for
+ * a broken basic never appeared in it. A report that names a problem and then
+ * recommends something else is worse than one that says nothing.
+ *
+ * These are deliberately boring and concrete. No campaign, no funnel: the one
+ * thing that turns this check from a fail into a pass.
+ */
+export const DIRECT_FIXES = {
+  website_basic: {
+    action: "Put up a simple one-page website",
+    why: "Right now a stranger cannot look you up. Only people you personally message can find you.",
+    steps: [
+      "One page is enough: what you do, who it is for, what it costs, how to contact you.",
+      "Use your business name in the address so people can guess it.",
+      "Put your phone or WhatsApp number where it is visible without scrolling.",
+    ],
+  },
+  second_channel: {
+    action: "Add one more place people can find you",
+    why: "You are on one channel. If it goes quiet, so does your business.",
+    steps: [
+      "Pick one more place your customers already look.",
+      "Put the same offer and the same contact detail there.",
+      "Post there once a week, not daily.",
+    ],
+  },
+  google_profile: {
+    action: "Set up your free Google Business profile",
+    why: "When someone nearby searches for what you sell, you do not come up at all.",
+    steps: [
+      "Search 'Google Business Profile' and claim your business - it is free.",
+      "Add your hours, area, phone number and five real photos.",
+      "Ask three past customers to leave a review.",
+    ],
+  },
+  sharpen_usp: {
+    action: "Write one line that says why you and not someone else",
+    why: "Your advantage reads like something every competitor also claims, so it does not help anyone choose.",
+    steps: [
+      "Pick the one thing you do that a competitor genuinely cannot copy this month.",
+      "Say it in plain words a customer would use, not marketing words.",
+      "Put that line at the top of every page and profile.",
+    ],
+  },
+  narrow_audience: {
+    action: "Name exactly who you are for",
+    why: "A description that fits everybody gives nobody a reason to feel it is meant for them.",
+    steps: [
+      "Describe your best customer: who they are, what they need, when they need it.",
+      "Write for that one person, not for everyone.",
+      "It is fine to lose the people who were never going to buy.",
+    ],
+  },
+  website_headline: {
+    action: "Say what you sell at the very top of your page",
+    why: "A first-time visitor cannot tell what you sell or what it costs, so they leave.",
+    steps: [
+      "First line: what you sell and who it is for.",
+      "Second line: what it costs, or the range.",
+      "Then one button with the next step.",
+    ],
+  },
+  publish_process: {
+    action: "Show how you actually work, step by step",
+    why: "People hesitate when they cannot picture what happens after they contact you.",
+    steps: [
+      "Write out what happens from first message to finished job.",
+      "Say how long each step takes.",
+      "Publish it where a new customer will see it before asking.",
+    ],
+  },
+  add_proof: {
+    action: "Put up three real customer proofs",
+    why: "Nothing on your side shows a real person has bought from you, so buyers assume the worst.",
+    steps: [
+      "Ask three past customers for one honest line about what changed for them.",
+      "Use their real first name and, if they agree, a photo.",
+      "Put them where the price is, not on a separate page.",
+    ],
+  },
+  build_audience: {
+    action: "Start collecting the people who already know you",
+    why: "You are starting from zero with every post because nothing keeps the people who liked you last time.",
+    steps: [
+      "Save the phone numbers of everyone who has ever enquired.",
+      "Message that list once a month with something useful, not a sale.",
+      "Ask every new customer if they want to be on it.",
+    ],
+  },
+  close_competitor_gap: {
+    action: "Do the one thing your competitor does not",
+    why: "Customers compare you with somebody else, and right now the comparison does not favour you.",
+    steps: [
+      "Look at your closest competitor and write down what they show that you do not.",
+      "Pick the one gap you can close this week.",
+      "Close it, and say plainly that you do it.",
+    ],
+  },
+  single_cta: {
+    action: "Give people exactly one next step",
+    why: "An interested person does not know what to do next, so they do nothing.",
+    steps: [
+      "Choose one action: message, call, or book.",
+      "Use the same words for it everywhere.",
+      "Remove the other buttons competing with it.",
+    ],
+  },
+  whatsapp_setup: {
+    action: "Make WhatsApp the easy way to reach you",
+    why: "People will message where they already are, if you let them.",
+    steps: [
+      "Set up WhatsApp Business - it is free.",
+      "Write a greeting that answers your two most common questions.",
+      "Put the WhatsApp link in every profile and on your page.",
+    ],
+  },
+};
+
+/**
+ * The repairs for the checks that actually failed in one area, worst first.
+ */
+export function directFixesFor(scoreGroup) {
+  const seen = new Set();
+  return (scoreGroup?.failed || [])
+    .map(item => {
+      const fix = DIRECT_FIXES[item.fixes];
+      if (!fix || seen.has(item.fixes)) return null;
+      seen.add(item.fixes);
+      return { ...fix, because: item.evidence, fixes: item.fixes };
+    })
+    .filter(Boolean);
+}
+
+/**
  * Give the owner something to read the result against. These are thresholds
  * for telling signal from noise, not revenue promises, and the report says so.
  */

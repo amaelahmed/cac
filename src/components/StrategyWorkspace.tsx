@@ -8,6 +8,7 @@ import {
   BookOpenText,
   BrainCircuit,
   CalendarDays,
+  Flag,
   FileText,
   Lightbulb,
   Megaphone,
@@ -68,6 +69,7 @@ type StrategyWorkspaceProps = {
 };
 
 const tabDefs = [
+  { id: "nextSteps", label: "Start Here", icon: Flag },
   { id: "calendar", label: "Calendar / 30-Day Post Plan", icon: CalendarDays },
   { id: "strategy", label: "Marketing Plan", icon: Target },
   { id: "psychology", label: "What Customers Think", icon: BrainCircuit },
@@ -210,6 +212,10 @@ function isEducationContext(
 
 function fallbackTabs(report: StrategyRecord) {
   return {
+    // Empty is correct here: this fallback runs when the engine did not answer,
+    // and the Start Here tab renders its own "we could not measure that" copy
+    // rather than inventing a priority.
+    nextSteps: {},
     calendar: { days: asArray(report["30-Day Content Calendar"]) },
     strategy: { steps: asArray(report["10-Step Growth Strategy"]) },
     psychology: report["Customer Psychology"] || {},
@@ -314,7 +320,7 @@ export function StrategyWorkspace({
     () => normalizeWorkspace(result, payload),
     [result, payload],
   );
-  const [activeTab, setActiveTab] = useState<WorkspaceTabId>("calendar");
+  const [activeTab, setActiveTab] = useState<WorkspaceTabId>("nextSteps");
   const [selectedDay, setSelectedDay] = useState<StrategyRecord | null>(null);
   const [extraCustomers, setExtraCustomers] = useState(10);
   const [conversionRate, setConversionRate] = useState(8);
@@ -325,6 +331,11 @@ export function StrategyWorkspace({
   const strategySteps = asArray(asRecord(tabs.strategy).steps)
     .map((step) => asRecord(step))
     .slice(0, 10);
+  const nextSteps = asRecord(tabs.nextSteps);
+  const oneThing = asRecord(nextSteps.oneThing);
+  const biggestProblem = asRecord(nextSteps.biggestProblem);
+  const weekActions = asArray(nextSteps.next7Days).map((item) => asRecord(item));
+  const problemActions = asArray(biggestProblem.what_to_do).map((item) => asRecord(item));
   const psychology = asRecord(tabs.psychology);
   const psychologyCards = asArray(psychology.customer_thoughts).map((item) =>
     asRecord(item),
@@ -559,6 +570,189 @@ export function StrategyWorkspace({
             </button>
           ))}
         </div>
+
+        {activeTab === "nextSteps" && (
+          <WorkspaceSection
+            title="Start Here"
+            subtitle="If you read nothing else, read this. One thing to do, why it matters, and what to do this week."
+          >
+            <div className="grid gap-4">
+              <article className="rounded-sm border-2 border-[#ff3300] bg-white p-5">
+                <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-[#ff3300]">
+                  Your #1 priority
+                </div>
+                <h3 className="font-display text-3xl font-bold leading-tight">
+                  {asText(oneThing.action, "Add your website and run this again")}
+                </h3>
+                {asText(oneThing.why_it_matters).trim() && (
+                  <p className="mt-3 text-base leading-7 text-black/70">
+                    {asText(oneThing.why_it_matters)}
+                  </p>
+                )}
+                {asArray(oneThing.what_to_do).length > 0 && (
+                  <div className="mt-4 border-t border-black/10 pt-4">
+                    <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-black/45">
+                      What to do
+                    </div>
+                    <ol className="grid gap-2">
+                      {asArray(oneThing.what_to_do).map((item, index) => (
+                        <li key={index} className="flex gap-3 text-sm leading-6">
+                          <span className="font-display font-bold text-[#ff3300]">
+                            {index + 1}
+                          </span>
+                          <span>{asText(item)}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+                <div className="mt-4 grid gap-3 border-t border-black/10 pt-4 sm:grid-cols-2">
+                  {asText(oneThing.what_success_looks_like).trim() && (
+                    <div>
+                      <div className="text-[11px] font-bold uppercase tracking-wider text-black/45">
+                        You will know it worked when
+                      </div>
+                      <p className="mt-1 text-sm leading-6">
+                        {asText(oneThing.what_success_looks_like)}
+                      </p>
+                    </div>
+                  )}
+                  {asText(oneThing.based_on).trim() && (
+                    <div>
+                      <div className="text-[11px] font-bold uppercase tracking-wider text-black/45">
+                        Why we picked this
+                      </div>
+                      <p className="mt-1 text-sm leading-6 text-black/65">
+                        {asText(oneThing.based_on)}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </article>
+
+              <article className="rounded-sm border border-black/10 bg-white p-5">
+                <div className="mb-2 flex flex-wrap items-center gap-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#ff3300]">
+                    If we fix only one thing
+                  </span>
+                  {asText(biggestProblem.rating).trim() && (
+                    <span className="rounded-sm bg-black/5 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-black/60">
+                      {asText(biggestProblem.rating)}
+                    </span>
+                  )}
+                </div>
+                <h3 className="font-display text-2xl font-bold leading-tight">
+                  {asText(biggestProblem.problem, "Your weakest area")}
+                </h3>
+                {asText(biggestProblem.why_it_matters).trim() && (
+                  <p className="mt-2 text-sm leading-6 text-black/70">
+                    {asText(biggestProblem.why_it_matters)}
+                  </p>
+                )}
+                {asArray(biggestProblem.what_is_wrong).length > 0 && (
+                  <div className="mt-4 border-t border-black/10 pt-4">
+                    <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-black/45">
+                      What is wrong
+                    </div>
+                    <ul className="grid gap-2">
+                      {asArray(biggestProblem.what_is_wrong).map((item, index) => (
+                        <li key={index} className="flex gap-3 text-sm leading-6">
+                          <span className="text-[#ff3300]">&#10007;</span>
+                          <span>{asText(item)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {problemActions.length > 0 && (
+                  <div className="mt-4 border-t border-black/10 pt-4">
+                    <div className="mb-3 text-[11px] font-bold uppercase tracking-wider text-black/45">
+                      What to do about it
+                    </div>
+                    <div className="grid gap-3">
+                      {problemActions.map((action, index) => (
+                        <div
+                          key={index}
+                          className="rounded-sm border border-black/10 bg-[#faf7f2] p-3"
+                        >
+                          <div className="font-display text-lg font-bold leading-tight">
+                            {asText(action.action)}
+                          </div>
+                          {asText(action.why).trim() && (
+                            <p className="mt-1 text-sm leading-6 text-black/65">
+                              {asText(action.why)}
+                            </p>
+                          )}
+                          {asArray(action.how).length > 0 && (
+                            <ul className="mt-2 grid gap-1">
+                              {asArray(action.how).map((step, stepIndex) => (
+                                <li
+                                  key={stepIndex}
+                                  className="flex gap-2 text-sm leading-6 text-black/75"
+                                >
+                                  <span className="text-black/35">&#8226;</span>
+                                  <span>{asText(step)}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {asArray(biggestProblem.still_unknown).length > 0 && (
+                  <p className="mt-4 border-t border-black/10 pt-3 text-xs leading-5 text-black/45">
+                    Still unknown: {asArray(biggestProblem.still_unknown).map((item) => asText(item)).join(" ")}
+                  </p>
+                )}
+                {asText(biggestProblem.honest_note).trim() && (
+                  <p className="mt-2 text-xs leading-5 text-black/45">
+                    {asText(biggestProblem.honest_note)}
+                  </p>
+                )}
+              </article>
+
+              {weekActions.length > 0 && (
+                <article className="rounded-sm border border-black/10 bg-white p-5">
+                  <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-[#ff3300]">
+                    Your next 7 days
+                  </div>
+                  <h3 className="font-display text-2xl font-bold leading-tight">
+                    Do these, in this order
+                  </h3>
+                  <p className="mt-1 text-sm leading-6 text-black/55">
+                    Nothing else on this list matters until these are done.
+                  </p>
+                  <ol className="mt-4 divide-y divide-black/10 border-t border-black/10">
+                    {weekActions.map((item, index) => (
+                      <li key={index} className="flex gap-4 py-3">
+                        <span className="font-display text-xl font-bold text-black/25">
+                          {index + 1}
+                        </span>
+                        <div>
+                          <div className="font-semibold leading-6">
+                            {asText(item.action)}
+                          </div>
+                          {asText(item.why).trim() && (
+                            <p className="mt-0.5 text-sm leading-6 text-black/60">
+                              {asText(item.why)}
+                            </p>
+                          )}
+                          {asText(item.time_needed).trim() && (
+                            <p className="mt-0.5 text-xs uppercase tracking-wider text-black/40">
+                              {asText(item.time_needed)}
+                            </p>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </article>
+              )}
+            </div>
+          </WorkspaceSection>
+        )}
 
         {activeTab === "calendar" && (
           <WorkspaceSection
