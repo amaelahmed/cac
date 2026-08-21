@@ -2880,8 +2880,12 @@ function businessKind(context) {
     context.productsOrServices,
     context.audience,
   ].join(" "));
-  if (context.briefSubtype) return "local";
-
+  // Kept deleted from main on purpose: this used to return "local" the moment
+  // context.briefSubtype was set, which is true for essentially every business
+  // because the subtype is chosen during onboarding. Every trade below was
+  // unreachable, so everyone got the same generic boilerplate. Nothing else
+  // here depends on kind === "local", so it stays gone.
+  //
   // The trade is whatever the owner ticked, not whatever word happens to appear
   // somewhere in their answers. Before this, ONE stray word could overrule the
   // industry question: a tuition centre that ticked "Membership / subscription"
