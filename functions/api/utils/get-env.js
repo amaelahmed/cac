@@ -15,6 +15,9 @@ export function getRuntimeEnv(contextOrEnv = {}) {
     NVIDIA_NIM_BASE_URL: env.NVIDIA_NIM_BASE_URL || fallback.NVIDIA_NIM_BASE_URL || "https://integrate.api.nvidia.com/v1",
     NVIDIA_NIM_DEFAULT_MODEL: env.NVIDIA_NIM_DEFAULT_MODEL || fallback.NVIDIA_NIM_DEFAULT_MODEL || "minimaxai/minimax-m3",
     AI_TEST_MODE: env.AI_TEST_MODE || fallback.AI_TEST_MODE || "false",
+    // When the first provider errors, try the other one before falling back to
+    // the offline template. Only applies if the second provider has a key.
+    AI_PROVIDER_FAILOVER: env.AI_PROVIDER_FAILOVER || fallback.AI_PROVIDER_FAILOVER || "true",
     // Counted in AI CALLS, not reports. One report is about five calls, so the
     // user limit below is eight reports a day. The global figure is a spend
     // ceiling for bugs and abuse, not a product limit; 0 switches it off.

@@ -37,6 +37,13 @@ Keep runtime app variables in Cloudflare Pages environment variables, not in Git
   One report is about five calls (one strategy call plus one per ten calendar
   days), so `40` is roughly eight reports a day. It was `3`, which could not
   finish even one report.
+- `AI_PROVIDER_FAILOVER` — optional. When the provider in `AI_PROVIDER` errors,
+  the other one is tried before falling back to the offline template. It only
+  activates if the second provider has a key set, so setting **both**
+  `NVIDIA_NIM_API_KEY` and `GEMINI_API_KEY` is what turns this on in practice.
+  Set to `false` for a single attempt. A failed attempt is logged with
+  `success = 0` and the daily counters only count successes, so failing over
+  never costs a customer quota.
 - `BACKGROUND_AI_ENRICHMENT` — optional. The customer is answered with the fast
   deterministic plan, and the AI rewrite runs after the response and saves over
   the same report. Set to `false` to go back to making the customer wait for the

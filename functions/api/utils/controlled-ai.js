@@ -44,6 +44,23 @@ function providerFromEnv(env) {
   return "none";
 }
 
+function configFor(name, runtimeEnv) {
+  return name === "gemini" ? getGeminiConfig(runtimeEnv) : getNvidiaNimConfig(runtimeEnv);
+}
+
+// The provider to try first, then the other one if it has a key configured.
+// Set AI_PROVIDER_FAILOVER=false to go back to a single attempt.
+export function buildProviderOrder(primary, runtimeEnv) {
+  const order = [primary];
+  if (String(runtimeEnv.AI_PROVIDER_FAILOVER || "").toLowerCase() === "false") return order;
+  const backup = primary === "gemini" ? "nvidia_nim" : "gemini";
+  const backupHasKey = backup === "gemini"
+    ? Boolean(runtimeEnv.GEMINI_API_KEY || runtimeEnv.GOOGLE_API_KEY)
+    : Boolean(runtimeEnv.NVIDIA_NIM_API_KEY);
+  if (backupHasKey) order.push(backup);
+  return order;
+}
+
 function tokenUsage(usage) {
   return {
     inputTokens: Number(usage?.prompt_tokens || usage?.input_tokens || 0),
@@ -65,6 +82,8 @@ export async function callControlledAi(context, {
   maxTokens,
   responseFormat = "json",
   fallback,
+  // Injected in tests so the failover path can be exercised without network.
+  callers,
 }) {
   const runtimeEnv = getRuntimeEnv(context);
   const db = getRuntimeBinding(context, "DB");
@@ -94,7 +113,7 @@ export async function callControlledAi(context, {
     };
   }
 
-  const config = provider === "gemini" ? getGeminiConfig(runtimeEnv) : getNvidiaNimConfig(runtimeEnv);
+  const config = configFor(provider, runtimeEnv);
   const selectedModel = model || config.model;
   const requestId = crypto.randomUUID();
   const businessProfileHash = await hashBusinessProfile(businessProfile || {});
@@ -180,109 +199,146 @@ export async function callControlledAi(context, {
     };
   }
 
-  const startedAt = Date.now();
-  try {
-    const response = provider === "gemini"
-      ? await callGemini({
-          env: runtimeEnv,
-          messages,
-          model: selectedModel,
-          temperature,
-          maxTokens,
-          responseFormat,
-        })
-      : await callNvidiaNim({
-          env: runtimeEnv,
-          messages,
-          model: selectedModel,
-          temperature,
-          maxTokens,
-          responseFormat,
-          taskProfile: "runtime",
+  // One provider going quiet should not take the whole product with it. Before
+  // this, a bad hour at NVIDIA dropped EVERY customer to the offline template at
+  // the same moment, even though a working Gemini key sat right there in the
+  // environment. Try the second one before giving up.
+  //
+  // A failed attempt is logged with success = 0, and the daily counters only
+  // count successes, so failing over never costs the customer quota.
+  const providerOrder = buildProviderOrder(provider, runtimeEnv);
+  let lastError = null;
+
+  for (let attempt = 0; attempt < providerOrder.length; attempt += 1) {
+    const attemptProvider = providerOrder[attempt];
+    const isPrimary = attempt === 0;
+    const attemptConfig = configFor(attemptProvider, runtimeEnv);
+    // A model name belongs to the provider it was written for, so a caller's
+    // model only applies to the provider they were aiming at.
+    const attemptModel = isPrimary ? selectedModel : attemptConfig.model;
+    const attemptCacheKey = isPrimary
+      ? cacheKey
+      : await buildAiCacheKey({
+          provider: attemptProvider,
+          userId,
+          businessProfileHash,
+          featureType,
+          sectionName,
+          promptVersion,
+          model: attemptModel,
+          inputHash,
         });
-    const latencyMs = Date.now() - startedAt;
-    const usage = tokenUsage(response.usage);
-    if (responseFormat === "json" && !response.json) {
-      const invalidJsonError = new Error("AI returned invalid JSON");
-      invalidJsonError.rawText = response.text || "";
-      invalidJsonError.model = response.model || selectedModel;
-      throw invalidJsonError;
+    const attemptRequestId = isPrimary ? requestId : crypto.randomUUID();
+    const startedAt = Date.now();
+
+    const callProvider = callers?.[attemptProvider]
+      || (attemptProvider === "gemini" ? callGemini : callNvidiaNim);
+
+    try {
+      const response = await callProvider({
+        env: runtimeEnv,
+        messages,
+        model: attemptModel,
+        temperature,
+        maxTokens,
+        responseFormat,
+        ...(attemptProvider === "gemini" ? {} : { taskProfile: "runtime" }),
+      });
+      const latencyMs = Date.now() - startedAt;
+      const usage = tokenUsage(response.usage);
+      if (responseFormat === "json" && !response.json) {
+        const invalidJsonError = new Error("AI returned invalid JSON");
+        invalidJsonError.rawText = response.text || "";
+        invalidJsonError.model = response.model || attemptModel;
+        throw invalidJsonError;
+      }
+      const cacheValue = {
+        response_json: response.json,
+        raw_text: response.text,
+        usage_tokens: response.usage || usage,
+        estimated_cost_or_credits: 0,
+        provider: attemptProvider,
+        model: response.model || attemptModel,
+        created_at: new Date().toISOString(),
+        expires_at: null,
+        validation_status: "valid",
+      };
+
+      await writeAiCache(context, attemptCacheKey, cacheValue);
+      await recordAiUsage(context, {
+        requestId: attemptRequestId,
+        userId,
+        provider: attemptProvider,
+        feature: featureType,
+        featureType,
+        model: response.model || attemptModel,
+        cacheKey: attemptCacheKey,
+        businessProfileHash,
+        promptVersion,
+        inputTokens: usage.inputTokens,
+        outputTokens: usage.outputTokens,
+        totalTokens: usage.totalTokens,
+        estimatedCostOrCredits: 0,
+        latencyMs,
+        cacheHit: false,
+        success: true,
+        metadata: {
+          section_name: sectionName,
+          rate_limit_headers: response.headers,
+          ...(isPrimary ? {} : { failover_from: providerOrder[0], attempt: attempt + 1 }),
+        },
+      });
+
+      return {
+        ok: true,
+        provider: attemptProvider,
+        cached: false,
+        limited: false,
+        cacheKey: attemptCacheKey,
+        data: response.json || response.text,
+        rawText: response.text,
+        usage: response.usage,
+        model: response.model || attemptModel,
+        headers: response.headers,
+        latencyMs,
+        ...(isPrimary ? {} : { failedOverFrom: providerOrder[0] }),
+      };
+    } catch (error) {
+      lastError = error;
+      await recordAiUsage(context, {
+        requestId: attemptRequestId,
+        userId,
+        provider: attemptProvider,
+        feature: featureType,
+        featureType,
+        model: attemptModel,
+        cacheKey: attemptCacheKey,
+        businessProfileHash,
+        promptVersion,
+        latencyMs: Date.now() - startedAt,
+        cacheHit: false,
+        success: false,
+        errorMessage: error?.message || String(error),
+        metadata: {
+          section_name: sectionName,
+          attempt: attempt + 1,
+          ...(attempt + 1 < providerOrder.length
+            ? { failing_over_to: providerOrder[attempt + 1] }
+            : {}),
+        },
+      });
     }
-    const cacheValue = {
-      response_json: response.json,
-      raw_text: response.text,
-      usage_tokens: response.usage || usage,
-      estimated_cost_or_credits: 0,
-      provider,
-      model: response.model || selectedModel,
-      created_at: new Date().toISOString(),
-      expires_at: null,
-      validation_status: responseFormat === "json" && !response.json ? "invalid_json" : "valid",
-    };
-
-    await writeAiCache(context, cacheKey, cacheValue);
-    await recordAiUsage(context, {
-      requestId,
-      userId,
-      provider,
-      feature: featureType,
-      featureType,
-      model: response.model || selectedModel,
-      cacheKey,
-      businessProfileHash,
-      promptVersion,
-      inputTokens: usage.inputTokens,
-      outputTokens: usage.outputTokens,
-      totalTokens: usage.totalTokens,
-      estimatedCostOrCredits: 0,
-      latencyMs,
-      cacheHit: false,
-      success: true,
-      metadata: {
-        section_name: sectionName,
-        rate_limit_headers: response.headers,
-      },
-    });
-
-    return {
-      ok: true,
-      provider,
-      cached: false,
-      limited: false,
-      cacheKey,
-      data: response.json || response.text,
-      rawText: response.text,
-      usage: response.usage,
-      model: response.model || selectedModel,
-      headers: response.headers,
-      latencyMs,
-    };
-  } catch (error) {
-    await recordAiUsage(context, {
-      requestId,
-      userId,
-      provider,
-      feature: featureType,
-      featureType,
-      model: selectedModel,
-      cacheKey,
-      businessProfileHash,
-      promptVersion,
-      latencyMs: Date.now() - startedAt,
-      cacheHit: false,
-      success: false,
-      errorMessage: error?.message || String(error),
-      metadata: { section_name: sectionName },
-    });
-    return {
-      ok: false,
-      provider,
-      cached: false,
-      limited: false,
-      fallbackUsed: true,
-      error: error?.message || String(error),
-      rawText: error?.rawText || "",
-      data: fallback,
-    };
   }
+
+  return {
+    ok: false,
+    provider: providerOrder[0],
+    providersTried: providerOrder,
+    cached: false,
+    limited: false,
+    fallbackUsed: true,
+    error: lastError?.message || String(lastError),
+    rawText: lastError?.rawText || "",
+    data: fallback,
+  };
 }

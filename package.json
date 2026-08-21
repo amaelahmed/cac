@@ -10,10 +10,11 @@
     "test:engine": "node tests/engine-quality.mjs",
     "preview:report": "node scripts/preview-report.mjs",
     "test:calendar": "node tests/calendar-expander.mjs",
-    "test": "npm run test:engine && npm run test:calendar && npm run test:distinct && npm run test:quota && npm run test:plan",
+    "test": "npm run test:engine && npm run test:calendar && npm run test:distinct && npm run test:quota && npm run test:plan && npm run test:failover",
     "test:distinct": "node tests/report-distinctness.mjs",
     "test:quota": "node tests/ai-quota.mjs",
-    "test:plan": "node tests/generation-plan.mjs"
+    "test:plan": "node tests/generation-plan.mjs",
+    "test:failover": "node tests/provider-failover.mjs"
   },
   "dependencies": {
     "@better-auth/client": "^0.0.2-alpha.3",
