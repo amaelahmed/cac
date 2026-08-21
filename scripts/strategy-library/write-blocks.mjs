@@ -224,16 +224,32 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     process.exit(0);
   }
 
-  const key = process.env.NVIDIA_NIM_API_KEY || process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  const key = process.env.DEEPSEEK_API_KEY
+    || process.env.NVIDIA_NIM_API_KEY
+    || process.env.GEMINI_API_KEY
+    || process.env.GOOGLE_API_KEY;
   if (!key) {
-    console.error("\nNo AI key found. Put NVIDIA_NIM_API_KEY or GEMINI_API_KEY in .dev.vars,");
+    console.error("\nNo AI key found. Put DEEPSEEK_API_KEY (or GEMINI_API_KEY) in .dev.vars,");
     console.error("or run with --dry-run to see the instructions without calling anything.\n");
     process.exit(1);
   }
 
-  const useGemini = !process.env.NVIDIA_NIM_API_KEY;
+  // This is the one place worth paying more for. A live report is written for
+  // one customer and thrown away; a library piece is written ONCE and then
+  // served to every future customer of that trade. So the writer reaches for
+  // the strong model by default, and the few dollars it costs are spent once.
+  // Override with DEEPSEEK_LIBRARY_MODEL if a cheaper run is wanted.
+  const LIBRARY_MODEL = process.env.DEEPSEEK_LIBRARY_MODEL || "deepseek-v4-pro";
+  const { callDeepseek } = await import("../../functions/api/engine/aiProviders/deepseek.js");
   const { callNvidiaNim } = await import("../../functions/api/engine/aiProviders/nvidiaNim.js");
   const { callGemini } = await import("../../functions/api/engine/aiProviders/gemini.js");
+
+  const writer = process.env.DEEPSEEK_API_KEY
+    ? { name: `deepseek (${LIBRARY_MODEL})`, call: turn => callDeepseek({ env: process.env, messages: turn, model: LIBRARY_MODEL, responseFormat: "json", maxTokens: 2000, taskProfile: "offline_block_generation" }) }
+    : process.env.NVIDIA_NIM_API_KEY
+      ? { name: "nvidia (free tier)", call: turn => callNvidiaNim({ env: process.env, messages: turn, responseFormat: "json", maxTokens: 2000, taskProfile: "offline_block_generation" }) }
+      : { name: "gemini", call: turn => callGemini({ env: process.env, messages: turn, responseFormat: "json", maxTokens: 2000 }) };
+  console.log(`\nWriting with: ${writer.name}`);
 
   // One section per call. Asked for four at once, the model returned one - and
   // a single fumbled answer cost the whole run. Separate calls give it one
@@ -248,9 +264,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const turn = [{ role: "system", content: system }, { role: "user", content: focused }];
     process.stdout.write(`  ${index + 1}/${sections.length} ${section} ... `);
     try {
-      const response = useGemini
-        ? await callGemini({ env: process.env, messages: turn, responseFormat: "json", maxTokens: 2000 })
-        : await callNvidiaNim({ env: process.env, messages: turn, responseFormat: "json", maxTokens: 2000, taskProfile: "offline_block_generation" });
+      const response = await writer.call(turn);
       const answer = response.json || (() => { try { return JSON.parse(response.text); } catch { return null; } })();
       const piece = Array.isArray(answer?.pieces) ? answer.pieces[0] : answer;
       if (!piece?.title) { console.log("no usable answer"); continue; }

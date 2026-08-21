@@ -14,6 +14,11 @@ export function getRuntimeEnv(contextOrEnv = {}) {
     NVIDIA_NIM_API_KEY: env.NVIDIA_NIM_API_KEY || fallback.NVIDIA_NIM_API_KEY || "",
     NVIDIA_NIM_BASE_URL: env.NVIDIA_NIM_BASE_URL || fallback.NVIDIA_NIM_BASE_URL || "https://integrate.api.nvidia.com/v1",
     NVIDIA_NIM_DEFAULT_MODEL: env.NVIDIA_NIM_DEFAULT_MODEL || fallback.NVIDIA_NIM_DEFAULT_MODEL || "minimaxai/minimax-m3",
+    // DeepSeek is the paid primary. NVIDIA above is a free tier, which has no
+    // uptime promise, so it is no longer what the product leans on.
+    DEEPSEEK_API_KEY: env.DEEPSEEK_API_KEY || fallback.DEEPSEEK_API_KEY || "",
+    DEEPSEEK_BASE_URL: env.DEEPSEEK_BASE_URL || fallback.DEEPSEEK_BASE_URL || "https://api.deepseek.com/v1",
+    DEEPSEEK_DEFAULT_MODEL: env.DEEPSEEK_DEFAULT_MODEL || fallback.DEEPSEEK_DEFAULT_MODEL || "deepseek-v4-flash",
     AI_TEST_MODE: env.AI_TEST_MODE || fallback.AI_TEST_MODE || "false",
     // When the first provider errors, try the other one before falling back to
     // the offline template. Only applies if the second provider has a key.

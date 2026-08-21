@@ -64,7 +64,20 @@ Local testing can use the built-in localhost tester session when Google credenti
 Optional controlled AI helper:
 
 ```bash
-AI_PROVIDER=nvidia_nim
+# DeepSeek is the paid primary. Leave AI_PROVIDER unset and it is picked
+# automatically whenever DEEPSEEK_API_KEY is present.
+DEEPSEEK_API_KEY=...
+DEEPSEEK_BASE_URL=https://api.deepseek.com/v1
+DEEPSEEK_DEFAULT_MODEL=deepseek-v4-flash
+# The library writer overrides the model above with the stronger, dearer one,
+# because a library piece is written once and served to every later customer.
+DEEPSEEK_LIBRARY_MODEL=deepseek-v4-pro
+
+# Gemini is the paid backup, tried when DeepSeek errors.
+GEMINI_API_KEY=...
+
+# NVIDIA is a FREE tier with no uptime promise. It is tried last, and only if a
+# key is still set. Remove the key and the product touches no free tier at all.
 NVIDIA_NIM_API_KEY=...
 NVIDIA_NIM_BASE_URL=https://integrate.api.nvidia.com/v1
 NVIDIA_NIM_DEFAULT_MODEL=minimaxai/minimax-m3
@@ -85,9 +98,15 @@ Production and preview variables belong in Cloudflare Pages:
 
 Workers & Pages → `cac` → Settings → Variables and Secrets.
 
-Add `NVIDIA_NIM_API_KEY` as an encrypted secret. Do not put secrets in `wrangler.toml`, do not commit them, and do not expose them to frontend code.
+Add `DEEPSEEK_API_KEY` and `GEMINI_API_KEY` as encrypted secrets. Do not put secrets in `wrangler.toml`, do not commit them, and do not expose them to frontend code.
 
-Local Cloudflare testing should use ignored `.dev.vars` or `.env` files. NVIDIA calls must stay server-side and must not be used for default full strategy generation.
+Check a new DeepSeek key with one real call before deploying it:
+
+```bash
+npm run check:deepseek
+```
+
+Local Cloudflare testing should use ignored `.dev.vars` or `.env` files. Provider calls must stay server-side and must not be used for default full strategy generation.
 
 ## Data
 

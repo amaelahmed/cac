@@ -1,3 +1,4 @@
+import { callDeepseek, getDeepseekConfig } from "../engine/aiProviders/deepseek.js";
 import { callGemini, getGeminiConfig } from "../engine/aiProviders/gemini.js";
 import { callNvidiaNim, getNvidiaNimConfig } from "../engine/aiProviders/nvidiaNim.js";
 import { getRuntimeEnv, getRuntimeBinding } from "./get-env.js";
@@ -35,29 +36,56 @@ function readLimit(env, key, fallback) {
   return Number.isFinite(number) ? number : Number(fallback);
 }
 
+// Every provider the engine can talk to, in the order it prefers them.
+//
+// DeepSeek leads because it is paid and cheap - roughly a cent a report - and a
+// paid account comes with an uptime promise. NVIDIA is a FREE tier: it has no
+// such promise, so it sits last and is only ever tried if a key is still set.
+// Delete NVIDIA_NIM_API_KEY in Cloudflare and the product no longer touches a
+// free tier anywhere.
+const PROVIDERS = {
+  deepseek: {
+    hasKey: env => Boolean(env.DEEPSEEK_API_KEY),
+    config: getDeepseekConfig,
+    call: callDeepseek,
+    usesTaskProfile: true,
+  },
+  gemini: {
+    hasKey: env => Boolean(env.GEMINI_API_KEY || env.GOOGLE_API_KEY),
+    config: getGeminiConfig,
+    call: callGemini,
+    usesTaskProfile: false,
+  },
+  nvidia_nim: {
+    hasKey: env => Boolean(env.NVIDIA_NIM_API_KEY),
+    config: getNvidiaNimConfig,
+    call: callNvidiaNim,
+    usesTaskProfile: true,
+  },
+};
+
+const PROVIDER_PREFERENCE = ["deepseek", "gemini", "nvidia_nim"];
+
 function providerFromEnv(env) {
   const runtimeEnv = getRuntimeEnv(env);
   const explicit = String(runtimeEnv.AI_PROVIDER || "none").toLowerCase();
   if (explicit && explicit !== "none") return explicit;
-  if (runtimeEnv.GEMINI_API_KEY || runtimeEnv.GOOGLE_API_KEY) return "gemini";
-  if (runtimeEnv.NVIDIA_NIM_API_KEY) return "nvidia_nim";
-  return "none";
+  return PROVIDER_PREFERENCE.find(name => PROVIDERS[name].hasKey(runtimeEnv)) || "none";
 }
 
 function configFor(name, runtimeEnv) {
-  return name === "gemini" ? getGeminiConfig(runtimeEnv) : getNvidiaNimConfig(runtimeEnv);
+  return (PROVIDERS[name] || PROVIDERS.nvidia_nim).config(runtimeEnv);
 }
 
-// The provider to try first, then the other one if it has a key configured.
-// Set AI_PROVIDER_FAILOVER=false to go back to a single attempt.
+// The provider to try first, then every other configured one behind it. Set
+// AI_PROVIDER_FAILOVER=false to go back to a single attempt.
 export function buildProviderOrder(primary, runtimeEnv) {
   const order = [primary];
   if (String(runtimeEnv.AI_PROVIDER_FAILOVER || "").toLowerCase() === "false") return order;
-  const backup = primary === "gemini" ? "nvidia_nim" : "gemini";
-  const backupHasKey = backup === "gemini"
-    ? Boolean(runtimeEnv.GEMINI_API_KEY || runtimeEnv.GOOGLE_API_KEY)
-    : Boolean(runtimeEnv.NVIDIA_NIM_API_KEY);
-  if (backupHasKey) order.push(backup);
+  for (const name of PROVIDER_PREFERENCE) {
+    if (name === primary) continue;
+    if (PROVIDERS[name].hasKey(runtimeEnv)) order.push(name);
+  }
   return order;
 }
 
@@ -89,7 +117,7 @@ export async function callControlledAi(context, {
   const db = getRuntimeBinding(context, "DB");
   const provider = providerFromEnv(runtimeEnv);
 
-  if (provider !== "nvidia_nim" && provider !== "gemini") {
+  if (!PROVIDERS[provider]) {
     return {
       ok: false,
       provider,
@@ -231,8 +259,7 @@ export async function callControlledAi(context, {
     const attemptRequestId = isPrimary ? requestId : crypto.randomUUID();
     const startedAt = Date.now();
 
-    const callProvider = callers?.[attemptProvider]
-      || (attemptProvider === "gemini" ? callGemini : callNvidiaNim);
+    const callProvider = callers?.[attemptProvider] || PROVIDERS[attemptProvider].call;
 
     try {
       const response = await callProvider({
@@ -242,7 +269,7 @@ export async function callControlledAi(context, {
         temperature,
         maxTokens,
         responseFormat,
-        ...(attemptProvider === "gemini" ? {} : { taskProfile: "runtime" }),
+        ...(PROVIDERS[attemptProvider].usesTaskProfile ? { taskProfile: "runtime" } : {}),
       });
       const latencyMs = Date.now() - startedAt;
       const usage = tokenUsage(response.usage);

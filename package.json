@@ -18,7 +18,8 @@
     "library:audit": "node scripts/strategy-library/librarian.mjs",
     "test:library": "node tests/library-grader.mjs",
     "library:write": "node scripts/strategy-library/write-blocks.mjs",
-    "test:writer": "node tests/library-writer.mjs"
+    "test:writer": "node tests/library-writer.mjs",
+    "check:deepseek": "node scripts/ai/check_deepseek.mjs"
   },
   "dependencies": {
     "@better-auth/client": "^0.0.2-alpha.3",
