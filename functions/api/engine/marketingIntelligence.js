@@ -1,3 +1,5 @@
+import { onePick } from "./multiPick.js";
+
 const SUPPORTED_GOALS = [
   "launch_business",
   "get_more_walkins",
@@ -1038,7 +1040,7 @@ function normalizePlatforms(rawBiz = {}, parentCategory) {
 
 function inferProductsOrServices(profile = {}, rawBiz = {}, businessType, briefSubtype = "") {
   const explicit = firstUseful(rawBiz.biz_offer, profile.offering?.coreOffer);
-  if (explicit) return explicit;
+  if (explicit) return onePick(explicit);
   if (briefSubtype && BRIEF_SUBTYPE_CONFIG[briefSubtype]) return BRIEF_SUBTYPE_CONFIG[briefSubtype].productsOrServices;
   const fallback = {
     restaurant: "fresh meals and dine-in food",
@@ -1059,7 +1061,7 @@ function inferProductsOrServices(profile = {}, rawBiz = {}, businessType, briefS
 
 function inferAudience(profile = {}, rawBiz = {}, businessType, parentCategory) {
   const explicit = firstUseful(rawBiz.biz_audience, profile.customers?.audience);
-  if (explicit) return explicit;
+  if (explicit) return onePick(explicit);
   if (businessType === "restaurant" || businessType === "cafe") return "nearby families, students, and office customers";
   if (businessType === "salon") return "local customers planning grooming, events, or regular care";
   if (businessType === "dental clinic") return "families and adults who want safe dental care";
@@ -1155,7 +1157,10 @@ function extractDifferentiator(profile = {}, rawBiz = {}) {
   );
   // Placeholders the intake form and older payloads send when nothing was typed.
   if (!raw || /^(any|n\/?a|none|na|-|nil|no)$/i.test(raw)) return "";
-  const phrase = raw.replace(/\s+/g, " ").trim().replace(/[.;]+$/, "");
+  // A multi-tick answer arrives as "A | B | C". One pick belongs inside a
+  // sentence; the whole list stays with the diagnostic, which is right to call
+  // out somebody who ticked everything.
+  const phrase = onePick(raw.replace(/\s+/g, " ").trim().replace(/[.;]+$/, ""));
   // Keep it short enough to read inside a sentence, but never cut mid-word.
   if (phrase.length <= 90) return phrase;
   return `${phrase.slice(0, 90).replace(/\s+\S*$/, "")}`;
@@ -1207,7 +1212,17 @@ export function normalizeBusinessContext(profile = {}, rawBiz = {}) {
     trustNeeds: subtypeConfig?.pack?.trustFactors || pack.trustFactors,
     offerAvailable: selectedGoal === "promote_offer" || selectedGoal === "clear_old_stock" || Boolean(clean(rawBiz.biz_offer_details)),
     platforms: normalizePlatforms(rawBiz, parentCategory),
-    tone: clean(rawBiz.biz_personality || profile.brand?.personality, "simple, warm, direct, practical"),
+    tone: onePick(clean(rawBiz.biz_personality || profile.brand?.personality, ""), "simple, warm, direct, practical"),
+    // The multi-tick answers kept whole, so generated copy can be checked
+    // against what the form actually sent. See multiPick.js.
+    pickLists: [
+      rawBiz.biz_usp,
+      rawBiz.biz_audience,
+      rawBiz.biz_offer,
+      rawBiz.biz_personality,
+      rawBiz.biz_challenge,
+      rawBiz.biz_customer_model,
+    ].filter(Boolean),
   };
   context.customerAction = subtypeConfig?.primaryCTA || getBestCustomerAction(goalStrategy, pack, parentCategory);
   context.salesChannel = context.platforms.join(", ");

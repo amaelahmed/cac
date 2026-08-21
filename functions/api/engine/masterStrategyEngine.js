@@ -1,6 +1,7 @@
 import { StrategyBlockRetrieval } from "./strategyBlockRetrieval.js";
 import { buildMarketingOSReport, normalizeBusinessContext, validateSemanticAlignment } from "./marketingIntelligence.js";
 import { callControlledAi } from "../utils/controlled-ai.js";
+import { collapsePickLists } from "./multiPick.js";
 
 const PROMPT_VERSION = "master-strategy-v2";
 
@@ -307,6 +308,10 @@ function sanitizeGeneratedText(value, context) {
     .replace(/\b(instagram|whatsapp|google business|linkedin|website|email)\s+proof\b/ig, concreteProof)
     .replace(/\byet using [^.?!]+/ig, "yet")
     .replace(/\bwhatsapp\b/ig, "WhatsApp");
+  // Last line of defence against a ticked-box list reaching a paying customer.
+  // The picks are already cut down where they enter the copy, but titles come
+  // from a dozen constant tables and one missed path is all it takes.
+  text = collapsePickLists(text, context?.pickLists);
   text = text.replace(/\s+/g, " ").trim();
   return text ? text.charAt(0).toUpperCase() + text.slice(1) : text;
 }

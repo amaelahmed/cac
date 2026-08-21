@@ -1,5 +1,6 @@
 import { buildMarketingOSReport, validateMarketingOutput, validateSemanticAlignment } from "./marketingIntelligence.js";
 import { runDiagnostics, rankRecommendations, headlineAction } from "./diagnostics.js";
+import { onePick } from "./multiPick.js";
 
 const REQUIRED_SECTIONS = [
   "Business Health Snapshot",
@@ -3059,7 +3060,7 @@ export function assembleReport({ hydratedStrategy, businessProfile, rawBiz, conf
     "Positioning Strategy": {
       simple_market_place: firstText(
         positioning.statement,
-        `${name} should be known as the ${industry} choice for ${lower(audience)} who want ${lower(profile?.offering?.usp || rawBiz?.biz_usp, "a better result")} without confusion.`
+        `${name} should be known as the ${industry} choice for ${lower(onePick(audience))} who want ${lower(onePick(profile?.offering?.usp || rawBiz?.biz_usp), "a better result")} without confusion.`
       ),
       proof_to_show: getList(
         positioning.differentiators,
