@@ -69,6 +69,9 @@ type GenerationResult = {
   };
   generatedAt?: string;
   savedReportId?: string;
+  // The server answers with the fast plan first, then rewrites the copy with AI
+  // and saves over the same row. "running" means a better version is coming.
+  aiEnrichment?: "running" | "ready" | "failed" | "skipped";
 };
 
 type ReportSummary = {
@@ -1182,6 +1185,7 @@ export default function DetailsPage() {
     null,
   );
   const [resultData, setResultData] = useState<GenerationResult | null>(null);
+  const [enrichingReportId, setEnrichingReportId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("form");
   const [lastPayload, setLastPayload] = useState<BusinessPayload | null>(null);
   const [reports, setReports] = useState<ReportSummary[]>([]);
@@ -1243,6 +1247,76 @@ export default function DetailsPage() {
     }, 800);
     return () => window.clearInterval(interval);
   }, [isLoading]);
+
+  // The plan on screen is the fast one. The server is still rewriting its copy
+  // with AI and saving over the same report, so watch for the better version and
+  // swap it in underneath the reader. If it never arrives - the AI was down, or
+  // the platform cut the background work short - the plan they already have
+  // stays exactly as it is, so this gives up quietly rather than warning them
+  // about something that did not cost them anything.
+  useEffect(() => {
+    if (!enrichingReportId) return;
+    const MAX_ATTEMPTS = 24;
+    const EVERY_MS = 5000;
+    let attempts = 0;
+    let cancelled = false;
+
+    const stop = () => {
+      cancelled = true;
+      window.clearInterval(interval);
+      setEnrichingReportId(null);
+    };
+
+    const poll = async () => {
+      attempts += 1;
+      if (attempts > MAX_ATTEMPTS) {
+        setResultData((current) =>
+          current?.aiEnrichment === "running"
+            ? { ...current, aiEnrichment: "failed" }
+            : current,
+        );
+        stop();
+        return;
+      }
+      try {
+        const res = await fetch(`/api/reports/${enrichingReportId}`);
+        if (!res.ok) return;
+        const data = await readJsonResponse<{
+          report?: { strategy_json?: string | Record<string, StrategyValue> };
+        }>(res);
+        const raw = data.report?.strategy_json;
+        if (!raw) return;
+        const strategy = (typeof raw === "string" ? JSON.parse(raw) : raw) as Record<
+          string,
+          StrategyValue
+        >;
+        const meta = strategy.meta as { enrichment_status?: string } | undefined;
+        const status = meta?.enrichment_status;
+        if (status !== "ready" && status !== "failed") return;
+        if (cancelled) return;
+        setResultData((current) =>
+          current
+            ? {
+                ...current,
+                strategy: status === "ready" ? strategy : current.strategy,
+                aiEnrichment: status,
+              }
+            : current,
+        );
+        stop();
+      } catch {
+        // A dropped poll is not worth surfacing; the next tick tries again.
+      }
+    };
+
+    const interval = window.setInterval(() => {
+      void poll();
+    }, EVERY_MS);
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, [enrichingReportId]);
 
   useEffect(() => {
     const query = formData.biz_location.trim();
@@ -1687,6 +1761,7 @@ export default function DetailsPage() {
         generatedAt?: string;
         savedReportId?: string;
         workspaceId?: string;
+        aiEnrichment?: { status?: string; reportId?: string };
       }>(res);
       if (!res.ok) {
         const serverFields = data?.error?.fields as
@@ -1710,14 +1785,17 @@ export default function DetailsPage() {
         data.workspaceId ||
         (await saveReport(strategy, payload).catch(() => null));
       setLastPayload(payload);
+      const enrichmentRunning = data.aiEnrichment?.status === "running";
       setResultData({
         strategy,
         confidence: data.confidence,
         telemetry: data.telemetry,
         generatedAt: data.generatedAt,
         savedReportId: savedReportId || undefined,
+        aiEnrichment: enrichmentRunning ? "running" : "skipped",
       });
       setViewMode("report");
+      if (enrichmentRunning && savedReportId) setEnrichingReportId(savedReportId);
       await refreshReports();
     } catch (error: unknown) {
       setViewMode("form");
@@ -1745,6 +1823,7 @@ export default function DetailsPage() {
         typeof strategyJson === "string"
           ? JSON.parse(strategyJson)
           : strategyJson;
+      setEnrichingReportId(null);
       setResultData({
         strategy,
         savedReportId: id,
@@ -1825,12 +1904,21 @@ export default function DetailsPage() {
         )}
 
         {viewMode === "report" && resultData && (
-          <StrategyWorkspace
-            result={resultData}
-            payload={lastPayload}
-            onBack={resetToForm}
-            onPrint={printCurrentStrategy}
-          />
+          <>
+            {resultData.aiEnrichment === "running" && (
+              <div className="mx-auto mt-4 flex max-w-7xl items-start gap-3 border border-[var(--color-brand-accent)]/35 bg-[var(--color-brand-accent)]/10 px-4 py-3 text-sm font-medium text-black/70 sm:px-6 lg:px-8 dark:text-white/75">
+                <Sparkles className="mt-0.5 h-4 w-4 shrink-0 animate-pulse text-[var(--color-brand-accent)]" />
+                Your plan is ready to use. We are still improving the wording — it
+                will update here on its own in a moment.
+              </div>
+            )}
+            <StrategyWorkspace
+              result={resultData}
+              payload={lastPayload}
+              onBack={resetToForm}
+              onPrint={printCurrentStrategy}
+            />
+          </>
         )}
 
         {viewMode === "form" && (isPending || !authChecked) && (

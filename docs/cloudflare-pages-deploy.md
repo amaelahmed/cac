@@ -37,6 +37,10 @@ Keep runtime app variables in Cloudflare Pages environment variables, not in Git
   One report is about five calls (one strategy call plus one per ten calendar
   days), so `40` is roughly eight reports a day. It was `3`, which could not
   finish even one report.
+- `BACKGROUND_AI_ENRICHMENT` — optional. The customer is answered with the fast
+  deterministic plan, and the AI rewrite runs after the response and saves over
+  the same report. Set to `false` to go back to making the customer wait for the
+  AI before they see anything.
 - `AI_MAX_OUTPUT_TOKENS`
 - `AI_RUNTIME_TIMEOUT_MS`
 

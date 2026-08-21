@@ -11,6 +11,7 @@ import { createMasterStrategy } from "./engine/masterStrategyEngine.js";
 import { expandCalendarWithAi } from "./engine/calendarExpander.js";
 import { fetchWebSnapshot } from "./utils/web-fetch.js";
 import { extractInternetSignals } from "./engine/internetSignals.js";
+import { planGeneration } from "./utils/generation-plan.js";
 
 function json(body, status = 200) {
     return new Response(JSON.stringify(body), {
@@ -400,38 +401,81 @@ export async function onRequestPost(context) {
         const forceAiFailure = body.aiMode === "force_ai_failure"
             || biz._force_ai_failure === true
             || env.FORCE_HYBRID_AI_FAILURE === "true";
+        // A full AI generation is one strategy call plus one call per ten calendar
+        // days, each with its own timeout, run one after another. Waiting for all
+        // of that leaves the customer watching a spinner long enough to think the
+        // product has hung. The deterministic engine builds a complete, usable
+        // plan in about a second, so ship that first and let the AI rewrite the
+        // copy behind it. Nobody waits, and a customer whose AI pass fails still
+        // has the plan they paid for.
+        const generationPlan = planGeneration({
+            forceRuleBased,
+            forceAiFailure,
+            env,
+            canDeferWork: typeof context.waitUntil === "function",
+        });
+        const wantsAiEnrichment = generationPlan.wantsAi;
+        const backgroundEnrichment = generationPlan.background;
+
+        const aiCalendarFacts = {
+            name: businessProfile?.identity?.name || enrichedBiz?.biz_name || "",
+            industry: businessProfile?.market?.industry || enrichedBiz?.biz_industry || "",
+            location: businessProfile?.market?.location || enrichedBiz?.biz_location || "",
+            audience: businessProfile?.customers?.audience || enrichedBiz?.biz_audience || "",
+            offer: businessProfile?.offering?.coreOffer || enrichedBiz?.biz_offer || "",
+            website_facts: compactSnapshot(enrichedBiz?.own_website_snapshot),
+        };
+
+        // Second AI pass: the master prompt deliberately refuses to write final
+        // calendar days, so without this the days are only ever template
+        // expansion. Slices are independent and each one falls back to the
+        // deterministic days on refusal, so this can partially succeed.
+        async function runAiPasses() {
+            const aiMaster = await createMasterStrategy(context, {
+                sessionUserId: session.user.id,
+                businessProfile,
+                rawBiz: enrichedBiz,
+                lineage: lineage.length > 0 ? lineage : ['ind-generic-000'],
+                internetSignals,
+                forceRuleBased: false,
+                forceAiFailure,
+            });
+            const passTelemetry = {};
+            if (aiMaster.masterStrategy) {
+                const expansion = await expandCalendarWithAi(context, {
+                    sessionUserId: session.user.id,
+                    businessProfile,
+                    masterStrategy: aiMaster.masterStrategy,
+                    businessFacts: aiCalendarFacts,
+                    enabled: env.CALENDAR_AI_EXPANSION !== "false",
+                });
+                if (expansion.days.length === aiMaster.masterStrategy.content_calendar_30_days.length) {
+                    aiMaster.masterStrategy.content_calendar_30_days = expansion.days;
+                }
+                Object.assign(passTelemetry, expansion.telemetry);
+            }
+            return { aiMaster, passTelemetry };
+        }
+
         const masterResult = await createMasterStrategy(context, {
             sessionUserId: session.user.id,
             businessProfile,
             rawBiz: enrichedBiz,
             lineage: lineage.length > 0 ? lineage : ['ind-generic-000'],
             internetSignals,
-            forceRuleBased,
+            forceRuleBased: true,
             forceAiFailure,
         });
-        // Second AI pass: the master prompt deliberately refuses to write final
-        // calendar days, so without this the days are only ever template
-        // expansion. Slices are independent and each one falls back to the
-        // deterministic days on refusal, so this can partially succeed.
-        if (masterResult.masterStrategy && !forceRuleBased && !forceAiFailure) {
-            const expansion = await expandCalendarWithAi(context, {
-                sessionUserId: session.user.id,
-                businessProfile,
-                masterStrategy: masterResult.masterStrategy,
-                businessFacts: {
-                    name: businessProfile?.identity?.name || enrichedBiz?.biz_name || "",
-                    industry: businessProfile?.market?.industry || enrichedBiz?.biz_industry || "",
-                    location: businessProfile?.market?.location || enrichedBiz?.biz_location || "",
-                    audience: businessProfile?.customers?.audience || enrichedBiz?.biz_audience || "",
-                    offer: businessProfile?.offering?.coreOffer || enrichedBiz?.biz_offer || "",
-                    website_facts: compactSnapshot(enrichedBiz?.own_website_snapshot),
-                },
-                enabled: env.CALENDAR_AI_EXPANSION !== "false",
-            });
-            if (expansion.days.length === masterResult.masterStrategy.content_calendar_30_days.length) {
-                masterResult.masterStrategy.content_calendar_30_days = expansion.days;
+
+        // When the platform gives us no way to keep working after responding,
+        // fall back to the old behaviour: do the AI work now rather than lose it.
+        if (generationPlan.blocking) {
+            const { aiMaster, passTelemetry } = await runAiPasses();
+            if (aiMaster.masterStrategy) {
+                masterResult.masterStrategy = aiMaster.masterStrategy;
+                masterResult.telemetry = aiMaster.telemetry;
             }
-            Object.assign(telemetry, expansion.telemetry);
+            Object.assign(telemetry, passTelemetry);
         }
 
         const masterTelemetry = masterResult.telemetry || {};
@@ -536,6 +580,9 @@ export async function onRequestPost(context) {
             finalStrategy.meta.message_ready_ratio = telemetry.message_ready_ratio;
             finalStrategy.meta.execution_ready_ratio = telemetry.execution_ready_ratio;
             finalStrategy.meta.saved_workspace_id = generationId;
+            // The workspace polls this to know whether a better version is coming.
+            finalStrategy.meta.enrichment_status = generationPlan.initialStatus;
+            finalStrategy.meta.enrichment_started_at = backgroundEnrichment ? new Date().toISOString() : null;
             finalStrategy.meta.internet_enrichment = telemetry.internet_enrichment;
             finalStrategy.meta.internet_sources_used = telemetry.internet_sources_used;
         }
@@ -543,6 +590,45 @@ export async function onRequestPost(context) {
         const savedReportId = await saveGeneratedWorkspace(env.DB, session.user.id, generationId, businessProfile, enrichedBiz, finalStrategy);
 
         await recordGenerationTelemetry(env.DB, session.user.id, generationId, businessProfile, telemetry, selectedObjects);
+
+        if (backgroundEnrichment) {
+            // saveGeneratedWorkspace upserts on the generation id, so this
+            // replaces the row the customer is already reading. If it throws, or
+            // the platform cuts the work short, the deterministic report simply
+            // stays - which is why it is written first.
+            context.waitUntil((async () => {
+                try {
+                    const { aiMaster, passTelemetry } = await runAiPasses();
+                    if (!aiMaster.masterStrategy) return;
+                    const enrichedTelemetry = { ...telemetry, ...passTelemetry };
+                    const enrichedReport = assembleReport({
+                        hydratedStrategy: hydratedKnowledge,
+                        businessProfile,
+                        rawBiz: enrichedBiz,
+                        confidence,
+                        telemetry: enrichedTelemetry,
+                        strategyBlocks: legacyStrategyBlockOutputEnabled ? strategyBlockPreview?.selectedBlocks || [] : [],
+                        internetSignals,
+                        masterStrategy: aiMaster.masterStrategy,
+                    });
+                    if (enrichedReport?.meta) {
+                        enrichedReport.meta.saved_workspace_id = generationId;
+                        enrichedReport.meta.enrichment_status = "ready";
+                        enrichedReport.meta.enrichment_finished_at = new Date().toISOString();
+                    }
+                    await saveGeneratedWorkspace(env.DB, session.user.id, generationId, businessProfile, enrichedBiz, enrichedReport);
+                } catch (error) {
+                    console.error("Background AI enrichment failed:", error);
+                    try {
+                        if (finalStrategy?.meta) {
+                            finalStrategy.meta.enrichment_status = "failed";
+                            finalStrategy.meta.enrichment_finished_at = new Date().toISOString();
+                        }
+                        await saveGeneratedWorkspace(env.DB, session.user.id, generationId, businessProfile, enrichedBiz, finalStrategy);
+                    } catch { /* the readable report is already saved */ }
+                }
+            })());
+        }
 
         const responseDetails = {
             confidence,
@@ -555,6 +641,10 @@ export async function onRequestPost(context) {
             internetEnrichment: {
                 status: telemetry.internet_enrichment,
                 sourcesUsed: telemetry.internet_sources_used,
+            },
+            aiEnrichment: {
+                status: generationPlan.initialStatus,
+                reportId: savedReportId,
             },
             ...(liveSignals ? { liveSignals } : {}),
             ...(strategyBlockPreview ? {
