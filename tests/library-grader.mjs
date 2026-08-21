@@ -112,6 +112,31 @@ console.log("\n=== the other faults ===");
 
   const [thin] = gradeBlocks([block("thin-1", { ...GOOD, what_to_do: ["Do one thing."] })]);
   check("a piece with nothing to do is caught", thin.faults.some(f => /two things/.test(f)), thin.faults.join("; "));
+
+  // A real draft came back answering "why does this help?" by pasting back what
+  // it had already said the thing means. It filled the slot and added nothing.
+  const echoed = "People trust a new shop faster when they can see real work.";
+  const [echo] = gradeBlocks([block("echo-1", {
+    ...GOOD, what_it_means: echoed, why_this_helps: echoed,
+  })]);
+  check("a piece repeating itself is caught", echo.faults.some(f => /same sentence twice/.test(f)), echo.faults.join("; "));
+
+  // "Check Instagram to see if the special has been posted" checks that you did
+  // the task, not whether it was worth doing.
+  const [hollow] = gradeBlocks([block("hollow-1", {
+    ...GOOD, how_to_check: "Check Instagram to see if the daily special has been posted.",
+  })]);
+  check(
+    "a check that measures nothing is caught",
+    hollow.faults.some(f => /does not measure a result/.test(f)),
+    hollow.faults.join("; ")
+  );
+
+  // But a real one must still pass.
+  const [measured] = gradeBlocks([block("measured-1", {
+    ...GOOD, how_to_check: "Count how many people walk in before eight the following week.",
+  })]);
+  check("a real check is left alone", !measured.faults.some(f => /does not measure/.test(f)), measured.faults.join("; "));
 }
 
 console.log("\n=== the reading measure itself ===");

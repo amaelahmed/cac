@@ -23,6 +23,11 @@ const JARGON = [
 // Grammar the template generator produced: a bare verb straight after "need".
 const BROKEN_GRAMMAR = /\bneed (make|explain|show|remove|know|build|turn|prove|answer)\b/i;
 
+// A real check counts, compares or watches something change.
+const MEASURES_SOMETHING = /\b(count|how many|how much|number|compare|more|fewer|less|increase|drop|track|watch|measure|replies|asked|ask|orders|bookings|messages|repeat|again)\b/i;
+
+const clean = value => String(value || "").trim();
+
 export function longStrings(value, out = []) {
   if (typeof value === "string") {
     if (value.trim().length > 25) out.push(value.trim());
@@ -151,6 +156,30 @@ export function gradeBlocks(blocks) {
     if (actions.length < 2) {
       score -= 1;
       faults.push("fewer than two things to actually do");
+    }
+
+    // 6. The piece repeating itself. A first draft often answers "why does this
+    //    help?" by pasting back what it already said the thing means, which
+    //    fills the slot without adding anything.
+    const seen = new Map();
+    const selfRepeat = [];
+    for (const text of sentences) {
+      const key = text.toLowerCase().replace(/\s+/g, " ").trim();
+      if (seen.has(key)) selfRepeat.push(text);
+      else seen.set(key, true);
+    }
+    if (selfRepeat.length) {
+      score -= 1;
+      faults.push(`says the same sentence twice: "${selfRepeat[0].slice(0, 60)}..."`);
+    }
+
+    // 7. "How to check" that only checks you did the task, not whether it
+    //    worked. "Check Instagram to see if the special has been posted" tells
+    //    an owner nothing about whether it was worth doing.
+    const howToCheck = clean(block.content_json?.how_to_check);
+    if (howToCheck && !MEASURES_SOMETHING.test(howToCheck)) {
+      score -= 1;
+      faults.push("the check does not measure a result, only whether the task was done");
     }
 
     return {

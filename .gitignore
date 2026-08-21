@@ -54,3 +54,4 @@ backups/
 .wrangler/
 backups/
 data/strategy-library/graded.jsonl
+data/strategy-library/drafts/librarian/
