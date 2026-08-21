@@ -15,8 +15,11 @@ export function getRuntimeEnv(contextOrEnv = {}) {
     NVIDIA_NIM_BASE_URL: env.NVIDIA_NIM_BASE_URL || fallback.NVIDIA_NIM_BASE_URL || "https://integrate.api.nvidia.com/v1",
     NVIDIA_NIM_DEFAULT_MODEL: env.NVIDIA_NIM_DEFAULT_MODEL || fallback.NVIDIA_NIM_DEFAULT_MODEL || "minimaxai/minimax-m3",
     AI_TEST_MODE: env.AI_TEST_MODE || fallback.AI_TEST_MODE || "false",
-    AI_DAILY_GLOBAL_LIMIT: env.AI_DAILY_GLOBAL_LIMIT || fallback.AI_DAILY_GLOBAL_LIMIT || "25",
-    AI_DAILY_USER_LIMIT: env.AI_DAILY_USER_LIMIT || fallback.AI_DAILY_USER_LIMIT || "3",
+    // Counted in AI CALLS, not reports. One report is about five calls, so the
+    // user limit below is eight reports a day. The global figure is a spend
+    // ceiling for bugs and abuse, not a product limit; 0 switches it off.
+    AI_DAILY_GLOBAL_LIMIT: env.AI_DAILY_GLOBAL_LIMIT || fallback.AI_DAILY_GLOBAL_LIMIT || "200000",
+    AI_DAILY_USER_LIMIT: env.AI_DAILY_USER_LIMIT || fallback.AI_DAILY_USER_LIMIT || "40",
     AI_MAX_OUTPUT_TOKENS: env.AI_MAX_OUTPUT_TOKENS || fallback.AI_MAX_OUTPUT_TOKENS || "2000",
     AI_RUNTIME_TIMEOUT_MS: env.AI_RUNTIME_TIMEOUT_MS || fallback.AI_RUNTIME_TIMEOUT_MS || "30000",
     AI_OFFLINE_MAX_OUTPUT_TOKENS: env.AI_OFFLINE_MAX_OUTPUT_TOKENS || fallback.AI_OFFLINE_MAX_OUTPUT_TOKENS || "8000",

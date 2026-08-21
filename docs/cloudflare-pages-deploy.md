@@ -29,8 +29,14 @@ Keep runtime app variables in Cloudflare Pages environment variables, not in Git
 - `NVIDIA_NIM_API_KEY`
 - `NVIDIA_NIM_BASE_URL`
 - `NVIDIA_NIM_DEFAULT_MODEL`
-- `AI_DAILY_GLOBAL_LIMIT`
-- `AI_DAILY_USER_LIMIT`
+- `AI_DAILY_GLOBAL_LIMIT` — spend ceiling for bugs and abuse, counted in AI
+  calls across the whole account. Not a product limit. `0` switches it off.
+  It was `25`, which meant the fifth report of the day, from any customer,
+  became the offline template. Anything below a few thousand will do that again.
+- `AI_DAILY_USER_LIMIT` — per-customer daily cap, also counted in AI **calls**.
+  One report is about five calls (one strategy call plus one per ten calendar
+  days), so `40` is roughly eight reports a day. It was `3`, which could not
+  finish even one report.
 - `AI_MAX_OUTPUT_TOKENS`
 - `AI_RUNTIME_TIMEOUT_MS`
 

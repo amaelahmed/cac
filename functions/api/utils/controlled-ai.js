@@ -12,6 +12,22 @@ import {
 
 const LIMIT_MESSAGE = "AI limit reached for today. Showing the saved library plan instead.";
 
+// A report is not one AI call. A full generation makes one master-strategy call
+// plus one call per ten calendar days, so about five. The old per-user limit of
+// 3 CALLS could not finish a single report - a paying customer ran out of quota
+// halfway through their first one of the day and silently got the offline
+// template for the rest of it.
+const AI_CALLS_PER_REPORT = 5;
+const DEFAULT_USER_REPORTS_PER_DAY = 8;
+const DEFAULT_USER_CALL_LIMIT = AI_CALLS_PER_REPORT * DEFAULT_USER_REPORTS_PER_DAY;
+
+// This ceiling is spend protection against a bug or abuse - it is NOT a product
+// limit. It used to be 25 calls a day shared across EVERY user combined, which
+// meant the fifth report of the day, from any customer anywhere, quietly became
+// the offline template. At 10,000 subscribers that is every customer, every day.
+// Set AI_DAILY_GLOBAL_LIMIT to 0 to switch the ceiling off entirely.
+const DEFAULT_GLOBAL_CALL_LIMIT = 200000;
+
 function readLimit(env, key, fallback) {
   const runtimeEnv = getRuntimeEnv(env);
   const raw = runtimeEnv?.[key] ?? fallback;
@@ -124,11 +140,15 @@ export async function callControlledAi(context, {
     };
   }
 
-  const usageToday = await countAiUsageToday(db, { userId });
-  const globalLimit = readLimit(runtimeEnv, "AI_DAILY_GLOBAL_LIMIT", 25);
-  const userLimit = readLimit(runtimeEnv, "AI_DAILY_USER_LIMIT", 3);
+  const globalLimit = readLimit(runtimeEnv, "AI_DAILY_GLOBAL_LIMIT", DEFAULT_GLOBAL_CALL_LIMIT);
+  const userLimit = readLimit(runtimeEnv, "AI_DAILY_USER_LIMIT", DEFAULT_USER_CALL_LIMIT);
+  // The global tally is a COUNT over every row logged today, run on every single
+  // AI call. When the ceiling is off there is nothing to compare it against, so
+  // skip the query rather than pay for it on every request.
+  const usageToday = await countAiUsageToday(db, { userId, skipGlobal: globalLimit <= 0 });
 
-  if (usageToday.global >= globalLimit || usageToday.user >= userLimit) {
+  const overGlobal = globalLimit > 0 && usageToday.global >= globalLimit;
+  if (overGlobal || usageToday.user >= userLimit) {
     await recordAiUsage(context, {
       requestId,
       userId,

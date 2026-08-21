@@ -171,11 +171,14 @@ export async function recordAiUsage(context, {
   }
 }
 
-export async function countAiUsageToday(db, { userId } = {}) {
+// `skipGlobal` avoids a COUNT over every row logged today. That query runs on
+// every AI call, and the whole-account tally is only worth paying for when a
+// spend ceiling is actually switched on.
+export async function countAiUsageToday(db, { userId, skipGlobal = false } = {}) {
   if (!db) return { global: 0, user: 0 };
 
   try {
-    const globalRow = await db.prepare(`
+    const globalRow = skipGlobal ? { count: 0 } : await db.prepare(`
       SELECT COUNT(*) AS count
       FROM ai_usage_logs
       WHERE cache_hit = 0
@@ -198,7 +201,7 @@ export async function countAiUsageToday(db, { userId } = {}) {
     };
   } catch {
     try {
-      const globalRow = await db.prepare(`
+      const globalRow = skipGlobal ? { count: 0 } : await db.prepare(`
         SELECT COUNT(*) AS count
         FROM ai_usage_logs
         WHERE cache_hit = 0
