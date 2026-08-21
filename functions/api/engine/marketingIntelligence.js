@@ -1139,6 +1139,39 @@ function adaptIndustryPackForContext(pack, context) {
   return adapted;
 }
 
+// The single field that separates two businesses in the SAME industry. Two
+// London dental clinics differ by "same-week appointments" vs "evening slots
+// after work" - nothing else in the brief distinguishes them. Before this,
+// biz_usp was only read to pick a subtype and then thrown away, so both
+// clinics received a word-for-word identical plan.
+function extractDifferentiator(profile = {}, rawBiz = {}) {
+  const raw = clean(
+    profile.offering?.usp
+      || rawBiz.biz_usp
+      || rawBiz.usp
+      || rawBiz.biz_offer_details
+      || rawBiz.biz_extra,
+    ""
+  );
+  // Placeholders the intake form and older payloads send when nothing was typed.
+  if (!raw || /^(any|n\/?a|none|na|-|nil|no)$/i.test(raw)) return "";
+  const phrase = raw.replace(/\s+/g, " ").trim().replace(/[.;]+$/, "");
+  // Keep it short enough to read inside a sentence, but never cut mid-word.
+  if (phrase.length <= 90) return phrase;
+  return `${phrase.slice(0, 90).replace(/\s+\S*$/, "")}`;
+}
+
+// Every card in a tab used to declare the same two metric sentences, so the
+// "what to track" column read as one line copied twenty times. The pack already
+// lists five real numbers - rotate a pair per card instead.
+function trackForIndex(metrics, index) {
+  const numbers = unique((metrics.numbers || []).map(item => clean(item)).filter(Boolean));
+  if (numbers.length < 2) return metrics.track;
+  const first = numbers[index % numbers.length];
+  const second = numbers[(index + 1) % numbers.length];
+  return `${first} first, then ${lower(second)} in the same week.`;
+}
+
 export function normalizeBusinessContext(profile = {}, rawBiz = {}) {
   const businessName = clean(profile.identity?.name || rawBiz.biz_name || rawBiz.name, "Your Business");
   const briefSubtype = detectBriefSubtype(profile, rawBiz);
@@ -1162,6 +1195,7 @@ export function normalizeBusinessContext(profile = {}, rawBiz = {}) {
       rawBiz.biz_usp,
       rawBiz.biz_challenge,
     ].filter(Boolean).join(" ")),
+    differentiator: extractDifferentiator(profile, rawBiz),
     launchStage: detectStage(profile, rawBiz),
     location,
     city,
@@ -1379,8 +1413,8 @@ function buildStrategySteps(context, pack, goalStrategy) {
     ],
     example_for_this_business: `${context.businessName} can use this for ${context.productsOrServices} in ${context.city}.`,
     copy_ready_text: copy,
-    track_this: index < 5 ? metrics.track : "The one post or message that created the most real action.",
-    what_to_check: index < 5 ? metrics.track : "The one post or message that created the most real action.",
+    track_this: trackForIndex(metrics, index),
+    what_to_check: trackForIndex(metrics, index),
     priority: index < 3 ? "Do this first" : index < 7 ? "Do this this week" : "Do after the basics",
     effort: index < 6 ? "Simple task" : "Needs weekly discipline",
     timeline: index < 3 ? "Today" : index < 7 ? "This week" : "This month",

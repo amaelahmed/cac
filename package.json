@@ -6,7 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:engine": "node tests/engine-quality.mjs",
+    "preview:report": "node scripts/preview-report.mjs",
+    "test:calendar": "node tests/calendar-expander.mjs",
+    "test": "npm run test:engine && npm run test:calendar && npm run test:distinct && npm run test:quota && npm run test:plan && npm run test:failover && npm run test:library && npm run test:writer",
+    "test:distinct": "node tests/report-distinctness.mjs",
+    "test:quota": "node tests/ai-quota.mjs",
+    "test:plan": "node tests/generation-plan.mjs",
+    "test:failover": "node tests/provider-failover.mjs",
+    "library:audit": "node scripts/strategy-library/librarian.mjs",
+    "test:library": "node tests/library-grader.mjs",
+    "library:write": "node scripts/strategy-library/write-blocks.mjs",
+    "test:writer": "node tests/library-writer.mjs",
+    "check:deepseek": "node scripts/ai/check_deepseek.mjs"
   },
   "dependencies": {
     "@better-auth/client": "^0.0.2-alpha.3",

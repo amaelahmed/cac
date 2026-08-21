@@ -463,6 +463,7 @@ function businessSpecificityScore(master, context) {
     context.city,
     context.location,
     context.businessType,
+    context.differentiator,
     ...asArray(context.platforms),
     ...offerKeywords(context, 12),
     ...wordsForVertical(context, { industryPack: {} }),
@@ -789,6 +790,19 @@ function reviewerScorecard(metrics) {
     min_score: Math.min(...Object.values(scores)),
     failures,
   };
+}
+
+function asContinuation(text, context) {
+  const value = String(text || "").trim();
+  if (!value) return "";
+  const firstWord = value.split(/\s+/)[0].replace(/[^A-Za-z']/g, "");
+  const proper = new Set([
+    ...String(context?.businessName || "").split(/\s+/).filter(Boolean),
+    "WhatsApp", "Instagram", "Google", "Facebook", "YouTube", "LinkedIn", "Reels", "DM", "DMs",
+  ]);
+  if (proper.has(firstWord)) return value;
+  // Only downcase Sentence-case words; leaves ALLCAPS acronyms untouched.
+  return /^[A-Z][a-z]/.test(value) ? value[0].toLowerCase() + value.slice(1) : value;
 }
 
 function scoreMasterStrategy(master, context, intelligence) {
@@ -1370,7 +1384,12 @@ function prioritiesForVertical(context, intelligence) {
       expected_result: baseMetric(context),
     },
   ];
-  return base;
+  // Every priority above declared the same industry sentence as its expected
+  // result, so "what should happen" read as one line repeated down the tab.
+  return base.map((item, index) => ({
+    ...item,
+    expected_result: expectedResultForIndex(context, index),
+  }));
 }
 
 function personasForVertical(context) {
@@ -1710,7 +1729,7 @@ function defaultMasterCore({ marketingOS, intelligence }) {
     },
     psychology: unique(intelligence.units.flatMap(unit => unit.psychology)).slice(0, 8).map(name => ({
       principle: name,
-      use_it_by: `Apply ${name} to make ${context.businessName} easier to trust before asking people to ${actionPhrase(context)}.`,
+      use_it_by: `apply ${name} to make the offer easier to trust before asking people to ${actionPhrase(context)}.`,
     })),
     offers: unique([
       ...offersForVertical(context, marketingOS),
@@ -1892,9 +1911,14 @@ function strengthenCompetitorReason(value, alternative, context) {
   return `${alt} can feel easier because customers understand it faster than ${context.businessName}.`;
 }
 
-function strengthenExpectedResult(value, context) {
+function strengthenExpectedResult(value, context, index = 0) {
   const text = clean(value);
-  return text.length >= 18 ? text : baseMetric(context);
+  if (text.length < 18) return expectedResultForIndex(context, index);
+  // A caller that passed the raw industry metric has not said anything specific
+  // about this card, so treat it like an empty value rather than shipping the
+  // same sentence on all twenty.
+  if (lower(text) === lower(baseMetric(context))) return expectedResultForIndex(context, index);
+  return text;
 }
 
 function leadOffer(context) {
@@ -1935,7 +1959,9 @@ function naturalOfferFocus(context, index = 0) {
   ].join(" "));
   const kind = businessKind(context);
   const sets = {
-    food: /shawarma|hostel|student dinner|grilled/.test(source)
+    food: /bakery|baker|bread|sourdough|patisserie|pastry|cake|croissant|bun\b/.test(source)
+      ? ["today's fresh batch", "loaf from the morning bake", "counter pick", "box to take home"]
+      : /shawarma|hostel|student dinner|grilled/.test(source)
       ? ["shawarma combo", "student dinner order", "quick parcel meal", "juice combo"]
       : /coffee|workspace|pastr|cold coffee|brownie|sandwich/.test(source)
         ? ["coffee break order", "student combo", "brownie-and-drink pick", "takeaway snack"]
@@ -1963,18 +1989,77 @@ function naturalOfferFocus(context, index = 0) {
     local: [leadOffer(context), "first enquiry", "starter offer", "proof post"],
   };
   const list = sets[kind] || sets.local;
-  return list[index % list.length] || leadOffer(context);
+  const industryFocus = list[index % list.length] || leadOffer(context);
+  return blendDifferentiator(context, industryFocus, index);
+}
+
+// The industry lists above are correct but shared: every gym gets "beginner
+// trial session". Rotating the business's own promise through them is what
+// makes two same-industry plans read differently, and it costs no AI call.
+function differentiatorFocuses(context) {
+  const promise = trimEndPunctuation(clean(context.differentiator));
+  if (!promise) return [];
+  // compactPhrase strips articles, which turns "sourdough baked twice a day"
+  // into "sourdough baked twice day". This is the owner's own sentence, so keep
+  // its words and only limit the length.
+  const words = promise.split(/\s+/).filter(Boolean);
+  const short = trimDanglingWord(words.slice(0, 6).join(" ")) || promise;
+  return unique([short, `${short} proof`].filter(Boolean));
+}
+
+function differentiatorDetails(context) {
+  const promise = trimEndPunctuation(clean(context.differentiator));
+  if (!promise) return [];
+  const short = lowerFirst(promise);
+  return [
+    `with ${short} shown on screen`,
+    `by proving ${short} in one shot`,
+    `with ${short} said in the first line`,
+  ];
+}
+
+function blendDifferentiator(context, industryFocus, index = 0) {
+  const own = differentiatorFocuses(context);
+  if (!own.length) return industryFocus;
+  // Alternate. The industry phrase carries the vertical's language; the business
+  // phrase carries what makes this one different. The plan needs both.
+  return index % 2 === 0 ? own[Math.floor(index / 2) % own.length] : industryFocus;
+}
+
+// "artisan bakery" for a bakery, "dental clinic" for a dental clinic: the offer
+// field is just the trade name with an adjective in front. Anything that adds
+// two or more real words ("wedding cakes", "same-day denture repair") is a
+// genuine offer and is left alone.
+function isIndustryRestatement(value, context) {
+  const type = lower(context.businessType);
+  const source = lower(value);
+  if (!type || !source) return false;
+  const escaped = type.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const remainder = source
+    .replace(new RegExp(`\\b${escaped}\\b`, "g"), " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return remainder.split(/\s+/).filter(Boolean).length <= 1;
 }
 
 function businessFacingFocus(context, value, index = 0) {
   const source = clean(value);
   if (!source) return naturalOfferFocus(context, index);
+  // When the owner leaves the offer blank, intake copies the industry into it.
+  // The "offer" then becomes "artisan bakery", and captions read "Fresh artisan
+  // bakery just came out." An industry is not a thing anyone buys, so fall back
+  // to something from the counter.
+  if (isIndustryRestatement(source, context)) return naturalOfferFocus(context, index);
   if (/\b(opening day tasting plate|first visit package|clearance bundle|checkup camp|matched property shortlist|guided trial(?: session)?|early access|paid strategy audit|content direction sprint|document checklist review|consultation slot|verified listing walkthrough|new arrival drop|weekend slot offer|family combo|service recommendation tool|real example on website|workflow audit)\b/i.test(source)) {
     return naturalOfferFocus(context, index);
   }
   if (/\bon\s+(website|instagram|whatsapp|google business|linkedin|email)\b/i.test(source)) {
     return naturalOfferFocus(context, index);
   }
+  // The focus may already BE the owner's promise, handed down from an earlier
+  // call. Compacting it again strips its articles: "sourdough baked twice a
+  // day" comes back as "sourdough baked twice day".
+  if (differentiatorFocuses(context).some(phrase => lower(phrase) === lower(source))) return source;
   return compactPhrase(source, naturalOfferFocus(context, index), 4);
 }
 
@@ -2300,6 +2385,16 @@ function growthIdeaExperiment(context, brief, index) {
       [`one feature into a buyer job`, `the feature only after naming the real job it solves for ${lowerFirst(buyer)}, then close with the demo question`],
       [`the first-week result as the promise`, `what gets faster or cleaner in seven days, using one screen and one measurable outcome`],
     ],
+    counter_bakery: [
+      [`the shelf at two times of day`, `what is out at opening and what is left by afternoon, so people learn when to come`],
+      [`how long ${lowerFirst(focus)} stays good`, `the honest keeping time, how to store it, and when it is best eaten`],
+      [`one pick for a first-time buyer`, `the single thing regulars buy, its price, and why it is the safe first try`],
+      [`pre-orders for dates people plan`, `what needs ordering ahead, how far ahead, and how to reserve it`],
+      [`the price list before the visit`, `every item and price in one image, so nobody has to ask at the counter`],
+      [`what sells out and when`, `the item that goes first, the hour it goes, and the time to arrive for it`],
+      [`a gift box people can send`, `what fits in a box, what it costs, and how to order one for someone else`],
+      [`the batch times as a habit`, `the hours the oven finishes, so buying fresh becomes a routine, not luck`],
+    ],
     food: [
       [`two order paths around ${lowerFirst(focus)}`, `two choices: fastest pickup and safest family order; ask for headcount, budget, and pickup time, then track which reply comes faster`],
       [`portion, ready time, and parcel detail before the menu`, `a real plate or parcel with size reference, ready-time note, and the keyword buyers should message`],
@@ -2391,12 +2486,17 @@ function growthIdeaExperiment(context, brief, index) {
       [`the first action path from post to reply`, `what buyers see, what they send, how the owner replies, and what gets tracked`],
     ],
   };
-  const selected = (options[kind] || options.local)[index % (options[kind] || options.local).length];
+  const pool = options[contextVariant(context, kind)] || options[kind] || options.local;
+  const selected = pool[index % pool.length];
   const titleRest = stripLeadingAction(selected[0]) || selected[0];
   const actionRest = stripLeadingAction(selected[1]) || selected[1];
   return {
-    title: sanitizeGeneratedText(`${starter} ${lowerFirst(titleRest)}`, context),
-    exactAction: sanitizeGeneratedText(`${actionStarter} ${lowerFirst(actionRest)}. End with "${cta}."`, context),
+    title: withOwnVoice(sanitizeGeneratedText(`${starter} ${lowerFirst(titleRest)}`, context), context, index),
+    exactAction: withOwnVoice(
+      sanitizeGeneratedText(`${actionStarter} ${lowerFirst(actionRest)}. End with "${cta}."`, context),
+      context,
+      index + 1,
+    ),
   };
 }
 
@@ -2436,7 +2536,10 @@ function compactPhrase(value, fallback = "customer", maxWords = 4) {
     .replace(/\s+/g, " ")
     .trim();
   const words = text.split(/\s+/).filter(Boolean).slice(0, maxWords);
-  return words.join(" ") || fallback;
+  // Clipping to a word count can end the phrase on a preposition, which then
+  // reads as broken English mid-sentence: "the safest first step for office
+  // workers in with first-step calm".
+  return trimDanglingWord(words.join(" ")) || fallback;
 }
 
 function compactProofPhrase(value, fallback = "proof detail", maxWords = 5) {
@@ -2846,6 +2949,16 @@ function industryCta(context, kind, index = 0) {
   };
   const subtypeList = subtypeVariants[context.briefSubtype];
   if (subtypeList) return subtypeList[index % subtypeList.length];
+  // A bakery has a counter and a batch, not a menu and a parcel. Route it
+  // before the shared food wording.
+  if (kind === "food" && contextVariant(context, kind) === "counter_bakery") {
+    const bakery = [
+      "Message FRESH and we will tell you what is on the shelf right now.",
+      "Send the day and time you want it, and we will hold one for you.",
+      "Ask what came out of the oven today before you walk over.",
+    ];
+    return bakery[index % bakery.length];
+  }
   const variants = {
     software: [
       "Reply DEMO and we will show the workflow before you sign up.",
@@ -3020,7 +3133,23 @@ function customerCaptionForKind(context, index, { focus, objection, proof, perso
       `Good businesses make the first step clear. Ask about ${focus}, see ${proofText}, and then decide. ${cta}`,
     ],
   };
-  const list = lines[kind] || lines.local;
+  // The shared food pool is written for a sit-down place: headcount, dine-in,
+  // spice comfort, group-chat debates. None of that is how anyone buys bread.
+  const bakeryLines = [
+    `Fresh ${offer} is out now. Ask what is on the shelf before you walk over.`,
+    `We bake in small batches, so the shelf changes through the day. Message to check what is left.`,
+    `Buying for someone else? Tell us the occasion and we will pick one thing from today's batch.`,
+    `Ask how long ${offer} stays good, so you know whether to buy today or tomorrow.`,
+    `Want it kept aside? Send the time you can collect and we will hold it.`,
+    `Prices are on every item. Ask before you come and we will send them.`,
+    `Some things sell out early. Ask what usually goes first and when to arrive.`,
+    `Ordering for a party? Give us the date and we will tell you what to book ahead.`,
+    `Not sure what to try first? Ask for the one thing regulars buy every week.`,
+    `We can box it for a gift. Ask what fits before you decide.`,
+  ];
+  const list = kind === "food" && contextVariant(context, kind) === "counter_bakery"
+    ? bakeryLines
+    : lines[kind] || lines.local;
   return sanitizeGeneratedText(pickSeeded(list, context, `caption:${kind}:${moment}:human`, index), context);
 }
 
@@ -3041,6 +3170,7 @@ function actionNounForKind(kind) {
 
 function titleFlavorForKind(context, kind, index) {
   const flavors = {
+    counter_bakery: ["with the batch time shown", "through shelf freshness", "with the price visible", "before it sells out", "around keeping time", "with one honest recommendation"],
     software: ["with workflow proof", "without setup confusion", "for team buy-in", "through a screen-level demo", "around week-one adoption", "against manual-work confusion"],
     food: ["with portion clarity", "through pickup timing", "with freshness proof", "for group orders", "before the menu decision", "with ready-time detail"],
     salon: ["with reference-photo clarity", "before the slot is chosen", "through result proof", "around prep timing", "with budget comfort", "through consultation detail"],
@@ -3052,7 +3182,7 @@ function titleFlavorForKind(context, kind, index) {
     retail: ["with real-photo proof", "through stock clarity", "before preview confidence", "around delivery timing", "with size-and-style fit", "with checkout confidence"],
     local: ["with proof clarity", "around reply confidence", "through timing detail", "before the fit check", "with first-step ease", "around buyer trust"],
   };
-  const list = flavors[kind] || flavors.local;
+  const list = flavors[contextVariant(context, kind)] || flavors[kind] || flavors.local;
   return list[seededIndex(context, `title-flavor:${kind}`, index, list.length)];
 }
 
@@ -3078,6 +3208,7 @@ function contextVariant(context, kind) {
     context.location,
   ].join(" "));
   if (kind === "food") {
+    if (/bakery|baker|bake[dr]?\b|bread|sourdough|patisserie|pastry shop|cake shop|confection/.test(source)) return "counter_bakery";
     if (/shawarma|hostel|grilled|student dinner/.test(source)) return "hostel_food";
     if (/cold coffee|brownies|sandwich|after|combo/.test(source)) return "after_class_cafe";
     if (/coffee|workspace|pastries|remote|weekday/.test(source)) return "workday_cafe";
@@ -3094,6 +3225,8 @@ function contextVariant(context, kind) {
   if (kind === "agency") return /pixel|small business|reels|kozhikode/.test(source) ? "local_agency" : "brand_agency";
   if (kind === "clinic") {
     if (/skin|derma|dermatology|laser|acne|pigmentation|glow/.test(source)) return "skin_clinic";
+    if (/office|work|commut|professional|corporate|student|solo|adult/.test(source)) return "local_clinic";
+    if (/famil|kid|child|parent|school/.test(source)) return "family_clinic";
     return /smiledock|tooth pain|kozhikode/.test(source) ? "local_clinic" : "family_clinic";
   }
   if (kind === "real_estate") return /northline|rentals|plots|tenants/.test(source) ? "local_property" : "premium_property";
@@ -3105,6 +3238,11 @@ function visibleTitleOverride(context, kind, index, offer) {
   if (index > 2) return "";
   const variant = contextVariant(context, kind);
   const lines = {
+    counter_bakery: [
+      "Post today's fresh batch with the time it came out of the oven",
+      "Show what is still on the shelf before the afternoon rush",
+      "Turn a first-time buyer into one easy pick from the counter",
+    ],
     family_food: [
       "Plan one family order around headcount, parcel time, and portion proof",
       "Sort the seafood choice by freshness, wait time, and pickup comfort",
@@ -3228,6 +3366,11 @@ function visibleCaptionOverride(context, kind, index, offer) {
   if (index > 2) return "";
   const variant = contextVariant(context, kind);
   const lines = {
+    counter_bakery: [
+      `Fresh ${offer} just came out. Ask what is on the shelf right now and we will hold one for you.`,
+      `Not sure what to pick? Tell us who it is for and we will name one thing from today's batch.`,
+      `We bake in small batches, so the shelf changes through the day. Message before you walk over.`,
+    ],
     family_food: [
       `Ordering for family? Send the headcount and pickup time. We will point you to the ${offer} option that keeps the table simple.`,
       `A good family order needs portion clarity first. Ask what serves 3-4 people, what is fresh now, and when it can be packed.`,
@@ -3245,7 +3388,7 @@ function visibleCaptionOverride(context, kind, index, offer) {
     ],
     after_class_cafe: [
       `After class, nobody wants a long menu debate. Ask what combo is fresh, pocket-friendly, and ready before the group splits.`,
-      `Calicut cafe plans move faster when the reply says price, portion, and ready time in one shot.`,
+      `Cafe plans move faster when the reply says price, portion, and ready time in one shot.`,
       `For a student order, send budget, hunger, and parcel time. We will point you to one combo that fits today.`,
     ],
     event_salon: [
@@ -3324,7 +3467,7 @@ function visibleCaptionOverride(context, kind, index, offer) {
       `Before booking a visit, request three options that match your budget and one reason each is worth seeing.`,
     ],
     local_property: [
-      `Kozhikode property search gets easier when budget and landmark preference come before random visits.`,
+      `A property search gets easier when budget and landmark preference come before random visits.`,
       `A useful rental reply filters by area, move-in date, and must-have before sending listings.`,
       `Do not spend Saturday chasing mismatched properties. Send budget, location, and property type first.`,
     ],
@@ -3346,6 +3489,11 @@ function visibleMessageOverride(context, kind, index, offer) {
   if (index > 2) return "";
   const variant = contextVariant(context, kind);
   const lines = {
+    counter_bakery: [
+      `Send FRESH and we will tell you what is on the shelf now, the price, and how long it will last.`,
+      `Message what you need it for and when. We will reply with one ${offer} pick and the pickup time.`,
+      `Ask us to hold something from today's batch. Tell us the time you can collect.`,
+    ],
     family_food: [
       `Send FAMILY with headcount, parcel or dine-in, and pickup time. We will suggest one ${offer} order with portion and price.`,
       `Message what time you need food and how many people are eating. We will reply with the safest family order.`,
@@ -3471,6 +3619,18 @@ function naturalDayTitleForKind(context, kind, index, { focus, objection, person
   const market = place || (kind === "software" ? "for the buyer team" : "for the buyer");
   const variant = contextVariant(context, kind);
   const variantTitles = {
+    counter_bakery: [
+      `Film the batch coming out of the oven with the time on screen`,
+      `Show what is left on the shelf at the same hour every day`,
+      `Help a first-time buyer pick one thing from the counter`,
+      `Show how long ${offer} stays good after it is bought`,
+      `Film the wrapping and the box for a gift order`,
+      `Show the price of each item without making people ask`,
+      `Record a regular customer saying what they always buy`,
+      `Show what sells out first and when to come for it`,
+      `Film a pre-order being collected at the promised time`,
+      `Show the difference between today's batch and yesterday's`,
+    ],
     family_food: [
       `Run a family portion test with parcel timing on screen`,
       `Simplify table-size ordering for the WhatsApp group`,
@@ -3514,7 +3674,7 @@ function naturalDayTitleForKind(context, kind, index, { focus, objection, person
       `Turn college snack confusion into one combo`,
       `Show the pocket-friendly order without hiding portion size`,
       `Film the parcel counter path for students`,
-      `Make the Calicut cafe plan fit budget and hunger`,
+      `Make the cafe plan fit budget and hunger`,
       `Show the fresh snack option before the menu scroll`,
       `Record the group table order with max spend visible`,
       `Turn after-class hunger into one useful reply`,
@@ -3700,7 +3860,7 @@ function naturalDayTitleForKind(context, kind, index, { focus, objection, person
       `Turn investment doubt into one useful shortlist`,
     ],
     local_property: [
-      `Localize the Kozhikode area filter before listings`,
+      `Localize the area filter before listings`,
       `Qualify budget, landmark, and move-in timing before options`,
       `Build a local property shortlist with must-have fit`,
       `Turn mismatched enquiries into one buyer filter`,
@@ -3738,7 +3898,11 @@ function naturalDayTitleForKind(context, kind, index, { focus, objection, person
   };
   if (variantTitles[variant]?.length) {
     const list = variantTitles[variant];
-    return sanitizeGeneratedText(groundTitleWithOffer(list[index % list.length], offer), context);
+    return withOwnVoice(
+      sanitizeGeneratedText(groundTitleWithOffer(list[index % list.length], offer), context),
+      context,
+      index,
+    );
   }
   const directTitles = {
     software: [
@@ -3864,9 +4028,13 @@ function naturalDayTitleForKind(context, kind, index, { focus, objection, person
   };
   const concreteTitles = directTitles[kind] || directTitles.local;
   if (concreteTitles?.length) {
-    return sanitizeGeneratedText(
-      groundTitleWithOffer(concreteTitles[seededIndex(context, `concrete-day-title:${kind}:${offer}:${action}`, index, concreteTitles.length)], offer),
+    return withOwnVoice(
+      sanitizeGeneratedText(
+        groundTitleWithOffer(concreteTitles[seededIndex(context, `concrete-day-title:${kind}:${offer}:${action}`, index, concreteTitles.length)], offer),
+        context,
+      ),
       context,
+      index,
     );
   }
   const titles = [
@@ -4111,11 +4279,12 @@ function calendarCreative(context, index, { pillar, objection, persona, psych, o
     local: [`Open with the customer doubt.`, `Show ${proof}.`, `End with ${cta}.`],
   };
   const shots = visualOpeners[kind] || visualOpeners.local;
+  const plainTitle = withoutOwnVoiceClause(title);
   return {
     title,
-    hook: title,
+    hook: plainTitle,
     caption,
-    visual_direction: sanitizeGeneratedText(`${context.businessName}: show ${proof} connected to ${focus}.`, context),
+    visual_direction: sanitizeGeneratedText(`Frame the first shot so "${lower(plainTitle)}" is obvious without sound, then show ${proof}.`, context),
     shot_list: shots.map(step => sanitizeGeneratedText(step, context)),
     script: sanitizeGeneratedText(`${context.businessName} should answer "${doubt || `Need ${focus}?`}" with ${proof}, the first step, and this exact action: ${cta}`, context),
     how_to_create: [
@@ -4124,11 +4293,22 @@ function calendarCreative(context, index, { pillar, objection, persona, psych, o
       sanitizeGeneratedText(`Close with: ${cta}`, context),
     ],
     customer_action: cta,
-    why_this_works: sanitizeGeneratedText(`For ${context.businessName}, ${clean(psych?.use_it_by, `this reduces doubt and gives ${context.audience} a clear action.`)}`, context),
+    why_this_works: sanitizeGeneratedText(`For ${context.businessName}, ${asContinuation(clean(psych?.use_it_by, `this reduces doubt and gives ${context.audience} a clear action.`), context)}`, context),
     offer_used: businessFacingFocus(context, clean(offer?.offer, focus), index),
     objective: sanitizeGeneratedText(clean(pillar?.purpose, `Make ${focus} easier to understand and act on.`), context),
   };
 }
+
+const BAKERY_MESSAGE_TEMPLATES = [
+  "Message FRESH and we will tell you what came out of the oven today.",
+  "Send the time you can collect and we will hold something from this batch.",
+  "Tell us the occasion and we will pick one thing from today's shelf.",
+  "Ask for prices and we will send the full list before you come.",
+  "Planning ahead? Send the date and we will tell you what to order in advance.",
+  "Ask what usually sells out first, so you know when to arrive.",
+  "Want it boxed as a gift? Tell us who it is for and we will suggest one.",
+  "Ask how long it stays fresh and we will tell you the honest answer.",
+];
 
 function messageTemplateForContext(context, index, { objection, persona, focus }) {
   const kind = businessKind(context);
@@ -4156,6 +4336,7 @@ function messageTemplateForContext(context, index, { objection, persona, focus }
       `${moment} fastest test: send the repeated task, current tool, and team size. We will reply with the cleanest first use case.`,
       `Not ready to switch? Ask for a week-one walkthrough and compare it with how your team works today.`,
     ],
+    counter_bakery: BAKERY_MESSAGE_TEMPLATES,
     food: [
       `${moment} order? Tell us headcount, budget, and parcel or dine-in. We will suggest one ${offer} option with price and ready time.`,
       `For ${offer}, message the item name and pickup time. We will confirm availability, price, and the easiest order step.`,
@@ -4248,7 +4429,7 @@ function messageTemplateForContext(context, index, { objection, persona, focus }
       `If the choice feels unclear, ask for price, timing, and proof in one message. We will make the decision easier.`,
     ],
   };
-  const list = templates[kind] || templates.local;
+  const list = templates[contextVariant(context, kind)] || templates[kind] || templates.local;
   const selected = sanitizeGeneratedText(pickSeeded(list, context, `message:${kind}:${moment}`, index), context);
   return {
     type: `${customer} reply`,
@@ -4634,6 +4815,7 @@ function contextSignalTokens(context) {
     context.city,
     context.location,
     context.businessType,
+    context.differentiator,
     ...asArray(context.platforms),
     ...offerKeywords(context, 12),
     ...wordsForVertical(context, { industryPack: {} }),
@@ -4654,6 +4836,10 @@ function anchorSpecificText(text, context, index) {
   const source = sanitizeGeneratedText(removeRepeatedWords(text), context);
   if (!source || hasContextSignal(source, context)) return source;
   if (STRONG_ACTION_VERB_PATTERN.test(source) && source.split(/\s+/).length >= 6) return source;
+  // Finished copy - a caption is a whole post, not a phrase waiting for a
+  // suffix. Gluing "for box to take home" onto the end of two sentences reads
+  // as broken English to the person who has to publish it.
+  if (source.split(/[.!?]+\s+/).filter(part => clean(part)).length > 1) return source;
   const focus = businessFacingFocus(context, offerFocus(context, index), index);
   if (/^(how|what|when|where|why|will|can|do|does|is|are)\b/i.test(source)) {
     return sanitizeGeneratedText(`For ${lowerFirst(focus)}, ${lowerFirst(trimEndPunctuation(source))}?`, context);
@@ -4936,13 +5122,95 @@ function consultantTitleForKind(context, kind, index, { focus, persona }) {
   return sanitizeGeneratedText(joinTitleDetail(base, detail), context);
 }
 
+// hasContextSignal cannot tell "specific to this industry" from "specific to
+// this business": "dental" and "appointment" satisfy it for every clinic alive.
+// These two helpers draw that line. Own tokens are what the owner typed that
+// their competitor next door would not - the trading name, the promise, the
+// audience, the city - minus anything the whole vertical shares.
+// compactPhrase drops articles and then clips to a word count, which can leave
+// a sentence ending on a preposition ("office workers in"). Every place that
+// names the audience mid-sentence needs the trimmed form.
+function trimDanglingWord(value) {
+  let text = clean(value);
+  let previous = "";
+  while (text && text !== previous) {
+    previous = text;
+    text = text.replace(/\s+(?:in|on|at|of|to|for|with|from|near|by|the|a|an|and|or)$/i, "").trim();
+  }
+  return text;
+}
+
+function audiencePhrase(context, fallback = "customers", maxWords = 4) {
+  return trimDanglingWord(compactPhrase(context.audience, fallback, maxWords)) || fallback;
+}
+
+function ownSignalTokens(context) {
+  const tokensOf = values => unique(values.filter(Boolean).flatMap(value => [
+    lower(value),
+    ...clean(value).split(/[^a-z0-9]+/i).filter(word => word.length >= 4).map(word => lower(word)),
+  ])).filter(Boolean);
+  const industry = new Set(tokensOf([
+    context.businessType,
+    context.productsOrServices,
+    ...wordsForVertical(context, { industryPack: {} }),
+  ]));
+  return tokensOf([
+    context.businessName,
+    context.differentiator,
+    context.audience,
+    context.city,
+  ]).filter(token => !industry.has(token));
+}
+
+function hasOwnSignal(text, context) {
+  const source = lower(text);
+  if (!source) return false;
+  return ownSignalTokens(context).some(token => source.includes(token));
+}
+
+// Titles come from a dozen per-variant constant tables. Rather than rewrite
+// every table, give one card in three a clause the owner actually supplied.
+// Two in three keep the industry's voice, which is what makes the plan sound
+// like it knows the trade.
+// The promise clause belongs on the card once. The hook and the shot direction
+// are both derived from the title, so without this the same clause appeared
+// three times on a single day.
+const OWN_VOICE_CLAUSE = /,\s+(?:built around|and name|so)\s+.+$/i;
+
+function withoutOwnVoiceClause(text) {
+  const source = clean(text);
+  if (!source) return source;
+  const stripped = source.replace(OWN_VOICE_CLAUSE, "").trim();
+  return stripped.length >= 12 ? stripped : source;
+}
+
+function withOwnVoice(title, context, index) {
+  const text = clean(title);
+  const promise = trimEndPunctuation(clean(context.differentiator));
+  if (!text || !promise) return text;
+  if (index % 3 !== 2) return text;
+  if (hasOwnSignal(text, context)) return text;
+  const clauses = [
+    `built around ${lowerFirst(promise)}`,
+    `and name ${lowerFirst(promise)} in the first line`,
+    `so ${lowerFirst(promise)} is the reason to act`,
+  ];
+  const clause = clauses[Math.floor(index / 3) % clauses.length];
+  return sanitizeGeneratedText(`${trimEndPunctuation(text)}, ${clause}`, context);
+}
+
 function agencyTitleForKind(context, kind, index, { focus, persona }) {
   const offer = businessFacingFocus(context, focus || leadOffer(context), index);
   const audience = compactPhrase(audienceCue(context), "buyer", 3).toLowerCase();
   const variant = contextVariant(context, kind);
   const consultantTitle = consultantTitleForKind(context, kind, index, { focus, persona });
-  if (consultantTitle) return consultantTitle;
+  if (consultantTitle) return withOwnVoice(consultantTitle, context, index);
   const titles = {
+    counter_bakery: [
+      `Film the fresh batch of ${offer} with the baking time shown`,
+      `Show shelf stock, price, and how long ${offer} keeps`,
+      `Make the first counter pick easy with one honest ${offer} recommendation`,
+    ],
     family_food: [
       `Film staff recommending one ${offer} order for a family`,
       `Show portion size, parcel packing, and ready time for ${offer}`,
@@ -5039,7 +5307,7 @@ function agencyTitleForKind(context, kind, index, { focus, persona }) {
       `Make the property visit feel filtered, not random`,
     ],
     local_property: [
-      `Film the Kozhikode property filter before sending listings`,
+      `Film the property filter before sending listings`,
       `Show budget, preferred landmark, availability, and visit timing`,
       `Turn random property enquiries into a useful shortlist`,
     ],
@@ -5194,88 +5462,99 @@ function agencyTitleForKind(context, kind, index, { focus, persona }) {
     : kind;
   const detailList = detailSets[detailKind] || detailSets.local;
   const base = list[index % list.length];
-  const detail = detailList[index % detailList.length];
+  // The base and the detail are both industry constants, so every clinic in the
+  // country shared these headlines. Give one card in three a detail built from
+  // the owner's own promise: enough to separate two same-industry plans, not so
+  // much that the same promise repeats down the page.
+  const ownDetails = differentiatorDetails(context);
+  const detail = ownDetails.length && index % 3 === 2
+    ? ownDetails[Math.floor(index / 3) % ownDetails.length]
+    : detailList[index % detailList.length];
   const cleanDetail = /\bwith\b/i.test(base) && /^with\s+/i.test(detail)
     ? detail.replace(/^with\s+/i, "showing ")
     : detail;
-  return sanitizeGeneratedText(`${base} ${cleanDetail}`, context);
+  return withOwnVoice(sanitizeGeneratedText(`${base} ${cleanDetail}`, context), context, index);
 }
 
-function agencyShotListForKind(context, kind, { focus, proof }) {
-  const offer = businessFacingFocus(context, focus || leadOffer(context), 0);
+// The four beats of a shoot: open, show the work, say what makes this business
+// different, close with the action. The beats are industry-shaped - a clinic
+// opens on a patient worry, a bakery opens on the product - but only the first
+// two lines belong to the industry. The last two belong to THIS business.
+//
+// Before this split the whole list was a fixed per-industry constant, so two
+// dental clinics in one city received the same four lines word for word, and
+// the list fed how_to_execute across five tabs plus the calendar.
+function agencyShotListForKind(context, kind, { focus, proof, index = 0 } = {}) {
+  const offer = businessFacingFocus(context, focus || leadOffer(context), index);
   const variant = contextVariant(context, kind);
-  const shots = {
+  const who = lowerFirst(audiencePhrase(context, "your customers"));
+  const promise = clean(context.differentiator);
+
+  // Line 3 answers "why this one, not the shop next door". It is the only line
+  // that can carry the owner's own promise, so it never falls back to filler
+  // when they gave us one.
+  const promiseShot = promise
+    ? `Say the one thing that is different: ${lowerFirst(trimEndPunctuation(promise))}.`
+    : `Show the price, the timing, and what ${who} get, so nothing is guessed.`;
+  const proofShot = `Show ${lowerFirst(clean(proof, "real proof"))} that ${who} can check.`;
+  const closeShot = `End with one line: ${trimEndPunctuation(industryCta(context, kind, index))}.`;
+
+  // Each industry contributes the opening beat and one "show the work" beat.
+  const openers = {
     food: [
-      `Open with the actual ${offer}, not a logo or empty plate.`,
-      "Show portion size with a hand, box, plate, or table reference.",
-      "Show packing, counter handoff, or ready-time proof.",
-      "End with the exact keyword customers should message.",
+      `Open with the actual ${offer}, not a logo or an empty plate.`,
+      "Show portion size against a hand, box, plate, or table.",
     ],
     salon: [
-      "Open with the reference photo or desired result.",
-      "Show the stylist explaining what is realistic.",
-      "Show time needed, starting price, prep, or clean setup.",
-      "End with the slot-check WhatsApp line.",
+      `Open with the photo of the look ${who} want.`,
+      "Show the stylist saying what is realistic on that hair.",
     ],
     gym: [
-      "Open with the beginner worry in one line.",
-      "Show trainer greeting, first movement, and form correction.",
-      "Show what to bring and how long the trial takes.",
-      "End with the trial-session message.",
+      `Open with the worry ${who} say out loud on day one.`,
+      "Show the greeting, the first movement, and one form correction.",
     ],
     software: [
-      "Open with the messy current workflow.",
-      `Show the ${context.businessName} screen solving one step.`,
-      "Show the result after the first setup or demo action.",
-      "End with the demo or early-access CTA.",
+      `Open with the messy way ${who} do this today.`,
+      `Show the ${context.businessName} screen fixing one step of it.`,
     ],
     clinic: [
-      "Open with the patient concern in plain words.",
-      "Show reception, consultation step, or doctor explanation.",
-      "Show timing, what to bring, and how booking works.",
-      "End with the appointment message.",
+      `Open with the worry ${who} carry into the room, in their own words.`,
+      "Show reception, the check itself, and the doctor explaining it.",
     ],
     real_estate: [
-      "Open with budget, area, and property type.",
-      "Show landmark, road access, availability, or room walkthrough.",
-      "Show why this option matches the buyer.",
-      "End with the shortlist or site-visit message.",
+      `Open with the budget and area ${who} actually asked for.`,
+      "Show the landmark, the road in, and a walk through the rooms.",
     ],
     law_firm: [
-      "Open with the document or issue type.",
-      "Show the checklist of facts needed before advice.",
-      "Explain the risk in one simple line.",
-      "End with the consultation-prep message.",
+      `Open with the document or problem ${who} bring first.`,
+      "Show the list of facts you need before you can advise.",
     ],
     agency: [
-      "Open with the weak page, post, offer, or CTA as proof.",
-      "Point to the business reason it is weak and what reply it should create.",
-      "Show one sharper content or offer move with the proof angle.",
-      "End with the audit reply message.",
+      `Open with the weak page, post, or offer as the proof.`,
+      "Say why it is weak and what reply it should have got.",
     ],
     retail: [
-      `Open with the real ${offer} photo or product in hand.`,
-      "Show size, colour, stock, price, or preview detail.",
-      "Show delivery, pickup, packing, or confirmation step.",
-      "End with the photo or preview message.",
+      `Open with a real photo of ${offer}, in hand.`,
+      "Show size, colour, stock, and price on screen.",
     ],
     local: [
-      `Open with ${proof || "real proof"}.`,
-      `Show how ${offer} works in practice.`,
-      "Show price, timing, process, or result.",
-      "End with one clear customer action.",
+      `Open with the moment ${who} decide they need ${offer}.`,
+      `Show how ${offer} works, start to finish.`,
     ],
   };
-  if (variant.includes("food")) return shots.food;
-  if (variant.includes("salon")) return shots.salon;
-  if (variant.includes("gym")) return shots.gym;
-  if (variant.includes("software")) return shots.software;
-  if (variant.includes("clinic")) return shots.clinic;
-  if (variant.includes("property")) return shots.real_estate;
-  if (variant.includes("law")) return shots.law_firm;
-  if (variant.includes("agency")) return shots.agency;
-  if (variant.includes("retail") || variant.includes("boutique")) return shots.retail;
-  return shots[kind] || shots.local;
+
+  const pick = variant.includes("food") ? openers.food
+    : variant.includes("salon") ? openers.salon
+    : variant.includes("gym") ? openers.gym
+    : variant.includes("software") ? openers.software
+    : variant.includes("clinic") ? openers.clinic
+    : variant.includes("property") ? openers.real_estate
+    : variant.includes("law") ? openers.law_firm
+    : variant.includes("agency") ? openers.agency
+    : (variant.includes("retail") || variant.includes("boutique")) ? openers.retail
+    : openers[kind] || openers.local;
+
+  return [pick[0], pick[1], promiseShot, proofShot, closeShot].filter(Boolean).slice(0, 4);
 }
 
 function isWeakAgencyTitle(title) {
@@ -5290,6 +5569,18 @@ function isWeakAgencyTitle(title) {
     || /\bfor\s+[A-Z][a-z]+(?:,|\s+(?:health|budget|careful|skeptical|founder|student|home|buyer|patient|individual|lead|manager|owner|member)\b)/.test(text);
 }
 
+function expectedResultForIndex(context, index) {
+  const parts = unique(clean(baseMetric(context))
+    .split(/,\s*|\s+and\s+/)
+    .map(part => trimEndPunctuation(clean(part)))
+    .filter(part => part.length >= 4));
+  if (parts.length < 2) return baseMetric(context);
+  const first = parts[index % parts.length];
+  const second = parts[(index + 1) % parts.length];
+  const who = lowerFirst(audiencePhrase(context, "customers"));
+  return sanitizeGeneratedText(`More ${first} from ${who}. Watch ${second} in the same week.`, context);
+}
+
 function agencyBrief(context, index, { focus, objection = {}, persona = {}, proof = "", platform = "", title = "" } = {}) {
   const kind = businessKind(context);
   const offer = businessFacingFocus(context, focus || offerFocus(context, index), index);
@@ -5300,18 +5591,18 @@ function agencyBrief(context, index, { focus, objection = {}, persona = {}, proo
   const exactTitle = title && !isWeakAgencyTitle(title) && title.length >= 18
     ? sanitizeGeneratedText(title, context)
     : agencyTitleForKind(context, kind, index, { focus: offer, persona });
-  const shotList = agencyShotListForKind(context, kind, { focus: offer, proof: proofPoint });
+  const shotList = agencyShotListForKind(context, kind, { focus: offer, proof: proofPoint, index });
   const exactAction = STRONG_ACTION_VERB_PATTERN.test(exactTitle)
     ? exactTitle
     : `Turn this into a practical customer action: ${exactTitle.charAt(0).toLowerCase()}${exactTitle.slice(1)}`;
   const platformName = clean(platform || context.platforms[index % Math.max(1, context.platforms.length)] || "the main channel", "the main channel");
   const mix = contentMixForIndex(context, index);
-  const expected = baseMetric(context);
+  const expected = expectedResultForIndex(context, index);
   return {
     title: exactTitle,
     exact_action: exactAction,
     owner_instruction: `${exactAction}. Use ${platformName}, keep it tight, include proof before the CTA, and close with: ${action}`,
-    why_it_matters: `This matters because ${customer} may hesitate when "${buyerDoubt}" is not answered clearly.`,
+    why_it_matters: `This matters because ${lowerFirst(audiencePhrase(context, customer, 5))} may hesitate when "${buyerDoubt}" is not answered clearly.`,
     when_to_do_this: mix.when_to_do_this,
     who_should_do_it: mix.who_should_do_it,
     recommended_format: mix.postType,
@@ -5523,7 +5814,7 @@ function expandMasterStrategy(core, { marketingOS, intelligence }) {
       best_message: clean(item.best_message || item.message_to_use, `${brief.cta}. We will show ${brief.proof_to_show} before you decide.`),
       best_channel: brief.cta.includes("DEMO") ? "Website / LinkedIn" : clean(item.best_channel, context.platforms[index % Math.max(1, context.platforms.length)] || "Instagram"),
       customer_doubt_solved: brief.customer_doubt_solved,
-      expected_result: strengthenExpectedResult(brief.expected_result, context),
+      expected_result: strengthenExpectedResult(brief.expected_result, context, index),
     };
   });
   const psychology = ensureArrayLength(
@@ -5579,8 +5870,8 @@ function expandMasterStrategy(core, { marketingOS, intelligence }) {
       steps: actionSteps,
       action_steps: actionSteps,
       customer_doubt_solved: brief.customer_doubt_solved,
-      business_result: strengthenExpectedResult(brief.expected_result, context),
-      expected_result: strengthenExpectedResult(brief.expected_result, context),
+      business_result: strengthenExpectedResult(brief.expected_result, context, index),
+      expected_result: strengthenExpectedResult(brief.expected_result, context, index),
       example_for_this_business: `${context.businessName} should use this around ${focus} for ${context.audience}.`,
       copy_ready_text: `${brief.cta}`,
       track_this: item.expected_result || brief.expected_result,
@@ -5601,14 +5892,18 @@ function expandMasterStrategy(core, { marketingOS, intelligence }) {
       proof: item.proof,
       platform: context.platforms[index % Math.max(1, context.platforms.length)] || "Instagram",
     });
-    const painAction = painPointAction(context, item.objection, brief);
-    const painTitle = painPointContentTitle(context, item.objection, index);
+    // The problem a patient feels is shared across a whole trade, and that is
+    // fine - two clinics do face the same fears. The ANSWER is what has to be
+    // this business's. Staggering the index by one means exactly one of these
+    // three fields carries the owner's promise on every card, never all three.
+    const painAction = withOwnVoice(painPointAction(context, item.objection, brief), context, index + 1);
+    const painTitle = withOwnVoice(painPointContentTitle(context, item.objection, index), context, index);
     const painCopy = sanitizeGeneratedText(`${context.businessName}: ${item.answer} ${brief.cta}`, context);
     return {
       problem: item.objection,
       customer_problem: item.objection,
       why_they_feel_this: item.reason,
-      your_solution: item.answer,
+      your_solution: withOwnVoice(item.answer, context, index + 2),
       exact_action: painAction,
       why_it_matters: brief.why_it_matters,
       when_to_do_this: brief.when_to_do_this,
@@ -5617,7 +5912,7 @@ function expandMasterStrategy(core, { marketingOS, intelligence }) {
       campaign_type: brief.campaign_type,
       how_to_execute: brief.how_to_execute,
       customer_doubt_solved: brief.customer_doubt_solved,
-      expected_result: strengthenExpectedResult(brief.expected_result, context),
+      expected_result: strengthenExpectedResult(brief.expected_result, context, index),
       text_to_use: painCopy,
       content_idea: painTitle,
       what_to_do: painAction,
@@ -5684,7 +5979,7 @@ function expandMasterStrategy(core, { marketingOS, intelligence }) {
       customer_action: creative.customer_action,
       cta: creative.customer_action,
       expected_outcome: strengthenExpectedResult(brief.expected_result, context),
-      expected_result: strengthenExpectedResult(brief.expected_result, context),
+      expected_result: strengthenExpectedResult(brief.expected_result, context, index),
       why_this_works: creative.why_this_works,
       why_this_helps: creative.why_this_works,
       how_to_create: [
@@ -5692,7 +5987,7 @@ function expandMasterStrategy(core, { marketingOS, intelligence }) {
         ...brief.how_to_execute,
       ],
       customer_doubt_solved: brief.customer_doubt_solved,
-      business_result: strengthenExpectedResult(brief.expected_result, context),
+      business_result: strengthenExpectedResult(brief.expected_result, context, index),
       offer_used: creative.offer_used,
     };
   });
@@ -5796,7 +6091,7 @@ function expandMasterStrategy(core, { marketingOS, intelligence }) {
         recommended_format: brief.recommended_format,
         campaign_type: brief.campaign_type,
         customer_doubt_solved: brief.customer_doubt_solved,
-        expected_result: strengthenExpectedResult(brief.expected_result, context),
+        expected_result: strengthenExpectedResult(brief.expected_result, context, index),
         message_to_use: `${brief.cta}. We will show the proof and the next step before you decide.`,
       };
     }),
@@ -5883,15 +6178,15 @@ function expandMasterStrategy(core, { marketingOS, intelligence }) {
           week: index + 1,
           title: roadmap.title,
           exact_action: roadmap.exactAction,
-          why_it_matters: `This turns a useful idea into an operating routine instead of leaving it as one post.`,
+          why_it_matters: `This turns week ${index + 1}'s idea into a routine ${lowerFirst(compactPhrase(context.businessName, "the team", 3))} repeats, instead of one post that fades.`,
           when_to_do_this: idea.when_to_do_this,
           who_should_do_it: idea.who_should_do_it,
           recommended_format: idea.recommended_format,
           campaign_type: idea.campaign_type,
           how_to_execute: [
-            `Pick the strongest proof asset from week ${index + 1}.`,
-            `Use the matching message template after people reply.`,
-            `Record the result, repeated question, and next adjustment before the week ends.`,
+            `Pick the strongest ${lowerFirst(businessFacingFocus(context, offerFocus(context, index), index))} proof from week ${index + 1}.`,
+            `Reply to ${lowerFirst(audiencePhrase(context, "people who ask"))} with the matching message template.`,
+            `Write down what ${lowerFirst(audiencePhrase(context, "they", 3))} asked most, and fix that before the week ends.`,
           ],
           customer_doubt_solved: idea.customer_doubt_solved,
           expected_result: idea.expected_result,
@@ -5932,6 +6227,7 @@ function buildMasterPrompt({ intelligence, ruleDraft }) {
       audience: context.audience,
       offer: context.productsOrServices,
       goal: context.selectedGoal,
+      what_makes_them_different: context.differentiator || "not supplied",
       platforms: context.platforms,
       launch_stage: context.launchStage,
     },

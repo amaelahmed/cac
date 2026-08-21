@@ -299,7 +299,9 @@ function normalizeWorkspace(
         },
       ];
 
-  return { report, tabs, business, scores };
+  const diagnostics = asRecord(report.diagnostics);
+
+  return { report, tabs, business, scores, diagnostics };
 }
 
 export function StrategyWorkspace({
@@ -308,7 +310,7 @@ export function StrategyWorkspace({
   onBack,
   onPrint,
 }: StrategyWorkspaceProps) {
-  const { report, tabs, business, scores } = useMemo(
+  const { report, tabs, business, scores, diagnostics } = useMemo(
     () => normalizeWorkspace(result, payload),
     [result, payload],
   );
@@ -436,34 +438,107 @@ export function StrategyWorkspace({
         </header>
 
         <section className="mb-6 rounded-sm bg-black p-4 text-white">
-          <div className="mb-3 flex items-center justify-between gap-3">
+          <div className="mb-1 flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-display text-xl font-semibold">
               Quick Business Check
             </h2>
             <span className="text-[11px] uppercase tracking-wider text-white/45">
-              How ready your business looks right now
+              {asText(
+                asRecord(diagnostics.coverage).checks_run,
+                "0",
+              )}{" "}
+              of{" "}
+              {asText(
+                asRecord(diagnostics.coverage).checks_total,
+                "0",
+              )}{" "}
+              checks run
+              {Number(asRecord(diagnostics.coverage).checks_verified) > 0
+                ? ` · ${asText(asRecord(diagnostics.coverage).checks_verified)} by opening your site`
+                : " · all from your own answers"}
             </span>
           </div>
+          {asText(asRecord(diagnostics.coverage).how_to_improve) && (
+            <p className="mb-3 text-xs leading-5 text-[#ffb4a1]">
+              {asText(asRecord(diagnostics.coverage).how_to_improve)}
+            </p>
+          )}
           <div className="grid gap-px overflow-hidden rounded-sm border border-white/10 bg-white/10 md:grid-cols-4">
-            {scores.map((score, index) => (
-              <div
-                key={`${asText(score.label)}-${index}`}
-                className="bg-black p-4"
-              >
-                <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/50">
-                  {asText(score.label, "Score")}
-                </div>
-                <div className="font-display text-4xl font-bold text-[#ff3300]">
-                  {asText(score.score, "0")}
-                </div>
-                <p className="mt-2 text-xs leading-5 text-white/55">
-                  {asText(
-                    score.reason,
-                    "Calculated from the submitted profile.",
+            {scores.map((score, index) => {
+              const tone = asText(score.tone, "unknown");
+              const bandColour =
+                tone === "good"
+                  ? "text-[#39d353]"
+                  : tone === "warn"
+                    ? "text-[#ffb54d]"
+                    : tone === "bad"
+                      ? "text-[#ff3300]"
+                      : "text-white/40";
+              const failed = asArray(score.failed).map(asRecord);
+              const notChecked = asArray(score.not_checked).map(asRecord);
+
+              return (
+                <div
+                  key={`${asText(score.label)}-${index}`}
+                  className="bg-black p-4"
+                >
+                  <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/50">
+                    {asText(score.label, "Check")}
+                  </div>
+
+                  {/* The word carries the meaning; the number is supporting
+                      detail. "Weak" lands with someone who has never read a
+                      marketing report, "55" does not. */}
+                  <div
+                    className={`font-display text-3xl font-bold ${bandColour}`}
+                  >
+                    {asText(score.band, "Not checked")}
+                  </div>
+                  {score.score !== null && score.score !== undefined && (
+                    <div className="mt-1 text-xs text-white/40">
+                      {asText(score.score)} / 100 ·{" "}
+                      {asText(score.checks_run, "0")} of{" "}
+                      {asText(score.checks_total, "0")} checks
+                    </div>
                   )}
-                </p>
-              </div>
-            ))}
+
+                  <p className="mt-2 text-xs leading-5 text-white/70">
+                    {asText(score.plain_meaning, asText(score.reason))}
+                  </p>
+
+                  {failed.length > 0 && (
+                    <ul className="mt-3 space-y-1.5 border-t border-white/10 pt-3">
+                      {failed.slice(0, 2).map((item, itemIndex) => (
+                        <li
+                          key={itemIndex}
+                          className="text-[11px] leading-4 text-white/55"
+                        >
+                          <span className="text-[#ff3300]">✗</span>{" "}
+                          {asText(item.evidence)}
+                          {asText(item.source) === "verified" && (
+                            <span className="ml-1 text-white/30">
+                              (we checked your site)
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {notChecked.length > 0 && (
+                    <p className="mt-2 text-[11px] leading-4 text-white/35">
+                      Not checked: {asText(notChecked[0].question)}
+                    </p>
+                  )}
+
+                  {asText(score.caveat) && (
+                    <p className="mt-2 text-[11px] leading-4 text-white/35">
+                      {asText(score.caveat)}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
 

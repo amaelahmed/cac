@@ -1,4 +1,5 @@
 import { buildMarketingOSReport, validateMarketingOutput, validateSemanticAlignment } from "./marketingIntelligence.js";
+import { runDiagnostics, rankRecommendations, headlineAction } from "./diagnostics.js";
 
 const REQUIRED_SECTIONS = [
   "Business Health Snapshot",
@@ -413,7 +414,7 @@ function categoryContext(profile, city, rawBiz) {
   if (custom) {
     return {
       customerTruth: `${audience} buy custom products when they can clearly imagine the final look, know the price and time, and trust ${name} will confirm the design before making it.`,
-      buyingTrigger: `The trigger is usually a birthday, college moment, friendship gift, event, couple gift, or last-minute need in ${city}.`,
+      buyingTrigger: `The trigger is usually a birthday, milestone, friendship gift, event, couple gift, or last-minute need in ${city}.`,
       pains: [
         "They worry the final product may not look like what they imagined.",
         "They worry the name, photo, size, colour, or design may come wrong.",
@@ -591,6 +592,42 @@ function buildHashtags(profile, rawBiz) {
   return Array.from(new Set(tags)).slice(0, 18);
 }
 
+// Currency must follow the BUSINESS location, not a hardcoded default.
+// Unmatched locations keep INR so existing Indian users see no change.
+const CURRENCY_RULES = [
+  [/\b(uae|dubai|abu dhabi|sharjah|ajman|emirates)\b/i, { symbol: "AED ", locale: "en-AE" }],
+  [/\b(saudi|riyadh|jeddah|dammam)\b/i, { symbol: "SAR ", locale: "en-SA" }],
+  [/\b(qatar|doha)\b/i, { symbol: "QAR ", locale: "en-QA" }],
+  [/\b(kuwait)\b/i, { symbol: "KWD ", locale: "en-KW" }],
+  [/\b(oman|muscat)\b/i, { symbol: "OMR ", locale: "en-OM" }],
+  [/\b(singapore)\b/i, { symbol: "S$", locale: "en-SG" }],
+  [/\b(malaysia|kuala lumpur)\b/i, { symbol: "RM", locale: "en-MY" }],
+  [/\b(uk|united kingdom|england|scotland|wales|london|manchester|birmingham)\b/i, { symbol: "\u00a3", locale: "en-GB" }],
+  [/\b(usa|united states|u\.s\.|new york|san francisco|los angeles|chicago|seattle|austin|boston)\b/i, { symbol: "$", locale: "en-US" }],
+  [/\b(canada|toronto|vancouver|montreal)\b/i, { symbol: "CA$", locale: "en-CA" }],
+  [/\b(australia|sydney|melbourne|brisbane)\b/i, { symbol: "A$", locale: "en-AU" }],
+  [/\b(germany|france|spain|italy|netherlands|portugal|ireland|belgium|austria|berlin|paris|madrid|lisbon|dublin|amsterdam|milan)\b/i, { symbol: "\u20ac", locale: "en-IE" }],
+];
+
+function currencyFor(profile, rawBiz) {
+  const where = [
+    rawBiz?.biz_location,
+    profile?.market?.location,
+    profile?.market?.city,
+    profile?.market?.country,
+  ].filter(Boolean).join(" ");
+  for (const [pattern, currency] of CURRENCY_RULES) {
+    if (pattern.test(where)) return currency;
+  }
+  return { symbol: "\u20b9", locale: "en-IN" };
+}
+
+function money(amount, currency) {
+  const value = Number(amount);
+  if (!Number.isFinite(value)) return String(amount ?? "");
+  return `${currency.symbol}${value.toLocaleString(currency.locale)}`;
+}
+
 function calendarSeed(profile, rawBiz) {
   const preLaunch = isPreLaunch(profile, rawBiz);
   const custom = isCustomProduct(profile, rawBiz);
@@ -600,21 +637,21 @@ function calendarSeed(profile, rawBiz) {
     return [
       ["Launch teaser", "First look at the product style", "Show 3 finished sample products on a clean table.", "Custom gifts are coming to {city}. Send us a name or photo idea and we will show what can be made.", "People quickly understand what you make.", "Message on WhatsApp with a gift idea."],
       ["Making video", "How one custom piece is made", "Film the hand/desk process from blank material to final product.", "From a simple idea to a gift someone can actually keep.", "Making videos build trust before launch.", "Ask for the making time."],
-      ["Student use case", "Gift idea for college friends", "Show a product with a college bag, notebook, or campus-style setup.", "For the friend who says they do not want gifts but still keeps the cute ones.", "Local students can imagine when to use it.", "Tag a friend who would like this."],
+      ["Audience use case", "Gift idea for {audience}", "Show the product in the setting {audience} actually use it in.", "For the person who says they do not want gifts but still keeps the thoughtful ones.", "{audience} can picture exactly when to use it.", "Tag someone who would like this."],
       ["Order process", "How to order on WhatsApp", "Show step 1 photo, step 2 design preview, step 3 confirmation, step 4 delivery.", "Ordering is simple: send idea, get preview, confirm, then we make it.", "Removes confusion before the first order.", "Send a photo or name to start."],
       ["Preview promise", "Design preview before making", "Show a mock preview beside the final product.", "We confirm the look before making, so you do not have to guess.", "This answers the biggest fear in custom orders.", "Ask for a preview."],
       ["Price clarity", "Simple starting price post", "Show 3 product types with starting prices.", "No awkward price guessing. Here are the starting prices before launch.", "Price clarity brings serious enquiries.", "Save this before ordering."],
-      ["Delivery clarity", "Kozhikode delivery and pickup", "Show a map-style post with local delivery/pickup words.", "Kozhikode orders can choose local delivery or pickup. We will confirm timing before payment.", "People need to know if they can receive it easily.", "Ask if your area is covered."],
+      ["Delivery clarity", "{city} delivery and pickup", "Show a map-style post with local delivery/pickup words.", "{city} orders can choose local delivery or pickup. We will confirm timing before payment.", "People need to know if they can receive it easily.", "Ask if your area is covered."],
       ["Gift occasion", "Birthday gift idea", "Show packaging, name customisation, and a small card.", "A birthday gift feels better when it has their name, photo, or inside joke on it.", "Occasions create buying reasons.", "Message the date you need it."],
       ["Material trust", "What the product is made of", "Show close-up material shots and durability details.", "Here is what goes into the product before it reaches your hand.", "Material proof reduces quality doubts.", "Ask which material fits your idea."],
       ["Mistake policy", "What happens if something is wrong", "Show a calm text post with design confirmation rules.", "We confirm the design before making it. If our side makes a mistake, we fix it clearly.", "Policy clarity makes advance payment easier.", "Read this before confirming."],
       ["Customer-style chat", "Privacy-safe WhatsApp example", "Blur a sample enquiry and show how you reply.", "This is how a normal custom order conversation looks.", "People see that ordering is not complicated.", "Send your own idea."],
       ["Packaging video", "Pack one finished order", "Film packing, label, and final product reveal.", "The gift should look good when it reaches them, not only in photos.", "Packaging helps gift buyers trust the shop.", "Ask for gift packing."],
-      ["Friend referral", "Bring one friend offer", "Show two products together with a launch-week friend offer.", "Launch week idea: order with a friend and both get a small add-on.", "Friend referrals fit student and gift buying.", "Share this with your friend."],
-      ["Malayalam-English post", "Simple local caption", "Show a product with text in mixed Malayalam and English if the brand suits it.", "Gift venam, but basic aakaruthu. Make it personal.", "Local language makes the brand feel close.", "Reply with the name to customise."],
+      ["Friend referral", "Bring one friend offer", "Show two products together with a launch-week friend offer.", "Launch week idea: order with a friend and both get a small add-on.", "Friend referrals fit gift buying.", "Share this with your friend."],
+      ["Local-language post", "Simple local caption", "Show a product with a caption in the everyday language your customers actually use.", "Write one caption the way your customers talk, not the way brands talk.", "Local language makes the brand feel close.", "Reply with the name to customise."],
       ["First 10 orders", "Founding customer callout", "Show a clean number card: first 10 orders get careful founder checking.", "We are taking the first 10 test orders slowly so every detail is checked.", "Scarcity helps early orders without fake pressure.", "Reserve one early slot."],
       ["Before-after", "From photo to finished product", "Show original reference on left and final product on right.", "One photo can become a gift when the details are handled properly.", "Before-after content proves skill.", "Send your reference photo."],
-      ["Campus table", "Products on a college desk", "Shoot products beside books, ID card, headphones, or tote bag.", "Small gifts that fit campus life, birthdays, farewells, and friendship days.", "Audience sees themselves in the post.", "Save for the next gift moment."],
+      ["In-context shot", "The product in a real setting", "Shoot the product beside the everyday things {audience} actually carry.", "Small gifts that fit real occasions: birthdays, farewells, and thank-yous.", "Audience sees themselves in the post.", "Save for the next gift moment."],
       ["Founder note", "Why the shop is starting", "Show founder hands or workspace, not a corporate photo.", "We are starting this because gifts should feel personal without becoming confusing to order.", "Founder story makes a new shop less unknown.", "Follow for launch date."],
       ["FAQ", "Top 5 questions before ordering", "Create a carousel: price, time, preview, delivery, advance.", "Before you order, here are the five things most people ask.", "Answers reduce repeated DMs.", "Send the question we missed."],
       ["Launch date", "Opening day announcement", "Show product wall or launch date card with real products around it.", "{business} opens for test orders soon in {city}.", "A clear date turns interest into action.", "Turn on reminders or DM to book."],
@@ -626,7 +663,7 @@ function calendarSeed(profile, rawBiz) {
       ["Price reason", "Why custom costs more than readymade", "Show time, materials, design checking, packing.", "Custom work is not just the item. It is the detail, checking, and making time.", "Educates buyers without sounding defensive.", "Ask what fits your budget."],
       ["Launch week offer", "Small add-on for first orders", "Show the add-on clearly, not a vague discount.", "Launch week: first orders get a small gift-packing add-on.", "Simple launch offers are easy to understand.", "Book before slots close."],
       ["Review request", "What early customers can tell you", "Show review prompts: look, quality, delivery, ordering.", "After your order, tell us what felt good and what should improve.", "Builds a feedback habit early.", "Become an early customer."],
-      ["Local collaboration", "College club or creator collab", "Show a mock collab idea with a local student creator or club.", "We want to make a few campus-style gifts with local creators.", "Partnerships create trust without big ad spend.", "Suggest a creator or club."],
+      ["Local collaboration", "Local creator or community collab", "Show a mock collab idea with a local creator or community group.", "We want to make a few local-style gifts with nearby creators.", "Partnerships create trust without big ad spend.", "Suggest a creator or group."],
       ["Launch recap", "What the first month will focus on", "Show 4 boxes: better samples, faster replies, clearer prices, real reviews.", "Our first month is about getting the basics right, not pretending to be huge.", "Honesty makes a new shop feel human.", "Follow the launch journey."],
     ];
   }
@@ -842,7 +879,7 @@ function buildCaptionBank(profile, rawBiz, city) {
   if (custom) {
     return [
       `${city}, custom gifts do not have to be confusing. Send the idea, see the preview, then confirm before we make it.`,
-      `For students, friends, birthdays, and small surprises: make the gift personal without making the order process hard.`,
+      `For friends, birthdays, and small surprises: make the gift personal without making the order process hard.`,
       `A name, photo, date, or inside joke can turn a simple product into something they will actually keep.`,
       `Before we make a custom order, we check the design details so the final product does not become a guess.`,
       `${name} is for people who want a personal gift, clear price, and simple WhatsApp ordering in ${city}.`,
@@ -1271,7 +1308,7 @@ function buildPersonas(profile, rawBiz, category, city) {
   if (custom) {
     return [
       {
-        label: "College gift buyer",
+        label: "Gift buyer",
         note: "This is an example based on your business details, not a real person.",
         who_they_are: `${audience} in or around ${city} looking for a personal gift for a friend, partner, classmate, or event.`,
         what_they_want: "A gift that looks personal, arrives on time, and does not feel common.",
@@ -1750,7 +1787,7 @@ function customPreLaunchCalendar(profile, rawBiz, city, hashtags, existingCalend
       caption: `Help us choose ${name}'s first design.`,
       how_to_create: ["Show two sample designs.", "Add a poll sticker.", "Share the winning design the next day."],
       customer_action: "Vote on the poll.",
-      why_this_works: "Students remember the brand better when they help choose something.",
+      why_this_works: "People remember the brand better when they help choose something.",
     },
     {
       day: 3,
@@ -1777,7 +1814,7 @@ function customPreLaunchCalendar(profile, rawBiz, city, hashtags, existingCalend
       caption: `${name} prices depend on product type, size, design detail, and delivery. Send your idea and we will guide you.`,
       how_to_create: ["Show 3 sample products.", "Add starting from price placeholders.", "Mention that final price depends on details."],
       customer_action: "Message your budget.",
-      why_this_works: "Students may avoid messaging if they think it will be too expensive.",
+      why_this_works: "People may avoid messaging if they think it will be too expensive.",
     },
     {
       day: 6,
@@ -1792,8 +1829,8 @@ function customPreLaunchCalendar(profile, rawBiz, city, hashtags, existingCalend
       day: 7,
       post_type: "Story",
       hook: "Which area should we deliver to first?",
-      caption: `${name} is preparing delivery and pickup around ${city}. Reply with your area or college.`,
-      how_to_create: ["Use a question sticker.", "Ask for area or college name.", "Save the answers in a simple list."],
+      caption: `${name} is preparing delivery and pickup around ${city}. Reply with your area.`,
+      how_to_create: ["Use a question sticker.", "Ask which area they are in.", "Save the answers in a simple list."],
       customer_action: "Reply with area name.",
       why_this_works: "Local delivery clarity reduces doubt before ordering.",
     },
@@ -1860,14 +1897,14 @@ function asCleanList(value) {
 function customPreLaunchStrategy(profile, rawBiz, city) {
   const name = clean(profile?.identity?.name || rawBiz?.biz_name, "the business");
   return [
-    ["Make 5 Sample Products First", "People will not trust a new custom product store without seeing real products.", ["Make 5 sample products.", "Record videos.", "Post them on Instagram.", "Share them on WhatsApp status.", "Ask people which one they like."], `${name} can make samples for birthdays, farewell, best friends, couples, and college gifts.`, "Price questions, WhatsApp messages, and story replies.", "Which sample should we launch first? Reply with your favourite."],
+    ["Make 5 Sample Products First", "People will not trust a new custom product store without seeing real products.", ["Make 5 sample products.", "Record videos.", "Post them on Instagram.", "Share them on WhatsApp status.", "Ask people which one they like."], `${name} can make samples for birthdays, farewells, friends, couples, and thank-you gifts.`, "Price questions, WhatsApp messages, and story replies.", "Which sample should we launch first? Reply with your favourite."],
     ["Set Up WhatsApp Ordering", "Custom orders need clear steps.", ["Create WhatsApp Business profile.", "Add business name and logo.", "Add quick replies.", "Add product photos.", "Pin the order process."], `${name} can pin: Send your idea, see a preview, confirm, then we make it.`, "More complete first messages.", "Send your idea, see a preview, confirm, then we make it."],
     ["Create Instagram Highlights", "New visitors should understand the shop in 10 seconds.", ["Create highlights: How to Order, Samples, Prices, Delivery, FAQ, Offers.", "Add one clear story to each highlight.", "Update them when customers ask repeat questions."], `${name} can keep the order steps visible even when posts move down the feed.`, "Profile visits turning into messages.", "New here? Check How to Order before messaging us."],
     ["Run a 7-Day Launch Countdown", "People need to see you more than once before they remember you.", ["Day 1: teaser.", "Day 2: sample product.", "Day 3: how to order.", "Day 4: price clarity.", "Day 5: delivery area.", "Day 6: launch offer.", "Day 7: test orders open."], `${name} can repeat the same launch story in different simple formats.`, "Story replies, saves, shares, and preview messages.", "Test orders open soon. Follow today so you do not miss the first slots."],
     ["Show Preview Before Making", "This is the biggest trust step for custom products.", ["Ask for name, photo, colour, size, and date.", "Send preview.", "Ask customer to confirm.", "Start making only after confirmation."], `${name} can show a sample preview beside a final product.`, "Fewer doubts before payment.", "We make only after you confirm the preview."],
     ["Start With First 10 Orders", "Do not try to take too many orders at the start.", ["Open only 10 test order slots.", "Handle every order carefully.", "Take photos and feedback.", "Improve the process.", "Then open more slots."], `${name} can say: First 10 test orders are opening soon in ${city}.`, "Slot messages and completed first orders.", "Message slot to reserve one."],
-    ["Make One Clear Price Post", "Students may avoid messaging if they think it is expensive.", ["Show starting price range.", "Explain what changes price.", "Mention delivery separately.", "Ask people to send budget."], `${name} can show three product examples with starting prices.`, "Price questions from serious buyers.", "Send your idea and budget. We will suggest the best option."],
-    ["Use Local Language Lightly", `${name} should feel local, not like a random online page.`, ["Use simple Malayalam-English in some posts.", "Keep order details in clear English.", "Test one local-style caption each week."], "Gift venam, but basic aakaruthu. Send your idea. We'll show a preview.", "Shares and replies from local students.", "Gift venam, but basic aakaruthu. Send your idea. We'll show a preview."],
+    ["Make One Clear Price Post", "People may avoid messaging if they think it is expensive.", ["Show starting price range.", "Explain what changes price.", "Mention delivery separately.", "Ask people to send budget."], `${name} can show three product examples with starting prices.`, "Price questions from serious buyers.", "Send your idea and budget. We will suggest the best option."],
+    ["Use Local Language Lightly", `${name} should feel local, not like a random online page.`, ["Mix in your customers' everyday language on some posts.", "Keep order details in clear, plain wording.", "Test one local-style caption each week."], `Send your idea and we'll show a preview.`, "Shares and replies from nearby customers.", `Send your idea and we'll show a preview.`],
     ["Collect First Proof", "After first orders, proof becomes your strongest marketing.", ["Send final product photo.", "Ask customer for review.", "Ask permission to post.", "Share packaging or delivery photo."], `${name} can turn each first order into a future trust post.`, "Reviews, customer photos, and permission to post.", "Your review helps a new local business grow."],
     ["Review Every Sunday", "Do not guess what is working.", ["Check which post got messages.", "Check which product got price questions.", "Check which story got replies.", "Check which caption people shared.", "Write the repeated question for next week's content."], `${name} can choose next week's posts from real replies, not random ideas.`, "A clear list of what to repeat next week.", "This week we learned what people ask most. Next week we will answer it better."],
   ].map(([title, why, steps, example, track, copy], index) => ({
@@ -1899,7 +1936,7 @@ function customPainPoints(city) {
     ["Is delivery available?", "Local buyers need delivery clarity.", "Mention delivery and pickup areas.", `Delivery and pickup available around ${city}. Send your area to confirm.`, "Ask followers to reply with their area."],
     ["Is the quality good?", "A new business has no trust yet.", "Post material close-ups and making videos.", "Here is the material and finish before it becomes a gift.", "Post a material close-up Reel."],
     ["I do not know what to order.", "Some customers want a gift but have no idea.", "Ask occasion and budget.", "Tell us the occasion and budget. We will suggest 2-3 ideas.", "Make gift idea posts by budget and occasion."],
-    ["Can I gift this to someone?", "Customers need to imagine use cases.", "Show birthday, farewell, best friend, couple, and college gift examples.", "Made for birthdays, farewell, best friends, couples, and college memories.", "Show one gift use case per post."],
+    ["Can I gift this to someone?", "Customers need to imagine use cases.", "Show birthday, farewell, best friend, couple, and milestone gift examples.", "Made for birthdays, farewells, best friends, couples, and milestones.", "Show one gift use case per post."],
   ].map(([problem, why, solution, text, idea]) => ({
     problem,
     customer_problem: problem,
@@ -1920,7 +1957,7 @@ function customCompetitors(name) {
     ["Cheap online sellers", "Low price.", "Local support, preview, and faster communication.", "Talk to a real person before your gift is made.", "Show local reply speed and preview steps."],
     ["Amazon / Flipkart", "Fast delivery and many options.", "More personal designs and local help.", "Not just delivered. Made for your person.", "Show why a custom gift feels more personal."],
     ["Local printing shops", "They can print quickly.", "Better gifting style, packaging, and Instagram-friendly designs.", "Custom product + gift feel + clear preview.", "Show packaging and final gift feel."],
-    ["College sellers", "They know students personally.", "Look more organised with WhatsApp steps, previews, and delivery clarity.", "Easy to order. Easy to confirm. Easy to gift.", "Show highlight tabs and order steps."],
+    ["Informal local sellers", "They know their buyers personally.", "Look more organised with WhatsApp steps, previews, and delivery clarity.", "Easy to order. Easy to confirm. Easy to gift.", "Show highlight tabs and order steps."],
     ["Big gift stores", "They look established.", "Personal attention and flexible customisation.", "Your idea gets personal attention, not just a shelf product.", "Show a one-idea-to-final-product story."],
     ["Cheaper custom pages", "They attract price-sensitive buyers.", "Show quality, material, and mistake-prevention process.", "Cheap is not useful if the name, photo, or date goes wrong.", "Post the mistake-prevention checklist."],
     ["Trendy product pages", "They follow trends.", "Turn trends into local custom gift ideas.", "Trending style, made personal for your friend.", "Post a trend as a local gift idea."],
@@ -1940,7 +1977,7 @@ function customCompetitors(name) {
 function customGrowthIdeas(city) {
   const postIdeas = [
     ["Preview Challenge", "Instagram Reels", "Show one design preview and ask people to guess the final product.", "Guess what this becomes.", "Comment your guess."],
-    ["₹500 Gift Ideas", "Instagram carousel", "Show 3 personal gift ideas under ₹500.", "Need a gift without spending too much? Start here.", "Save this post."],
+    ["Budget Gift Ideas", "Instagram carousel", "Show 3 personal gift ideas at your lowest price point.", "Need a gift without spending too much? Start here.", "Save this post."],
     ["Best Friend Gift Reel", "Instagram Reels", "Show a funny best-friend gift idea.", "For the friend who deserves drama and love.", "Tag your best friend."],
     ["Farewell Gift Carousel", "Instagram carousel", "Show 5 farewell gift ideas.", "Farewell gift ideas that are not boring.", "Share with your class group."],
     ["Mistake Check Reel", "Instagram Reels", "Show spelling and photo check before making.", "Custom gifts need careful checking.", "Message preview."],
@@ -1954,11 +1991,11 @@ function customGrowthIdeas(city) {
   const growthOpportunities = [
     ["First 10 Test Orders", "Instagram and WhatsApp", "Post: First 10 test orders opening soon.", "First 10 test orders opening soon.", "Slot messages."],
     ["Friend Referral", "WhatsApp Status and Instagram Story", "Give a small add-on when two friends order.", "Order with a friend and both get free gift packing.", "Referral messages."],
-    ["College Gift Packs", "Instagram Reels and carousel", "Create 3 sample packs.", "Gift ideas for your college gang.", "Pack enquiries."],
+    ["Curated Gift Packs", "Instagram Reels and carousel", "Create 3 sample packs.", "Gift ideas for your group.", "Pack enquiries."],
     ["Design of the Week", "Instagram and WhatsApp", "Post one design every week.", "This week's design is open for custom orders.", "Votes and custom order messages."],
     ["WhatsApp Status Selling", "WhatsApp Status", "Post one product, one order step, and one offer every day.", "Reply preview to see how this order works.", "Replies to status."],
     ["Google Business Trust", "Google Business and Instagram", "Add product photos, hours, and WhatsApp number.", "Find Cartroid on Google soon.", "Profile views and WhatsApp taps."],
-    ["Gift Reminder Content", "Instagram Story and WhatsApp Status", "Post reminders for birthdays, farewell, anniversaries, and college events.", "Need a gift by Friday? Message early.", "Date-based messages."],
+    ["Gift Reminder Content", "Instagram Story and WhatsApp Status", "Post reminders for birthdays, farewells, anniversaries, and seasonal events.", "Need a gift by Friday? Message early.", "Date-based messages."],
     ["Packaging Upgrade", "Instagram Reels", "Show gift packing as an add-on.", "Make it ready to gift.", "Gift-packing requests."],
     ["Customer Idea Polls", "Instagram Story", "Ask: What should Cartroid make next?", "What should Cartroid make next?", "Poll votes and replies."],
     ["Early Buyer Proof", "Instagram and WhatsApp", "Ask for photo, review, or simple feedback.", "Your review helps a new local business grow.", "Reviews and customer photos."],
@@ -1990,13 +2027,13 @@ function customPsychology(city) {
   return [
     ["People trust what they can see", "Do not only say good quality.", "Show real videos, close-ups, and final product photos.", "Here is the material and finish before it becomes a gift.", "Seeing feels safer than reading."],
     ["People fear custom mistakes", "Custom orders can go wrong.", "Show preview confirmation.", "We make only after you confirm the preview.", "Customers feel safe when they approve before making."],
-    ["Students avoid unknown prices", "Many students will not message if they think it is costly.", "Show starting prices.", "Send your idea and budget. We will suggest the best option.", "Clear price brings serious enquiries."],
+    ["Buyers avoid unknown prices", "Many buyers will not message if they think it is costly.", "Show starting prices.", "Send your idea and budget. We will suggest the best option.", "Clear price brings serious enquiries."],
     ["People need a simple next step", "Do not make them think too much.", "End posts with one action.", "Message preview on WhatsApp.", "One clear action gets more messages."],
     ["People like feeling involved", "Before launch, involve followers.", "Use polls and design voting.", "Which design should we launch first?", "People remember what they helped choose."],
-    ["People buy gifts for moments", "They buy for birthdays, farewell, and memories.", "Post occasion-based gift ideas.", "Made for birthdays, farewell, best friends, couples, and college memories.", "Occasions create urgency."],
+    ["People buy gifts for moments", "They buy for birthdays, farewells, and milestones.", "Post occasion-based gift ideas.", "Made for birthdays, farewells, best friends, couples, and milestones.", "Occasions create urgency."],
     ["People trust local clarity", "Local buyers want to know delivery and pickup.", `Mention ${city} delivery areas.`, `Delivery and pickup available around ${city}. Send your area to confirm.`, "Local clarity reduces doubt."],
     ["People like proof from others", "Early reviews matter.", "Post customer feedback after first orders.", "Your review helps a new local business grow.", "People trust other buyers more than brand claims."],
-    ["People share simple ideas", "Simple content spreads faster.", "Use natural local captions.", "Gift venam, but basic aakaruthu.", "It feels natural and shareable."],
+    ["People share simple ideas", "Simple content spreads faster.", "Use natural local captions.", "Write it the way your customers actually speak.", "It feels natural and shareable."],
     ["People need repeated reminders", "One post is not enough.", "Repeat the order process in different formats.", "Send idea -> See preview -> Confirm -> Get it made.", "People understand after seeing it more than once."],
   ].map(([thought, meaning, show, say, why]) => ({
     customer_thought: thought,
@@ -2011,7 +2048,7 @@ function customPremiumGrowth() {
   return [
     ["First 30 Customers Plan", "A step-by-step plan to get the first 30 buyers.", "Start with 10 test orders, then 10 referral orders, then 10 occasion-based orders.", "The owner gets a clear target instead of random posting.", "Unlock the full first 30 customers plan."],
     ["WhatsApp Follow-Up System", "Messages for people who asked price but did not order.", "Hi, just checking. Do you want us to suggest a design based on your budget?", "Many people need one reminder before buying.", "Unlock the follow-up message set."],
-    ["College Ambassador Plan", "A simple way to make students promote the business.", "Give one student free gift packing or commission for bringing orders.", "Students trust other students.", "Unlock the college ambassador plan."],
+    ["Referral Ambassador Plan", "A simple way to let happy customers promote the business.", "Give one regular free gift packing or commission for bringing orders.", "People trust people like them.", "Unlock the ambassador plan."],
     ["Launch Week Command Plan", "A daily launch checklist.", "Day 1 samples, Day 2 order steps, Day 3 price post, Day 4 launch offer, Day 5 test orders.", "The owner knows exactly what to do each day.", "Unlock the launch week command plan."],
     ["Product Drop System", "A weekly design launch plan.", "Every Friday, release one Design of the Week.", "People get a reason to return.", "Unlock the weekly product drop system."],
     ["Review Collection System", "Review request messages and posting plan.", "Thank you for ordering. Can you send a small review or photo? It helps our new business build trust.", "Reviews make a new store feel real.", "Unlock the review collection system."],
@@ -2062,7 +2099,7 @@ function buildPlainFullPlan({ report, profile, rawBiz, category, city, calendar,
           avoid: "Do not post randomly without answering customer questions.",
         },
     [preLaunch ? "First Customer Plan" : "Customer Plan"]: {
-      who_to_start_with: custom ? `Students, friends buying gifts, college crowd, and local buyers in ${city}.` : audience,
+      who_to_start_with: custom ? `Gift buyers, friends buying for occasions, and local buyers in ${city}.` : audience,
       what_to_offer_first: preLaunch ? "A small tester or launch-week order with extra care." : "A simple starter option.",
       where_to_find_them: channels,
       what_to_say: category.waysToTalk,
@@ -2573,7 +2610,24 @@ function masterCalendarDay(day, index, profile, rawBiz, city, hashtags) {
     recommended_format: masterText(day.recommended_format, postType),
     title,
     topic: title,
-    hook: masterText(day.hook, title),
+    // A hook that repeats the topic verbatim is not a hook. Omit rather than
+    // duplicate; the UI falls back to topic on its own.
+    hook: (() => {
+      const supplied = masterText(day.hook, "");
+      if (!supplied) return undefined;
+      // The hook is derived from the title, so the two can differ only by the
+      // trailing "built around <the owner's promise>" clause. To a reader that
+      // is still the same sentence twice.
+      // Drop the trailing promise clause AND the opening verb: the hook is the
+      // title with its first word swapped ("Show ..." becomes "Turn ..."), and
+      // that is still one sentence printed twice.
+      const bare = text => clean(text, "")
+        .replace(/,\s+(?:built around|and name|so)\s+.+$/i, "")
+        .trim()
+        .toLowerCase()
+        .replace(/^\S+\s+/, "");
+      return bare(supplied) && bare(supplied) !== bare(title) ? supplied : undefined;
+    })(),
     objective: masterText(day.objective, day.goalIntent, "Move the customer one step closer to action."),
     target_customer: masterText(day.target_customer, targetLabel(profile, rawBiz)),
     customer_objection: masterText(day.customer_objection, "They need more clarity before acting."),
@@ -2937,6 +2991,7 @@ export function assembleReport({ hydratedStrategy, businessProfile, rawBiz, conf
   const raw = hydratedStrategy || {};
   const profile = businessProfile || {};
   const city = cityFrom(rawBiz, profile);
+  const reportCurrency = currencyFor(profile, rawBiz);
   const consumer = getSection(raw, "Consumer Psychology");
   const pain = getSection(raw, "Pain Points");
   const questions = getSection(raw, "Common Objections");
@@ -3028,12 +3083,12 @@ export function assembleReport({ hydratedStrategy, businessProfile, rawBiz, conf
       simple_target: mode === "digital"
         ? `${leadsNeeded} qualified demo or trial leads`
         : preLaunch ? "First 10-20 serious enquiries or test orders" : `${leadsNeeded} extra customers or orders`,
-      possible_revenue: preLaunch ? "Not needed before launch" : `₹${(ticketAmount * leadsNeeded).toLocaleString("en-IN")}`,
+      possible_revenue: preLaunch ? "Not needed before launch" : money(ticketAmount * leadsNeeded, reportCurrency),
       break_even_logic: mode === "digital"
-        ? `If one qualified lead is worth around ₹${ticketAmount.toLocaleString("en-IN")}, focus first on channels that create demo requests and trial starts.`
+        ? `If one qualified lead is worth around ${money(ticketAmount, reportCurrency)}, focus first on channels that create demo requests and trial starts.`
         : preLaunch
         ? "Before launch, track interest, questions, and first orders instead of revenue targets."
-        : `If one customer or order is worth around ₹${ticketAmount.toLocaleString("en-IN")}, focus first on channels that create measurable enquiries.`,
+        : `If one customer or order is worth around ${money(ticketAmount, reportCurrency)}, focus first on channels that create measurable enquiries.`,
       track_weekly: mode === "digital"
         ? ["Demo requests", "Trial starts", "Qualified leads", "Activation questions", "Repeated objections"]
         : preLaunch
@@ -3141,6 +3196,51 @@ export function assembleReport({ hydratedStrategy, businessProfile, rawBiz, conf
     marketingOS.industryPack,
     marketingOS.goalStrategy,
   );
+  // --- Evidence-based diagnostics -----------------------------------------
+  // Replaces the old buildScores() output, which scored form completeness.
+  // Everything below is derived from checks we can point at, and anything we
+  // could not check is reported as unchecked rather than folded into a number.
+  const diagnostics = runDiagnostics({ businessProfile: profile, rawBiz, internetSignals });
+  const existingSteps = Array.isArray(finalReport.tabs?.strategy?.steps) ? finalReport.tabs.strategy.steps : [];
+  const rankedSteps = rankRecommendations(existingSteps, diagnostics, { rawBiz, profile });
+  const headline = headlineAction(rankedSteps, diagnostics);
+
+  finalReport.scores = cleanPlainValue(diagnostics.scores);
+  finalReport.diagnostics = cleanPlainValue({
+    coverage: diagnostics.coverage,
+    checks: diagnostics.checks,
+    headline_action: headline,
+  });
+
+  if (rankedSteps.length) {
+    finalReport.tabs = finalReport.tabs || {};
+    finalReport.tabs.strategy = { ...(finalReport.tabs.strategy || {}), steps: cleanPlainValue(rankedSteps) };
+    finalReport.tabs.fullReport = cleanPlainValue({
+      ...(finalReport.tabs.fullReport || {}),
+      "If You Only Do One Thing": headline,
+      "Do This First": rankedSteps.slice(0, 5).map(step => ({
+        rank: step.rank,
+        title: step.title,
+        when: step.when,
+        time_needed: step.effort,
+        cost: step.money,
+        impact: step.impact_label,
+        why_this_one: step.because,
+        do_this: step.steps || step.action_steps || [step.action],
+        copy_ready_text: step.copy_ready_text,
+        how_to_know_it_worked: step.target?.watch,
+        good_sign: step.target?.good_sign,
+        bad_sign: step.target?.bad_sign,
+      })),
+      "What We Checked": {
+        note: `We ran ${diagnostics.coverage.checks_run} of ${diagnostics.coverage.checks_total} checks${diagnostics.coverage.checks_verified ? `, ${diagnostics.coverage.checks_verified} of them by opening your website` : " using only what you typed in"}.`,
+        confidence: diagnostics.coverage.confidence,
+        to_get_a_sharper_report: diagnostics.coverage.how_to_improve || "",
+        not_checked: diagnostics.scores.flatMap(score => (score.not_checked || []).map(item => item.question)),
+      },
+    });
+  }
+
   finalReport.marketing_os = buildMarketingOSEnvelope(finalReport, report, profile, rawBiz, internetSignals);
   finalReport.exportable_report_data = finalReport.marketing_os.exportable_report_data;
   const finalValidation = validateReportSchema(finalReport);
